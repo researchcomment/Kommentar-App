@@ -10,46 +10,75 @@ const state = () => ({
     bibliographic:null,
     affiliation:null,
     doi:null,
-    commit_private:[],
-    commit_public:[]
+    commit_private:{
+        data:[],
+        length:0
+    },
+    commit_public:{
+        data:[],
+        length:0
+    }
 })
 
 const getters = {}
 
 const actions = {
-    askfordetail({ commit, state }, {doi}){
+    askfordetail({ commit, state }, {doi,username}){
         //set the information to the state,filter it into title author and doi(may changed from google firebase side)
         //commit('setlist',list)
 
         //give the first 5 commit of each part, can reuse changepage
         let returnValue={
-            list:[
-                {
-                    title:"The 'book' of my own ",
-                    author:"You know WHO !!!",
-                    doi:"1232334234"
-                }
-            ],
-            length:1
+            title:"The 'book' of my own ",
+            author:"You know WHO !!!",
+            editor:"Harry Potter",
+            chair:"Ron Weasley",
+            translator:"Hermine Granger",
+            contributor:"Albus Dumbledore",
+            bibliographic:"///",
+            affiliation:",",
+            doi:"1232334234",
+            commit_private:{
+                data:[
+                    {
+                        content:"This is a new Day!",
+                        author:"Merker"
+                    }
+                ],
+                length:1
+            },
+            commit_public:{
+                data:[
+                    {
+                        content:"This is a Bad Day!",
+                        author:"John"
+                    }
+                ],
+                length:1
+            }
         }
         //if possible, we can use state instead
-        return state;
+        return returnValue;
     },
 
     changepage({ commit, state }, {flag,from,to}){
         //use from and to to search out the matched answer
+        //flag shows whether it is private one or a public one
         let returnValue={
-            list:[
+            data:[
                 {
-                    title:"The 'book' of my own ",
-                    author:"You know WHO !!!",
-                    doi:"1232334234"
+                    content:"This is a Bad Day!",
+                    author:"John"
                 }
-            ]
+            ],
         }
         return returnValue;
-    }
+    },
 
+    sendFromEditorToDatabase({ commit, state }, {doi,username,content}){
+        //set content with doi username to database
+        
+    }
     
 }
 
