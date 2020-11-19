@@ -1,5 +1,6 @@
 <template>
   <div>
+
     <Home></Home>
     
   </div>
@@ -7,6 +8,7 @@
 
 <script>
 import Home from './views/Home'
+import Account from './views/Account'
   export default {
     components:{
       Home,

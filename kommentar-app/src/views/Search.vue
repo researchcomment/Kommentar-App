@@ -1,21 +1,19 @@
 <template>
     <div>
-       this is Home Page
-       <searchBar></searchBar>
+        <searchBar></searchBar>
     </div>
 </template>
 
 <script>
-   import searchBar from '@/components/Search/searchBar'
+ import searchBar from '@/components/Search/searchBar'
     export default {
         components:{
             searchBar,
 
         }
-
     }
 </script>
 
-<style>
+<style lang="scss" scoped>
 
 </style>
