@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <!-- <script type="text/javascript" src="js/jquery.min.js"></script>
+    <script type="text/javascript" src="js/bootstrap.min.js"></script> -->
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+</head>
+
+<body>
+    <h1 id="header">search with DOI</h1>
+    </br>
+    Give a DOI：<input type="text" name="doi" id="doi"></br>
+    <p id="result">Search Result:</p>
+    </br>
+    <button type="button" id="submit" onclick="get_data()">search</button>
+    <script src="search.js"></script>
+    <script>
+        function get_data() {
+            const id_doi = document.getElementById("doi");
+            doi_value = id_doi.innerText;
+            data = get_data_crossref(doi_value);
+            document.getElementById("result").append(data);
+        }
+    </script>
+</body>
+
+</html>
