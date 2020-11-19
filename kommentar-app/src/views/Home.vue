@@ -1,6 +1,6 @@
 <template>
     <div>
-       this is Home Page
+       Home
        <searchBar></searchBar>
 
     </div>
@@ -12,9 +12,7 @@
         components:{
             searchBar,
 
-        }
-
-        
+        },
         mounted(){
             console.log(this.$store.dispatch('account/login',{
 	            username:"123123",

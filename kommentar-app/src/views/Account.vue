@@ -1,12 +1,20 @@
 <template>
-    <icon></icon>
+    <div>
+      <accounticon></accounticon>
+      or
+      <login></login>
+      
+    </div>
+
 </template>
 
 <script>
-import icon from '@/components/account/icon'
+import accounticon from '@/components/account/accounticon'
+import login from '@/components/login/login'
 export default {
     components:{
-      icon,
+      accounticon,
+      login,
     },
 }
 </script>

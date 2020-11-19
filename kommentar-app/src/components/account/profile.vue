@@ -1,8 +1,10 @@
 <template>
   <div>
-      Name:
+    Profile
+      <!-- Name:
       Role:
-      [logout button]
+      [logout button] -->
+      
   </div>
 </template>
 
