@@ -2,6 +2,7 @@
     <div>
        this is Home Page
        <searchBar></searchBar>
+
     </div>
 </template>
 
@@ -13,6 +14,13 @@
 
         }
 
+        
+        mounted(){
+            console.log(this.$store.dispatch('account/login',{
+	            username:"123123",
+                password:"123123123"
+                }))
+        }
     }
 </script>
 
