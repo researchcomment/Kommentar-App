@@ -16,13 +16,13 @@ const actions = {
         /*
             return {flag:false,msg:""} 
         */
-        commit('setrolle','User')
+        commit('setrole','User')
         commit('setusername',username)
         let returnValue={flag:true,role:state.role}
         return returnValue
     },
     logout ({ commit}) {
-        commit('setrolle',null)
+        commit('setrole',null)
         commit('setusername',null)
     },
     regist({ commit, state }, {username,password}) {
