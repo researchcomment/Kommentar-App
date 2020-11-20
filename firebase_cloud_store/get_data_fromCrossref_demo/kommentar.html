@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://www.gstatic.com/firebasejs/6.2.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.23.0/firebase-database.js"></script>
+</head>
+
+<body>
+    <h2>please give your kommentar</h2>
+    </br>
+    kommentar: <input type="text" id="kommentar" value="write your kommentar"></br>
+    <button id="submit" onclick="push()">submit kommentar</button>
+    <script src="kommentar.js"></script>
+    <script>
+        const komm = document.getElementById("kommentar").innerText;
+
+        function push() {
+            push_komm(komm);
+        }
+    </script>
+</body>
+
+</html>
