@@ -3,7 +3,6 @@
       <accounticon></accounticon>
       or
       <login></login>
-      
     </div>
 
 </template>

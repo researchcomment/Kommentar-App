@@ -7,7 +7,7 @@
             username：
             password:
             (register button)]
-            点一下会弹出注册表单 -->
+            点一下会弹出注册表单 --> 
             <register></register>
     </div>
 </template>
