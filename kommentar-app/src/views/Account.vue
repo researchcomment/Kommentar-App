@@ -1,10 +1,10 @@
 <template>
   <div class="bar">
     <div class="account">
-      <accounticon class="icon"  v-show="logged"></accounticon>
+      <accounticon class="icon"  v-show="username"></accounticon>
       
-      <login class="login" v-show="!logged"></login>
-      <register v-show="!logged"></register>
+      <login class="login" v-show="!username"></login>
+      <register v-show="!username"></register>
     </div>
     
   </div>
@@ -22,26 +22,15 @@ export default {
   },
   data(){
     return{
-      logged:false,
+      
     }
   },
   computed:{
-    username(){
-      return this.$store.state.username;
+    username: function(){
+      return this.$store.state.account.username;
     },
-    
   },
   watch:{
-    username(){
-      if(this.username != null){
-        //username is null => not logged
-        this.logged = true;
-      }
-      else{
-        console.log(this.$store.state.username);
-        this.logged = false;
-      }
-    }
   }
 };
 </script>

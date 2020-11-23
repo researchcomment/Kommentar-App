@@ -19,7 +19,6 @@ const actions = {
         //return {flag:false, msg:"Wrong XXX"} 
         commit('setrole','User')
         commit('setusername',username)
-        
         let returnValue={flag:true,role:state.role}
         return returnValue
     },
