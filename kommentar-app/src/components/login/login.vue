@@ -45,7 +45,7 @@
         },
         methods:{
             confirm(){
-                if(this.form.username==""||this.form.password==""){    //check if the form is filled
+                if(!this.form.username||!this.form.password){    //check if the form is filled
                     this.$message.warning('Username/Password can not be empty.');
                 }
 
@@ -57,7 +57,6 @@
                             message: 'Successfully logged in',
                             type: 'success'
                         });
-                        console.log(this.$store.state.username);
                         
                     }
                     else{
