@@ -22,26 +22,15 @@ export default {
   },
   data(){
     return{
-      logged:false,
+      
     }
   },
   computed:{
-    username(){
-      return this.$store.state.username;
+    logged: function(){
+      return this.$store.state.account.username;
     },
-    
   },
   watch:{
-    username(){
-      if(this.username != null){
-        //username is null => not logged
-        this.logged = true;
-      }
-      else{
-        console.log(this.$store.state.username);
-        this.logged = false;
-      }
-    }
   }
 };
 </script>

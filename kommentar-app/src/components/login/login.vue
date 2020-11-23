@@ -57,6 +57,7 @@
                             message: 'Successfully logged in',
                             type: 'success'
                         });
+                        console.log(this.$store.state.username);
                         
                     }
                     else{
