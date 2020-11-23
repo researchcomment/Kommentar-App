@@ -1,53 +1,51 @@
-
-
 const state = () => ({
-    username:null,
-    role:null,
+    username: null,
+    role: null,
 })
 
 const getters = {}
 
 
 const actions = {
-    login ({ commit, state }, {username,password}) {
-        
+    login({ commit, state }, { username, password }) {
+
         //when everything ok, update inform//get information from google firebase backend
         //when username does not compare to the password, return false and reason
         /*
             return {flag:false,msg:""} 
         */
         //return {flag:false, msg:"Wrong XXX"} 
-        commit('setrole','User')
-        commit('setusername',username)
-        let returnValue={flag:true,role:state.role}
+        commit('setrole', 'User')
+        commit('setusername', username)
+        let returnValue = { flag: true, role: state.role }
         return returnValue
     },
-    logout ({ commit}) {
-        commit('setrole',null)
-        commit('setusername',null)
+    logout({ commit }) {
+        commit('setrole', null)
+        commit('setusername', null)
     },
-    regist({ commit, state }, {username,password}) {
+    regist({ commit, state }, { username, password }) {
         //get information from google firebase backend
         //when username does not compare to the password, return false and reason
         /*
             return {flag:false,msg:""} 
         */
-       
-       return {flag:true}
+
+        return { flag: true }
     },
-    
+
 }
 
 const mutations = {
-  
-    setrole(state,role){
-        state.role=role
+
+    setrole(state, role) {
+        state.role = role
     },
 
-    setusername(state,username){
-        state.username=username
+    setusername(state, username) {
+        state.username = username
     }
-    
+
 }
 
 
@@ -58,4 +56,3 @@ export default {
     actions,
     mutations
 }
-
