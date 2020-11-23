@@ -47,6 +47,7 @@
             confirm(){
                 if(!this.form.username||!this.form.password){    //check if the form is filled
                     this.$message.warning('Username/Password can not be empty.');
+                    return;
                 }
 
                 this.$store.dispatch('account/login',this.form).then((result) => {    //get the information from database
