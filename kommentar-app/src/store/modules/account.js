@@ -17,8 +17,7 @@ const actions = {
         /*
             return {flag:false,msg:""} 
         */
-
-        /*
+        //return {flag:false, msg:"Wrong XXX"} 
         commit('setrole','User')
         commit('setusername',username)
         let returnValue={flag:true,role:state.role}
@@ -64,7 +63,7 @@ const actions = {
 }
 
 const mutations = {
-
+  
     setrole(state,role){
         state.role=role
     },
