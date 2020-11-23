@@ -45,6 +45,7 @@ export default {
       },
     }
   },
+
     methods:{
       confirm(){
         if(this.form.username==""||this.form.password==""){    //check if the form is filled
@@ -55,19 +56,18 @@ export default {
       checkForm(){
 
       },
-
-    }
-
       // when valid then sign in
       if (this.validationErrors.length <= 0) {
         this.signUp();
       }
     },
+
      signUp() {
       //use regist action in store/account.js
     }
   }
-}
+  }
+
 </script>
 
 <style>

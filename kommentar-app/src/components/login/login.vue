@@ -7,10 +7,6 @@
             username：
             password:
             (register button)]
-<<<<<<< HEAD
-            点一下会弹出注册表单 --> 
-            <register></register>
-=======
             点一下会弹出注册表单 -->
 
         <el-dialog title="Login" :visible.sync="dialogFormVisible">
@@ -30,7 +26,6 @@
         </el-dialog>
 
       
->>>>>>> origin/main
     </div>
 </template>
 
