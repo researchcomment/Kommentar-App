@@ -53,8 +53,9 @@ export default {
         this.signUp();
       }
     },
-
-    
+     signUp() {
+      //use regist action in store/account.js
+    }
   }
 }
 </script>
