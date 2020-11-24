@@ -11,10 +11,10 @@
 
         <el-dialog title="Login" :visible.sync="dialogFormVisible">
             <el-form :model="form">
+
                 <el-form-item label="Username" :label-width="formLabelWidth">
                     <el-input v-model="form.username" autocomplete="off"></el-input>
                 </el-form-item>
-                
                 <el-form-item label="Password" :label-width="formLabelWidth">
                     <el-input v-model="form.password" autocomplete="off"></el-input>
                 </el-form-item>
@@ -24,8 +24,6 @@
                 <el-button type="primary" @click.native="confirm">Confirm</el-button>
             </div>
         </el-dialog>
-
-      
     </div>
 </template>
 
