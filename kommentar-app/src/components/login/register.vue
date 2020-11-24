@@ -1,4 +1,4 @@
-<template>
+    <template>
   <div>
       <el-button type="primary" @click="dialogFormVisible = true" round> Register </el-button>
         <!-- 点一下会弹出注册表单
@@ -37,6 +37,7 @@ export default {
       formLabelWidth: '150px',
       dialogFormVisible: false,
       passwordComfirm:"",
+      validationErrors: [],
       form:{
         username:"",
         password:"",
@@ -44,19 +45,34 @@ export default {
     }
   },
     methods:{
+      resetError() {
+      this.validationErrors = [];
+      },
+      
       confirm(){
-        if(this.form.username==""||this.form.password==""){    //check if the form is filled
+        if(this.form.username==""||this.form.password==""){
+          //check if the form is filled
+          this.validationErrors.push("Username/Password can not be empty.")
           this.$message.warning('Username/Password can not be empty.');
         }
-        this.checkForm();  
+      if (/.{6,}/.test(this.password) != true) {
+        this.validationErrors.push("Password must be at least 6 characters long");
+        this.$message.warning("Password must be at least 6 characters long");
+      }
+      if (!(this.form.password === this.passwordComfirm)) {
+        this.validationErrors.push("Passwords did not match");
+        this.$message.warning("Passwords did not match");
+      }
+      if (this.validationErrors.length <= 0) {
+        this.signUp();
+      }
       },
-      checkForm(){
+      signUp(){
+        this.$store.dispatch('account/regist',this.form);
+        }
+      }
 
-      },
-
-    }
-
-}
+};
 </script>
 
 <style>
