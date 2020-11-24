@@ -4,7 +4,7 @@
       <accounticon class="icon"  v-show="username"></accounticon>
       
       <login class="login" v-show="!username"></login>
-      <register v-show="!username"></register>
+      <register class="register" v-show="!username"></register>
     </div>
     
   </div>
@@ -38,29 +38,34 @@ export default {
 <style>
 .bar {
   width: 100%;
-  height: 40px;
-  border: 1px solid blue;
+  height: 100%;
+  box-shadow: 3px 3px 5px #E5E7EC;
+  margin: 0px 0px;
 }
 .account{
   float: right;
-  margin-right: 20px;
+  display: flex;
+  align-items: center;
 }
 
 
 .icon {
   position:relative;
-  
   border: 1px solid pink;
   width: 100px;
   height: 40px;
+  float: right;
 }
 
 .login {
   position: relative;
-  /* top: -40px; */
-  border: 1px solid yellow;
+  
   width: 100px;
   height: 40px;
- 
+  float: right;
+}
+
+.register{
+  float: right;
 }
 </style>

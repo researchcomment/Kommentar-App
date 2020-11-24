@@ -25,7 +25,6 @@ import Account from './views/Account'
     },
   }
 </script>
-
 <style lang="scss" scoped>
-
+  
 </style>

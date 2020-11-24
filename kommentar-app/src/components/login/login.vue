@@ -1,6 +1,6 @@
 <template>
     <div>
-        <el-button type="primary" @click="dialogFormVisible = true" round> Login </el-button>
+        <el-button type="primary" @click="dialogFormVisible = true" round size="mini"> Login </el-button>
         <!-- [login Button]
         点击会弹出 login table
             [login Table
@@ -69,5 +69,4 @@
 </script>
 
 <style>
-
 </style>
