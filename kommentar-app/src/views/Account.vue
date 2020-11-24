@@ -1,12 +1,11 @@
 <template>
   <div class="bar">
     <div class="account">
-      <accounticon class="icon"  v-show="username"></accounticon>
-      
+      <accounticon class="icon" v-show="username"></accounticon>
+
       <login class="login" v-show="!username"></login>
       <register v-show="!username"></register>
     </div>
-    
   </div>
 </template>
 
@@ -20,18 +19,15 @@ export default {
     login,
     register,
   },
-  data(){
-    return{
-      
-    }
+  data() {
+    return {};
   },
-  computed:{
-    username: function(){
+  computed: {
+    username: function () {
       return this.$store.state.account.username;
     },
   },
-  watch:{
-  }
+  watch: {},
 };
 </script>
 
@@ -41,15 +37,14 @@ export default {
   height: 40px;
   border: 1px solid blue;
 }
-.account{
+.account {
   float: right;
   margin-right: 20px;
 }
 
-
 .icon {
-  position:relative;
-  
+  position: relative;
+
   border: 1px solid pink;
   width: 100px;
   height: 40px;
@@ -61,6 +56,5 @@ export default {
   border: 1px solid yellow;
   width: 100px;
   height: 40px;
- 
 }
 </style>
