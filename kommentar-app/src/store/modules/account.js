@@ -56,12 +56,10 @@ const actions = {
         */
        
     },
+
     regist({ commit, state }, {username,password}) {
         //get information from google firebase backend
         //when username does not compare to the password, return false and reason
-        /*
-            return {flag:false,msg:""} 
-        */
        firebase
        .auth()
        .createUserWithEmailAndPassword(username, password)
@@ -69,12 +67,23 @@ const actions = {
         commit("setusername", username);
        })
        .catch(error => {
-           commit("setError", error.message);
+        var errorCode = error.code;
+        var errorMessage = error.message;
+        commit("setError", error.message);
+        if(errorCode == 'auth/email-already-in-use'){
+            alert('The User is existed.');
+        }else if(errorCode == 'auth/invalid-email'){
+            alert('The Email is invalid.')
+        }else if(errorCode == 'auth/operation-not-allowed'){
+            alert('The Email/Username is not allowed.')
+        }
+        else if(errorCode == 'auth/weak-password'){
+            alert('The Password is not strong enough.')
+        }else{
+            alert(errorCode)
+        }
        });
-       //?return needed?
-       return {flag:true}
-    },
-    
+    }
 }
 
 const mutations = {
