@@ -17,7 +17,8 @@ const actions = {
         /*
             return {flag:false,msg:""} 
         */
-        //return {flag:false, msg:"Wrong XXX"} 
+       /*
+        return {flag:false, msg:"Wrong XXX"} 
         commit('setrole','User')
         commit('setusername',username)
         let returnValue={flag:true,role:state.role}
@@ -30,7 +31,21 @@ const actions = {
            commit("setusername", username);
         })
         .catch(error => {
-            commit("setError", error.message);
+            var errorCode = error.code;
+            var errorMessage = error.message;
+            commit("setError", errorMessage);
+            if(errorCode == 'auth/invalid-email'){
+                alert('The Email is invalid.');
+            }else if(errorCode == 'auth/user-disabled'){
+                alert('The User is disabled.')
+            }else if(errorCode == 'auth/user-not-found'){
+                alert('The Email is not founbd.')
+            }
+            else if(errorCode == 'auth/wrong-password'){
+                alert('The Password is wrong.')
+            }else{
+                alert(errorCode)
+            }
         });
     },
 

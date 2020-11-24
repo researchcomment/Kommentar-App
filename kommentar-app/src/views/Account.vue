@@ -1,17 +1,10 @@
 <template>
-<<<<<<< HEAD
-    <div>
-      <accounticon></accounticon>
-      or
-      <login></login>
-=======
   <div class="bar">
     <div class="account">
       <accounticon class="icon"  v-show="username"></accounticon>
       
       <login class="login" v-show="!username"></login>
       <register v-show="!username"></register>
->>>>>>> origin/main
     </div>
     
   </div>
