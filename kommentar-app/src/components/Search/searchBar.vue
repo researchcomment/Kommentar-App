@@ -1,6 +1,7 @@
 <template>
     <div>
        <input 
+        v-focus
         v-model="searchText" 
         placeholder="Search..." 
         class="input-search"  
@@ -27,7 +28,14 @@
                 }
                      
             },
-        }
+        },
+        directives: {
+            focus: {
+                inserted: function (el) {
+                    el.focus()
+                }
+            }
+    }
     }
 </script>
 
