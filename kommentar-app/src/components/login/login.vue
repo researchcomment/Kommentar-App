@@ -2,7 +2,7 @@
     <div>
 
         <!-- login Button -->
-        <el-button id="btn" type="info" @click="dialogFormVisible=true" round> Login </el-button>
+        <mt-button id="btn" type="info" @click="dialogFormVisible=true" round> Login </mt-button>
         <!-- <mt-button type="primary" @click="dialogFormVisible=true" round> Login </mt-button> -->
         <!-- After clicking, a login form will pop up -->
         <el-dialog title="Login" :visible.sync="dialogFormVisible">
@@ -24,7 +24,7 @@
 </template>
 
 <script>
-
+    import { Button } from 'mint-ui';
     export default {
 
         data(){
