@@ -2,7 +2,7 @@
     <div>
 
         <!-- login Button -->
-        <mt-button id="btn" type="info" @click="dialogFormVisible=true" round> Login </mt-button>
+        <div class="login" @click="dialogFormVisible=true"> Login<span class="iconfont icon-denglu"></span></div>
         <!-- <mt-button type="primary" @click="dialogFormVisible=true" round> Login </mt-button> -->
         <!-- After clicking, a login form will pop up -->
         <el-dialog title="Login" :visible.sync="dialogFormVisible">
@@ -63,5 +63,11 @@
 </script>
 
 <style>
- 
+ .login{
+    width: 100px;
+    height: 50px;
+    font-size: 15px;
+    line-height: 50px;
+    color: #fff;
+ }
 </style>

@@ -1,7 +1,7 @@
 <template>
   <div>
       <!-- register Button -->
-      <el-button id="btn" type="info" @click="dialogFormVisible = true" round> Register</el-button>
+      <div class="reg" @click="dialogFormVisible = true">Register<span class="iconfont icon-zhuce"></span></div>
       
       <!-- After clicking, a register form will pop up -->
       <el-dialog title="Register" :visible.sync="dialogFormVisible">
@@ -86,7 +86,15 @@ export default {
 </script>
 
 <style>
-#btn{
-     width: 100px;
- }
+.reg{
+    width: 100px;
+    height: 50px;
+    font-size: 15px;
+    line-height: 50px;
+    color: #fff;
+}
+.iconfont icon-zhuce{
+  font-size: inherit;
+}
+
 </style>

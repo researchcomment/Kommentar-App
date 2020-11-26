@@ -44,7 +44,7 @@
     outline:none;
     width:50%;
     height:46px;
-    border:solid 1px #746B6F;
+    border:solid 2px #00243E;
     box-sizing: border-box;
     vertical-align: bottom;
     font-size:1.2em;

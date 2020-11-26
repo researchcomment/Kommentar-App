@@ -13,7 +13,7 @@
 
             <!-- profile picture -->
             <!-- <img src="@/assets/user.jpeg" slot="reference" class="round_icon">  -->
-            <i class="el-icon-user" slot="reference"></i>
+            <i class="el-icon-user" style="color:#fff" slot="reference"></i>
             Your Account
         </el-popover>
         

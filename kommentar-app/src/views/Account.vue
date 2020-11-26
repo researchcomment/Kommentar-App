@@ -3,7 +3,7 @@
     <div class="account">
       <accounticon class="icon"  v-show="username"></accounticon>
       <div class="buttons">
-        <login class="login" v-show="!username"></login>
+        <login class="log" v-show="!username"></login>
         <register class="reg" v-show="!username"></register>
       </div>
       
@@ -56,6 +56,7 @@ body{
   width: 100%;
   height: 50px;
   box-shadow: 2px 2px 5px #DBD5D7;
+  background-color: #00243E;
 }
 .account{
   margin-right: 20px;
@@ -71,12 +72,13 @@ body{
   color: #746B6F
 }
 
-.login{
+.log{
   float: right;
-  
+  cursor: pointer; 
 }
 .reg{
   float: right;
-  margin: 0 20px;
+  margin: 0 0px;
+  cursor: pointer; 
 }
 </style>

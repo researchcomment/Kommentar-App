@@ -1,6 +1,6 @@
 <template>
     <div class="search">
-       <div class="logo"><img src="../../public/static/logo.jpg" alt=""></div>
+       <div class="logo"><img src="../../public/static/logo1.png" alt=""></div>
        <searchBar class="searchbar"></searchBar>
 
     </div>
@@ -28,8 +28,9 @@
     }
     
     .search img{
-        width:20%;
-        height:20%;
+        width:50%;
+        height:50%;
+        margin-bottom: 30px;
     }
     .logo{
         margin: 0 auto;
