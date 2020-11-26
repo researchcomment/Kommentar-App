@@ -31,6 +31,17 @@ export default {
     },
   },
   watch:{
+
+    //Monitor login/logout status and prompt success message
+    username(newName,oldName){
+      if((!oldName)&&newName){
+        this.$message.success("Login successfully. Welcome!");
+      }
+      if((!newName)&&oldName){
+        this.$message.success("Logout successfully. Goodbye!");
+      }
+    }
+
   }
 };
 </script>

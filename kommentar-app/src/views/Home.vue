@@ -9,6 +9,7 @@
 <script>
    import searchBar from '@/components/Search/searchBar'
     export default {
+        name: 'home',
         components:{
             searchBar,
 
