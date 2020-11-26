@@ -13,15 +13,21 @@ const actions = {
         //commit('setlist',list)
 
         //give the first 10 information(Todo), can reuse changepage
+       
         let returnValue={
             list:[
+                {
+                    title:keyword,
+                    author:"You know WHO !!!",
+                    doi:"1232334234"
+                },
                 {
                     title:"The 'book' of my own ",
                     author:"You know WHO !!!",
                     doi:"1232334234"
                 }
             ],
-            length:1
+            length:2
         }
         return returnValue;
     },

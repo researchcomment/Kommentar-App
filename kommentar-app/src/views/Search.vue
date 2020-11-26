@@ -4,7 +4,7 @@
         <searchBar :search="searchText" ></searchBar>
         
         <div v-for="item in searchResultList" v-bind:key="item.id">
-            <searchItem :info="item"/>
+            <searchItem :book="item"/>
         </div>
         
         <div v-if="searchResultList.length==0">
@@ -29,9 +29,15 @@
         },
         computed:{
             searchText(){
+                if (!this.$route.params.searchText) {
+                    this.$message.warning("Search cannot be empty");
+                } 
                 return this.$route.params.searchText;
             },
             
+        },
+        created(){
+            this.getSearchResult()
         },
         beforeRouteUpdate(to, from, next){
             next();
@@ -39,12 +45,14 @@
         },
         methods:{
             getSearchResult(){
-                this.searchResultList = this.$store.dispatch('worklist/search',this.searchText).list;
+               this.$store.dispatch('worklist/search',{keyword:this.searchText}).then((result) =>{
+                    this.searchResultList = result.list;
+               });  
             }
         }
     }
 </script>
 
-<style lang="scss" scoped>
+<style>
 
 </style>

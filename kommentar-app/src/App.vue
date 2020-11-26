@@ -5,7 +5,7 @@
         <Account></Account>
       </el-header>
       <el-main>
-        <Home></Home>
+        <router-view/>
       </el-main>
     </el-container>
     

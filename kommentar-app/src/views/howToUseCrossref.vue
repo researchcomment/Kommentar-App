@@ -24,6 +24,11 @@
 	            username:"123123",
                 password:"123123123"
             }))
+            //how to get result from vuex
+            this.$store.dispatch('worklist/search',{keyword:"input"}).then((result) =>{
+                console.log(result.length);
+                this.searchResultList = result.list;
+            });
         }
     }
 </script>
