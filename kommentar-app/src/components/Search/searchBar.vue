@@ -34,14 +34,18 @@
 <style>
 .input-search{
     outline:none;
-    width:100%;
+    width:50%;
     height:46px;
-    border:solid 1px #3388FF;
+    border:solid 1px #746B6F;
     box-sizing: border-box;
     vertical-align: bottom;
     font-size:1.2em;
-    padding:20px 20px;
+    padding-left:20px;
     border-radius: 23px;
+    position: absolute;
+    left: 0;
+	right: 0;
+	margin:0 auto;
 }
 
 

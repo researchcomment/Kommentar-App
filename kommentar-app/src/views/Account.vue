@@ -2,9 +2,11 @@
   <div class="bar">
     <div class="account">
       <accounticon class="icon"  v-show="username"></accounticon>
+      <div class="buttons">
+        <login class="login" v-show="!username"></login>
+        <register class="reg" v-show="!username"></register>
+      </div>
       
-      <login class="login" v-show="!username"></login>
-      <register v-show="!username"></register>
     </div>
     
   </div>
@@ -50,28 +52,26 @@ export default {
 .bar {
   width: 100%;
   height: 40px;
-  border: 1px solid blue;
+  
 }
 .account{
-  float: right;
   margin-right: 20px;
 }
-
-
 .icon {
   position:relative;
-  
-  border: 1px solid pink;
-  width: 100px;
+  float: right;
+  width: 40px;
   height: 40px;
+  font-size: 50px;
+  color: #746B6F
 }
 
-.login {
-  position: relative;
-  /* top: -40px; */
-  border: 1px solid yellow;
-  width: 100px;
-  height: 40px;
- 
+.login{
+  float: right;
+  
+}
+.reg{
+  float: right;
+  margin: 0 20px;
 }
 </style>

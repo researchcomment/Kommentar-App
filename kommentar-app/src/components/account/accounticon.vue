@@ -12,7 +12,8 @@
             <profile @logout="logout"></profile>
 
             <!-- profile picture -->
-            <img src="@/assets/user.jpeg" slot="reference" class="round_icon"> 
+            <!-- <img src="@/assets/user.jpeg" slot="reference" class="round_icon">  -->
+            <i class="el-icon-user" slot="reference"></i>
         </el-popover>
         
     </div>

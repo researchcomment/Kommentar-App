@@ -2,9 +2,8 @@
     <div>
 
         <!-- login Button -->
-        <el-button type="primary" @click="dialogFormVisible=true" round> Login </el-button>
-
-        
+        <el-button id="btn" type="info" @click="dialogFormVisible=true" round> Login </el-button>
+        <!-- <mt-button type="primary" @click="dialogFormVisible=true" round> Login </mt-button> -->
         <!-- After clicking, a login form will pop up -->
         <el-dialog title="Login" :visible.sync="dialogFormVisible">
             <el-form :model="form">
@@ -64,5 +63,5 @@
 </script>
 
 <style>
-
+ 
 </style>

@@ -1,7 +1,7 @@
 <template>
   <div>
       <!-- register Button -->
-      <el-button type="primary" @click="dialogFormVisible = true" round> Register </el-button>
+      <el-button id="btn" type="info" @click="dialogFormVisible = true" round> Register</el-button>
       
       <!-- After clicking, a register form will pop up -->
       <el-dialog title="Register" :visible.sync="dialogFormVisible">
@@ -86,5 +86,7 @@ export default {
 </script>
 
 <style>
-
+#btn{
+     width: 100px;
+ }
 </style>
