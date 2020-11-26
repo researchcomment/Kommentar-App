@@ -24,13 +24,12 @@
     .search{
         position: relative;
         height: 400px;
-
+        top: 30px;
     }
     
     .search img{
         width:20%;
         height:20%;
-        top: 80%
     }
     .logo{
         margin: 0 auto;

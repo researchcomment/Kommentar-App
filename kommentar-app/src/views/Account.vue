@@ -49,10 +49,13 @@ export default {
 </script>
 
 <style>
+body{
+  margin:0;
+}
 .bar {
   width: 100%;
-  height: 40px;
-  
+  height: 50px;
+  box-shadow: 2px 2px 5px #DBD5D7;
 }
 .account{
   margin-right: 20px;
@@ -60,9 +63,11 @@ export default {
 .icon {
   position:relative;
   float: right;
-  width: 40px;
+  width: 100px;
   height: 40px;
-  font-size: 50px;
+  font-size: 30px;
+  text-align: center;
+  top: 5px;
   color: #746B6F
 }
 

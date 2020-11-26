@@ -14,6 +14,7 @@
             <!-- profile picture -->
             <!-- <img src="@/assets/user.jpeg" slot="reference" class="round_icon">  -->
             <i class="el-icon-user" slot="reference"></i>
+            Your Account
         </el-popover>
         
     </div>
@@ -39,14 +40,6 @@ import profile from './profile'
 </script>
 
 <style >
-.round_icon{
-  width: 34px;
-  height: 34px;
-  display: flex;
-  border-radius: 50%;
-  align-items: center;
-  justify-content: center;
-  overflow: hidden;
-}
+
 
 </style>
