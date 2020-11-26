@@ -50,11 +50,8 @@ const actions = {
     },
 
     logout ({ commit}) {
-        /*
         commit('setrole',null)
         commit('setusername',null)
-        */
-       
     },
 
     regist({ commit, state }, {username,password}) {
