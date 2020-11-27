@@ -2,9 +2,11 @@
   <div class="bar">
     <div class="account">
       <accounticon class="icon"  v-show="username"></accounticon>
+      <div class="buttons">
+        <login class="log" v-show="!username"></login>
+        <register class="reg" v-show="!username"></register>
+      </div>
       
-      <login class="login" v-show="!username"></login>
-      <register class="register" v-show="!username"></register>
     </div>
     
   </div>
@@ -31,41 +33,50 @@ export default {
     },
   },
   watch:{
+
+    //Monitor login/logout status and prompt success message
+    username(newName,oldName){
+      if((!oldName)&&newName){
+        this.$message.success("Login successfully. Welcome!");
+      }
+      if((!newName)&&oldName){
+        this.$message.success("Logout successfully. Goodbye!");
+      }
+    }
+
   }
 };
 </script>
 
 <style>
+body{
+  margin:0;
+}
 .bar {
   width: 100%;
-  height: 100%;
-  box-shadow: 3px 3px 5px #E5E7EC;
-  margin: 0px 0px;
+  height: 50px;
+  box-shadow: 2px 2px 5px #DBD5D7;
+  background-color: #00243E;
 }
 .account{
-  float: right;
-  display: flex;
-  align-items: center;
+  margin-right: 20px;
 }
-
-
 .icon {
   position:relative;
-  border: 1px solid pink;
-  width: 100px;
-  height: 40px;
   float: right;
+  width: 100px;
+  height: 50px;
+  float:right;
+  margin-right: 50px;
 }
 
-.login {
-  position: relative;
-  
-  width: 100px;
-  height: 40px;
+.log{
   float: right;
+  cursor: pointer; 
 }
-
-.register{
+.reg{
   float: right;
+  margin: 0 0px;
+  cursor: pointer; 
 }
 </style>
