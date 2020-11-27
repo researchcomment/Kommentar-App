@@ -23,6 +23,16 @@ export default new VueRouter({
       // which is lazy-loaded when the route is visited.
       // component: () => import(/* webpackChunkName: "search" */ './views/Search.vue')
       component: Search
+    },
+    {
+      path: '*',
+      name: 'other',
+      // route level code-splitting
+      // this generates a separate chunk (search.[hash].js) for this route
+      // which is lazy-loaded when the route is visited.
+      // component: () => import(/* webpackChunkName: "search" */ './views/Search.vue')
+      redirect: '/' 
     }
+    
   ]
 })
