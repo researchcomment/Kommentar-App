@@ -52,18 +52,9 @@ const actions = {
             });
     },
 
-<<<<<<< HEAD
-    logout({ commit }) {
-        /*
-        commit('setrole',null)
-        commit('setusername',null)
-        */
-
-=======
     logout ({ commit}) {
         commit('setrole',null)
         commit('setusername',null)
->>>>>>> origin/jjy_szj/release
     },
 
     regist({ commit, state }, { username, password }) {
