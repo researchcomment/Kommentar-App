@@ -23,11 +23,6 @@ export default new VueRouter({
       // which is lazy-loaded when the route is visited.
       // component: () => import(/* webpackChunkName: "search" */ './views/Search.vue')
       component: Search
-    },
-    {
-      path: '/search/',
-      component: Home
-      //if the input in the url is empty, it should jump back to the home page
     }
   ]
 })
