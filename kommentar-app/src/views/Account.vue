@@ -27,9 +27,6 @@ export default {
       return this.$store.state.account.username;
     },
   },
-<<<<<<< HEAD
-  watch: {},
-=======
   watch:{
 
     //Monitor login/logout status and prompt success message
@@ -43,7 +40,6 @@ export default {
     }
 
   }
->>>>>>> origin/jjy_szj/release
 };
 </script>
 
