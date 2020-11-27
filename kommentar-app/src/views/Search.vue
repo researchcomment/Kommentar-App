@@ -79,9 +79,6 @@ export default {
     width:60%;
     margin-left:30px;
 }
-.booklist li{
-    
-}
 .smalllogo{
     width:60px;
     height:60px;
