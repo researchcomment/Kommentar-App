@@ -36,5 +36,10 @@
         margin: 0 auto;
         text-align: center;
     }
+    /* .searchbar{
+        width: 55%;
+        height:46px;
+        margin:0 auto;
+    } */
 
 </style>

@@ -65,11 +65,9 @@ body{
   position:relative;
   float: right;
   width: 100px;
-  height: 40px;
-  font-size: 30px;
-  text-align: center;
-  top: 5px;
-  color: #746B6F
+  height: 50px;
+  float:right;
+  margin-right: 50px;
 }
 
 .log{
