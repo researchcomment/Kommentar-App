@@ -27,7 +27,23 @@ export default {
       return this.$store.state.account.username;
     },
   },
+<<<<<<< HEAD
   watch: {},
+=======
+  watch:{
+
+    //Monitor login/logout status and prompt success message
+    username(newName,oldName){
+      if((!oldName)&&newName){
+        this.$message.success("Login successfully. Welcome!");
+      }
+      if((!newName)&&oldName){
+        this.$message.success("Logout successfully. Goodbye!");
+      }
+    }
+
+  }
+>>>>>>> origin/jjy_szj/release
 };
 </script>
 
