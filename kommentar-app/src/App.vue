@@ -1,16 +1,8 @@
 <template>
   <div>
-    <el-container>
-      <el-header>
-        <Account></Account>
-      </el-header>
-      <el-main>
-        <Home></Home>
-      </el-main>
-    </el-container>
-    
-    
-    
+     <Account></Account>
+     
+      <router-view></router-view>
   </div>
 </template>
 
@@ -25,7 +17,6 @@ import Account from './views/Account'
     },
   }
 </script>
-
 <style lang="scss" scoped>
-
+  
 </style>

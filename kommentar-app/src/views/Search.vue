@@ -1,19 +1,90 @@
 <template>
+  <div>
+    <!-- List search results -->
     <div>
-        <searchBar></searchBar>
+        <img class="smalllogo" src="../../public/static/logo_small.png">
+        <searchBar class="search-top-bar" :search="searchText"></searchBar>
     </div>
+    
+
+    <ul class="booklist">
+      <li>
+        <div v-for="item in searchResultList" v-bind:key="item.id">
+          <searchItem :book="item" />
+        </div>
+      </li>
+    </ul>
+    <!-- <div v-for="item in searchResultList" v-bind:key="item.id">
+            <searchItem :book="item"/>
+        </div> -->
+
+    <div v-if="searchResultList.length == 0">Did not find any content!!</div>
+  </div>
 </template>
 
 <script>
- import searchBar from '@/components/Search/searchBar'
-    export default {
-        components:{
-            searchBar,
-
-        }
-    }
+import searchBar from "@/components/Search/searchBar";
+import searchItem from "@/components/Search/searchItem";
+export default {
+  name: "search",
+  components: {
+    searchBar,
+    searchItem,
+  },
+  data() {
+    return {
+      searchResultList: [],
+    };
+  },
+  computed: {
+    searchText() {
+      if (!this.$route.params.searchText) {
+        this.$message.warning("Search cannot be empty");
+      }
+      return this.$route.params.searchText;
+    },
+  },
+  created() {
+    this.getSearchResult();
+  },
+  beforeRouteUpdate(to, from, next) {
+    next();
+    this.getSearchResult();
+  },
+  methods: {
+    getSearchResult() {
+      this.$store
+        .dispatch("worklist/search", { keyword: this.searchText })
+        .then((result) => {
+          this.searchResultList = result.list;
+        });
+    },
+  },
+};
 </script>
 
-<style lang="scss" scoped>
-
+<style>
+.search-top-bar{
+    margin-left:20px;
+    margin-right: auto;
+    width:65%;
+    margin-top: 15px;
+    float:left;
+}
+.booklist{
+    list-style-type: none;
+    padding: 0;
+    margin-top: 20px;
+    float:left;
+    width:60%;
+    margin-left:30px;
+}
+.smalllogo{
+    width:60px;
+    height:60px;
+    float: left;
+    margin-left: 30px;
+    vertical-align:middle;
+    margin-top: 10px;
+}
 </style>
