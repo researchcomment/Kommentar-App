@@ -1,8 +1,6 @@
 <template>
     <div class="search-bar">
-        
-        
-       
+
         <el-input 
         v-focus
         v-model="searchText" 
@@ -13,10 +11,7 @@
         > 
             <i slot="prefix" class="el-input__icon el-icon-search"  @click="doSearch"></i>
         </el-input>
-
-      
-            
-           
+  
     
     </div>
 </template>
