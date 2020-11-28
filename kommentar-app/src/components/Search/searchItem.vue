@@ -1,12 +1,12 @@
 <template>
     <div>
         <!-- Basic Information of this Book -->
-        <el-card class="box-card"
+        <div class="box-card"
             :href="book.url">
             <p>Title: {{book.title}}</p>
             <p>Author: {{book.author}}</p>
             <p>DOI :{{book.doi}}</p>
-        </el-card>
+        </div>
 
     </div>
 </template>
@@ -18,5 +18,7 @@
 </script>
 
 <style>
-
+.box-card{
+    border-bottom: 2px solid #EBEBEB;
+}
 </style>

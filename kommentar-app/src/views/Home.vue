@@ -1,7 +1,7 @@
 <template>
     <div class="search">
-       <div class="logo">Logo</div>
-       <searchBar></searchBar>
+       <div class="logo"><img src="../../public/static/logo1.png" alt=""></div>
+       <searchBar class="searchbar"></searchBar>
 
     </div>
 </template>
@@ -22,20 +22,24 @@
 
 <style>
     .search{
-        width: 800px;
-        height: 100px;
-        position: absolute;
-        left: 50%;
-        top: 50%;
-        margin-top: -50px;
-        margin-left: -400px;
-        border: 1px solid blue;
-        
+        position: relative;
+        height: 400px;
+        top: 30px;
+    }
+    
+    .search img{
+        width:50%;
+        height:50%;
+        margin-bottom: 30px;
     }
     .logo{
         margin: 0 auto;
         text-align: center;
-        font-size: 50px;
     }
+    /* .searchbar{
+        width: 55%;
+        height:46px;
+        margin:0 auto;
+    } */
 
 </style>

@@ -1,12 +1,18 @@
 <template>
-    <div>
-       <input 
+    <div class="search-bar">
+
+        <el-input 
         v-focus
         v-model="searchText" 
-        placeholder="Search..." 
-        class="input-search"  
-        @keydown.enter="doSearch">  
-       
+        placeholder="" 
+        class="input-search"
+        @keydown.enter.native="doSearch"
+        clearable
+        > 
+            <i slot="prefix" class="el-input__icon el-icon-search"  @click="doSearch"></i>
+        </el-input>
+  
+    
     </div>
 </template>
 
@@ -40,16 +46,26 @@
 </script>
 
 <style>
-.input-search{
-    outline:none;
-    width:100%;
+
+/* .input-search{ 
+    width:60%;
     height:46px;
-    border:solid 1px #3388FF;
+} */
+
+.el-input input{
+    outline:none;
+    border:solid 2px #00243E;
     box-sizing: border-box;
-    vertical-align: bottom;
     font-size:1.2em;
-    padding:20px 20px;
     border-radius: 23px;
+}
+.el-input i{
+    cursor: pointer;
+}
+
+.search-bar{
+	margin:0 auto;
+    width:60%;
 }
 
 

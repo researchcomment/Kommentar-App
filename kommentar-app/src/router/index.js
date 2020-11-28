@@ -25,9 +25,14 @@ export default new VueRouter({
       component: Search
     },
     {
-      path: '/search/',
-      component: Home
-      //if the input in the url is empty, it should jump back to the home page
+      path: '*',
+      name: 'other',
+      // route level code-splitting
+      // this generates a separate chunk (search.[hash].js) for this route
+      // which is lazy-loaded when the route is visited.
+      // component: () => import(/* webpackChunkName: "search" */ './views/Search.vue')
+      redirect: '/' 
     }
+    
   ]
 })
