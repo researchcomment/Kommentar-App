@@ -34,27 +34,23 @@ const actions = {
                 commit("setusername", username);
             })
             .catch(error => {
-                var errorCode = error.code;
                 var errorMessage = error.message;
                 commit("setError", errorMessage);
-                if (errorCode == 'auth/invalid-email') {
-                    this.state.error = 'The Email is invalid.';
-                } else if (errorCode == 'auth/user-disabled') {
-                    this.state.error = 'The Email is disabled.';
-                } else if (errorCode == 'auth/user-not-found') {
-                    this.state.error = 'The Email is not founded.';
-                }
-                else if (errorCode == 'auth/wrong-password') {
-                    this.state.error = 'The Password or Email is wrong.';
-                } else {
-                    this.state.error = errorCode;
-                }
             });
     },
 
     logout ({ commit}) {
-        commit('setrole',null)
-        commit('setusername',null)
+        //logout action in firebase, return a promise
+        firebase
+        .auth()
+        .signOut()
+        .then(() => {
+            commit('setrole',null)
+            commit('setusername',null)
+        })
+        .catch(error => {
+            commit("setError", error.message);
+        })
     },
 
     regist({ commit, state }, { username, password }) {
@@ -67,21 +63,10 @@ const actions = {
                 commit("setusername", username);
             })
             .catch(error => {
-                var errorCode = error.code;
                 var errorMessage = error.message;
                 commit("setError", errorMessage);
-                if (errorCode == 'auth/email-already-in-use') {
-                    this.state.error = 'TThe User is existed.';
-                } else if (errorCode == 'auth/invalid-email') {
-                    this.state.error = 'The Email is invalid.';
-                } else if (errorCode == 'auth/operation-not-allowed') {
-                    this.state.error = 'The Email/Username is not allowed.';
-                }
-                else if (errorCode == 'auth/weak-password') {
-                    this.state.error = 'The Password is not strong enough.';
-                } else {
-                    this.state.error = errorCode;
-                }
+               
+                
             });
     }
 }

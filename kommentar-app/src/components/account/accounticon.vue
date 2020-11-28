@@ -1,24 +1,4 @@
 <template>
-<<<<<<< HEAD
-  <div>
-    accounticon
-    <!-- <p>head photo</p>
-         <p>(鼠标点击 会显示profile)</p> -->
-    <!-- <p><profile></profile></p> -->
-  </div>
-</template>
-
-<script>
-import profile from "./profile";
-export default {
-  components: {
-    profile,
-  },
-};
-</script>
-
-<style lang="scss" scoped>
-=======
     <div>
         
         <!-- Personal information will appear after clicking profile picture -->
@@ -68,5 +48,4 @@ import profile from './profile'
   overflow: hidden;
 }
 
->>>>>>> origin/jjy_szj/release
 </style>
