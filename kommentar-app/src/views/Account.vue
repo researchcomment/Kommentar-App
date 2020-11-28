@@ -8,7 +8,6 @@
       </div>
       
     </div>
-    
   </div>
 </template>
 
@@ -22,13 +21,11 @@ export default {
     login,
     register,
   },
-  data(){
-    return{
-      
-    }
+  data() {
+    return {};
   },
-  computed:{
-    username: function(){
+  computed: {
+    username: function () {
       return this.$store.state.account.username;
     },
   },
