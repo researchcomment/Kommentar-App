@@ -63,8 +63,6 @@
 </script>
 
 <style>
-<<<<<<< HEAD
-=======
  .login{
     width: 100px;
     height: 50px;
@@ -72,5 +70,4 @@
     line-height: 50px;
     color: #fff;
  }
->>>>>>> origin/main
 </style>
