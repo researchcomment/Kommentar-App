@@ -6,7 +6,19 @@ const state = () => ({
     error: null
 })
 
-const getters = {}
+const getters = {
+    getUser(state) {
+        return state.username;
+    },
+
+    isAuth(state) {
+        return !!state.username;
+    },
+
+    getError(state) {
+        return state.error;
+    }
+}
 
 
 const actions = {
@@ -14,16 +26,6 @@ const actions = {
 
         //when everything ok, update inform//get information from google firebase backend
         //when username does not compare to the password, return false and reason
-        /*
-            return {flag:false,msg:""} 
-        */
-        /*
-         return {flag:false, msg:"Wrong XXX"} 
-         commit('setrole','User')
-         commit('setusername',username)
-         let returnValue={flag:true,role:state.role}
-         return returnValue
-         */
         return firebase
             .auth()
             .signInWithEmailAndPassword(username, password)
@@ -31,27 +33,22 @@ const actions = {
                 commit("setusername", username);
             })
             .catch(error => {
-                var errorCode = error.code;
                 var errorMessage = error.message;
                 commit("setError", errorMessage);
-                if (errorCode == 'auth/invalid-email') {
-                    alert('The Email is invalid.');
-                } else if (errorCode == 'auth/user-disabled') {
-                    alert('The User is disabled.')
-                } else if (errorCode == 'auth/user-not-found') {
-                    alert('The Email is not founbd.')
-                } else if (errorCode == 'auth/wrong-password') {
-                    alert('The Password is wrong.')
-                } else {
-                    alert(errorCode)
-                }
             });
     },
 
-    logout({ commit }) {
-        firebase.auth().signOut().then(() => {
-            commit('setusername', null);
-            commit('setrole', null);
+    logout ({ commit}) {
+        //logout action in firebase, return a promise
+        firebase
+        .auth()
+        .signOut()
+        .then(() => {
+            commit('setrole',null)
+            commit('setusername',null)
+        })
+        .catch(error => {
+            commit("setError", error.message);
         })
     },
 
@@ -65,20 +62,10 @@ const actions = {
                 commit("setusername", username);
             })
             .catch(error => {
-                var errorCode = error.code;
                 var errorMessage = error.message;
-                commit("setError", error.message);
-                if (errorCode == 'auth/email-already-in-use') {
-                    alert('The User is existed.');
-                } else if (errorCode == 'auth/invalid-email') {
-                    alert('The Email is invalid.')
-                } else if (errorCode == 'auth/operation-not-allowed') {
-                    alert('The Email/Username is not allowed.')
-                } else if (errorCode == 'auth/weak-password') {
-                    alert('The Password is not strong enough.')
-                } else {
-                    alert(errorCode)
-                }
+                commit("setError", errorMessage);
+               
+                
             });
     }
 }
