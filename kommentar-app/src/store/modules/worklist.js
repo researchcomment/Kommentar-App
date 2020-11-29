@@ -1,7 +1,8 @@
 import axios from 'axios';
 const state = () => ({
     list: [],
-    length: 0
+    length: 0,
+    set:false
 })
 const url = "http://api.crossref.org/works?query=";
 const getters = {}
@@ -35,21 +36,9 @@ async function get_worklist(keyword, rows, offset) {
     keyword = keyword.split(" ");
     keyword = keyword.join("+");
     var search_url = url + keyword + "&rows=" + rows + "&offset=" + offset;
-    console.log(search_url);
     let returnValue = {
         list: [],
         length: 0
-            /*{
-                                title: keyword,
-                                author: "You know WHO !!!",
-                                doi: "1232334234"
-                            },
-                            {
-                                title: "The 'book' of my own ",
-                                author: "You know WHO !!!",
-                                doi: "1232334234"
-                            }*/
-
     }
     return axios.get(search_url).then(res => {
         //get reference : res -> data -> message
@@ -72,19 +61,21 @@ async function get_worklist(keyword, rows, offset) {
            
         } 
         return returnValue;
-    });
-    
+    }).catch(err => {
+        console.log(err);}); 
 }
 
 const actions = {
-    search({ commit, state }, { keyword }) {
+    async search({ commit, state }, { keyword }) {
         //set the information to the state,filter it into title author and doi(may changed from google firebase side)
         //commit('setlist',list)
         console.log("keyword is : " + keyword);
         //give the first 10 information(Todo), can reuse changepage
         last_keyword = keyword;
-        let returnValue =get_worklist(keyword, 10, 0);
+        //wait inorder to know the setlest and setset will not earlier then them
+        let returnValue =await get_worklist(keyword, 10, 0);
         commit('setlist', returnValue.list);
+        commit('setset', true);
         return returnValue;
     },
 
@@ -110,6 +101,10 @@ const mutations = {
     setlist(state, list) {
         state.list = list
     },
+    setset(state, set) {
+        state.set = set
+    }
+    ,
 
     setusername(state, username) {
         state.username = username
