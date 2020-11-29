@@ -31,6 +31,7 @@ function construct_author(author_ref) {
 }
 
 function get_worklist(keyword, rows, offset) {
+    //convert keyword in this format list : keyword1+keyword2+...
     keyword = keyword.split(" ");
     keyword = keyword.join("+");
     var search_url = url + keyword + "&rows=" + rows + "&offset=" + offset;
@@ -79,7 +80,6 @@ const actions = {
         console.log("keyword is : " + keyword);
         //give the first 10 information(Todo), can reuse changepage
         last_keyword = keyword;
-        //convert keyword in this format list : keyword1+keyword2+...
         let returnValue = get_worklist(keyword, 10, 0);
         commit('setlist', returnValue.list);
         return returnValue;
