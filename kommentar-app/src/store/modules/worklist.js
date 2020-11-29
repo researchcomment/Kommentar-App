@@ -29,8 +29,8 @@ function construct_author(author_ref) {
     author = author.join(" ; ");
     return author;
 }
-
-function get_worklist(keyword, rows, offset) {
+//async function return promise
+async function get_worklist(keyword, rows, offset) {
     //convert keyword in this format list : keyword1+keyword2+...
     keyword = keyword.split(" ");
     keyword = keyword.join("+");
@@ -51,7 +51,7 @@ function get_worklist(keyword, rows, offset) {
                             }*/
 
     }
-    axios.get(search_url).then(res => {
+    return axios.get(search_url).then(res => {
         //get reference : res -> data -> message
         let ref = res.data.message;
         if (!isNull(ref)) {
@@ -69,10 +69,13 @@ function get_worklist(keyword, rows, offset) {
                 });
             }
             returnValue.lenth = returnValue.list.length;
-        }
+           
+        } 
+        return returnValue;
     });
-    return returnValue;
+    
 }
+
 const actions = {
     search({ commit, state }, { keyword }) {
         //set the information to the state,filter it into title author and doi(may changed from google firebase side)
@@ -80,7 +83,7 @@ const actions = {
         console.log("keyword is : " + keyword);
         //give the first 10 information(Todo), can reuse changepage
         last_keyword = keyword;
-        let returnValue = get_worklist(keyword, 10, 0);
+        let returnValue =get_worklist(keyword, 10, 0);
         commit('setlist', returnValue.list);
         return returnValue;
     },
