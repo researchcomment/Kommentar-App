@@ -59,7 +59,7 @@ export default {
           this.$message.warning('Username/Password can not be empty.');
         }
         //check the form of the password
-        if (/.{6,}/.test(this.password) != true) { 
+        if (/.{6,}/.test(this.form.password) != true) { 
           this.validationErrors.push("Password must be at least 6 characters long");
           this.$message.warning("Password must be at least 6 characters long");
         }
