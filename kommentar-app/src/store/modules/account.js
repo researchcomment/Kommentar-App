@@ -26,7 +26,6 @@ const actions = {
 
         //when everything ok, update inform//get information from google firebase backend
         //when username does not compare to the password, return false and reason
-
         return firebase
             .auth()
             .signInWithEmailAndPassword(username, password)
@@ -94,4 +93,3 @@ export default {
     actions,
     mutations
 }
-

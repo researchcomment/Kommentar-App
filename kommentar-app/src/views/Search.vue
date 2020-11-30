@@ -13,12 +13,10 @@
           <searchItem :book="item" />
         </div>
       </li>
+      
     </ul>
-    <!-- <div v-for="item in searchResultList" v-bind:key="item.id">
-            <searchItem :book="item"/>
-        </div> -->
-
-    <div v-if="searchResultList.length == 0">Did not find any content!!</div>
+    <div v-if="(searchResultList.length == 0) && (searchset)">Did not find any content!!</div>
+    
   </div>
 </template>
 
@@ -43,13 +41,18 @@ export default {
       }
       return this.$route.params.searchText;
     },
+    searchset(){
+      return this.$store.state.worklist.set;
+    }
   },
   created() {
-    this.getSearchResult();
+     this.getSearchResult();
   },
   beforeRouteUpdate(to, from, next) {
+    
     next();
     this.getSearchResult();
+    
   },
   methods: {
     getSearchResult() {
@@ -57,7 +60,9 @@ export default {
         .dispatch("worklist/search", { keyword: this.searchText })
         .then((result) => {
           this.searchResultList = result.list;
-        });
+        }).catch(err => {
+        console.log(err);
+    })
     },
   },
 };
