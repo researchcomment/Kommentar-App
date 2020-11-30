@@ -16,7 +16,7 @@
 
           <el-form-item label="Confirm Password" :label-width="formLabelWidth" >
             <el-input v-model="passwordComfirm" placeholder="Comfirm your password"  autocomplete="off"></el-input>
-            <span v-show="passwordNotMatch">Does not match password 帮我改成红色</span> 
+            <span style="color:red" v-show="passwordNotMatch">Does not match password</span> 
           </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">

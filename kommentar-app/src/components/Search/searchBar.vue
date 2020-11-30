@@ -28,6 +28,10 @@
             doSearch() {           
                 if (!this.searchText) {
                     this.$message.warning("Search cannot be empty");
+                }
+                else if(this.searchText == this.$route.params.searchText){
+                   return;
+                    //jump back to the first page
                 } 
                 else{
                     this.$router.push(`/search/${this.searchText}`)  
