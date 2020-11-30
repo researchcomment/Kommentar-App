@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-loading.fullscreen.lock="loading">
     <!-- List search results -->
     <div>
         <img class="smalllogo" src="../../public/static/logo_small.png">
@@ -7,15 +7,15 @@
     </div>
     
 
-    <ul class="booklist">
+    <ul class="booklist" >
       <li>
         <div v-for="item in searchResultList" v-bind:key="item.id">
           <searchItem :book="item" />
         </div>
       </li>
-      
+      <div v-if="(searchResultList.length == 0) && (!loading)">Did not find any content!!</div>
     </ul>
-    <div v-if="(searchResultList.length == 0) && (searchset)">Did not find any content!!</div>
+    
     
   </div>
 </template>
@@ -32,10 +32,11 @@ export default {
   data() {
     return {
       searchResultList: [],
+      loading:false,
     };
   },
   computed: {
-    searchText() {
+    searchText() { 
       if (!this.$route.params.searchText) {
         this.$message.warning("Search cannot be empty");
       }
@@ -56,6 +57,7 @@ export default {
   },
   methods: {
     getSearchResult() {
+      this.loading=true;
       this.$store
         .dispatch("worklist/search", { keyword: this.searchText })
         .then((result) => {
@@ -65,6 +67,11 @@ export default {
     })
     },
   },
+  watch:{
+    searchResultList(newList,oldList){
+      this.loading=false;
+    }
+  }
 };
 </script>
 
