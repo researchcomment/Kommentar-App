@@ -2,9 +2,9 @@
     <div>
         <p>{{doi}}</p>
         <bookInfo></bookInfo>
-        <officialComment></officialComment>
-        <unofficialComment></unofficialComment>
-        <commentEditor></commentEditor>
+        <officialComment :doi="doi" :username="username"></officialComment>
+        <unofficialComment :doi="doi" :username="username"></unofficialComment>
+        <commentEditor :doi="doi" :username="username"></commentEditor>
     </div>
 </template>
 
@@ -29,6 +29,9 @@ import commentEditor from "@/components/detail/commentEditor";
         computed:{
             doi(){
                 return this.$route.query.doi;
+            },
+            username: function () {
+                return this.$store.state.account.username;
             },
 
         },
