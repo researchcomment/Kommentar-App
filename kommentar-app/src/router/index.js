@@ -16,7 +16,7 @@ export default new VueRouter({
       component: Home
     },
     {
-      path: '/search/:searchText',
+      path: '/search',
       name: 'search',
       // route level code-splitting
       // this generates a separate chunk (search.[hash].js) for this route

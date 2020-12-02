@@ -37,20 +37,22 @@ export default {
   },
   computed: {
     searchText() { 
-      if (!this.$route.params.searchText) {
+      if (!this.$route.query.keyword) {
         this.$message.warning("Search cannot be empty");
       }
-      return this.$route.params.searchText;
+      return this.$route.query.keyword;
     },
-    searchset(){
-      return this.$store.state.worklist.set;
+    from(){
+      return this.$route.query.from;
+    },
+    to(){
+       return this.$route.query.to;
     }
   },
   created() {
      this.getSearchResult();
   },
   beforeRouteUpdate(to, from, next) {
-    
     next();
     this.getSearchResult();
     
@@ -58,13 +60,22 @@ export default {
   methods: {
     getSearchResult() {
       this.loading=true;
+
+      //build the msg sent to backend
+      var date = {
+        from:new Date().setFullYear(this.from),
+        to:new Date().setFullYear(this.to),
+      }
+      var info = { keyword: this.searchText,
+                   date:date};
+                   
       this.$store
-        .dispatch("worklist/search", { keyword: this.searchText })
+        .dispatch("worklist/search", info )  
         .then((result) => {
           this.searchResultList = result.list;
         }).catch(err => {
         console.log(err);
-    })
+        })
     },
   },
   watch:{

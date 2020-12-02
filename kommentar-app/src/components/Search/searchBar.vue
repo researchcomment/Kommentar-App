@@ -3,8 +3,8 @@
 
         <el-input 
         v-focus
-        v-model="searchText" 
-        placeholder="" 
+        v-model="keyword" 
+        placeholder="Search..." 
         class="input-search"
         @keydown.enter.native="doSearch"
         clearable
@@ -21,20 +21,29 @@
         props:["search"],
         data() {
             return {
-                searchText: this.search
+                keyword: this.search,
+                from:new Date().getFullYear()-4, //string
+                to:new Date().getFullYear(),
             }
         },
         methods:{
-            doSearch() {           
-                if (!this.searchText) {
+            doSearch() {   
+                var sameSearch = (this.keyword == this.$route.query.keyword)&&
+                                        (this.from == this.$route.query.from)&&
+                                            (this.to == this.$route.query.to); 
+                if (!this.keyword) {
                     this.$message.warning("Search cannot be empty");
                 }
-                else if(this.searchText == this.$route.params.searchText){
-                   return;
+                else if(sameSearch){
+                   return;  //待修改
                     //jump back to the first page
                 } 
                 else{
-                    this.$router.push(`/search/${this.searchText}`)  
+                    this.$router.push({path: '/search', 
+                                       query: { keyword: this.keyword,
+                                                from:this.from,
+                                                to:this.to}});  //the form of to and from must be string
+                     
                 }
                      
             },
