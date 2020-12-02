@@ -11,32 +11,33 @@
         > 
             <i slot="prefix" class="el-input__icon el-icon-search"  @click="doSearch"></i>
         </el-input>
-  
+
     
     </div>
 </template>
 
 <script>
     export default {
-        props:["search"],
+        props:["from","to"],
         data() {
             return {
-                keyword: this.search,
-                from:new Date().getFullYear()-4, //string
-                to:new Date().getFullYear(),
+                keyword:"",
             }
         },
         methods:{
             doSearch() {   
-                var sameSearch = (this.keyword == this.$route.query.keyword)&&
-                                        (this.from == this.$route.query.from)&&
-                                            (this.to == this.$route.query.to); 
                 if (!this.keyword) {
                     this.$message.warning("Search cannot be empty");
                 }
-                else if(sameSearch){
-                   return;  //待修改
+                var sameSearch = (this.keyword == this.$route.query.keyword)&&
+                                        (this.from == this.$route.query.from)&&
+                                            (this.to == this.$route.query.to); 
+               
+                if(sameSearch){
                     //jump back to the first page
+                   this.$emit("gotoPage",0);
+                   //return;  //待修改
+                   
                 } 
                 else{
                     this.$router.push({path: '/search', 
@@ -54,7 +55,7 @@
                     el.focus()
                 }
             }
-    }
+        }
     }
 </script>
 
@@ -64,6 +65,9 @@
     width:60%;
     height:46px;
 } */
+.filter p{
+    margin-bottom:0;
+}
 
 .el-input input{
     outline:none;

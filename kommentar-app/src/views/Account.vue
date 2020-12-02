@@ -55,9 +55,7 @@ body{
   box-shadow: 2px 2px 5px #DBD5D7;
   background-color: #00243E;
 }
-.account{
-  margin-right: 20px;
-}
+
 .icon {
   position:relative;
   float: right;

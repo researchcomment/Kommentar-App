@@ -34,7 +34,7 @@ export default {
     },
     popout: function () {
         this.visible = !this.visible;
-      }
+    }
   },
   computed:{
       username: function(){
@@ -57,7 +57,7 @@ export default {
 }
 .pop {
     height: 100%;
-    width: 250px;;
+    width: 300px;;
 
 }
 </style>
