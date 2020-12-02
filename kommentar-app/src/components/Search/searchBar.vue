@@ -35,9 +35,7 @@
                
                 if(sameSearch){
                     //jump back to the first page
-                   this.$emit("gotoPage",0);
-                   //return;  //待修改
-                   
+                   this.$emit("gotoPage",1); 
                 } 
                 else{
                     this.$router.push({path: '/search', 

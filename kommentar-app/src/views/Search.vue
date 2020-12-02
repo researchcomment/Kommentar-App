@@ -40,6 +40,7 @@
     <button v-show="(!loading)" @click="gotoPage(page+1)">next Page</button>
     
     
+    
   </div>
 </template>
 
@@ -123,8 +124,8 @@ export default {
       }
       this.page=n;
       this.$store
-        .dispatch("worklist/changepage", {from:this.page*10,
-                                          to:this.page*10+10} )  
+        .dispatch("worklist/changepage", {from:(this.page-1)*10+1,
+                                          to:(this.page-1)*10+11} )  
         .then((result) => {
           this.searchResultList = result.list;
         }).catch(err => {
@@ -134,6 +135,9 @@ export default {
     
     
    
+    showfilter: function () {
+        this.filterflag = !this.filterflag;
+    }
   },
   watch:{
     searchResultList(newList,oldList){
