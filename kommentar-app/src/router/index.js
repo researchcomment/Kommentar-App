@@ -2,6 +2,7 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Home from '../views/Home.vue'
 import Search from  '../views/Search.vue'
+import Detail from  '../views/Detail.vue'
 Vue.use(VueRouter)
 
 
@@ -16,13 +17,18 @@ export default new VueRouter({
       component: Home
     },
     {
-      path: '/search/:searchText',
+      path: '/search',
       name: 'search',
       // route level code-splitting
       // this generates a separate chunk (search.[hash].js) for this route
       // which is lazy-loaded when the route is visited.
       // component: () => import(/* webpackChunkName: "search" */ './views/Search.vue')
       component: Search
+    },
+    {
+      path: '/Detail',
+      name: 'detail',
+      component: Detail
     },
     {
       path: '*',

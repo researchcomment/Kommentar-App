@@ -3,8 +3,8 @@
 
         <el-input 
         v-focus
-        v-model="searchText" 
-        placeholder="" 
+        v-model="keyword" 
+        placeholder="Search..." 
         class="input-search"
         @keydown.enter.native="doSearch"
         clearable
@@ -18,23 +18,31 @@
 
 <script>
     export default {
-        props:["search"],
+        props:["from","to"],
         data() {
             return {
-                searchText: this.search,
+                keyword:"",
             }
         },
         methods:{
-            doSearch() {           
-                if (!this.searchText) {
+            doSearch() {   
+                if (!this.keyword) {
                     this.$message.warning("Search cannot be empty");
                 }
-                else if(this.searchText == this.$route.params.searchText){
-                   return;
+                var sameSearch = (this.keyword == this.$route.query.keyword)&&
+                                        (this.from == this.$route.query.from)&&
+                                            (this.to == this.$route.query.to); 
+               
+                if(sameSearch){
                     //jump back to the first page
+                   this.$emit("gotoPage",1); 
                 } 
                 else{
-                    this.$router.push(`/search/${this.searchText}`)  
+                    this.$router.push({path: '/search', 
+                                       query: { keyword: this.keyword,
+                                                from:this.from,
+                                                to:this.to}});  //the form of to and from must be string
+                     
                 }
                      
             },
@@ -45,7 +53,7 @@
                     el.focus()
                 }
             }
-    }
+        }
     }
 </script>
 

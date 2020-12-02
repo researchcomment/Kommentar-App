@@ -1,9 +1,11 @@
 <template>
     <!-- Basic Information of this Book -->
+    
     <div class="box-card"
-        :href="book.url">
-        <a href="http://www.google.com">DOI :{{book.doi}}</a>
-        <h3>{{book.title}}</h3>
+        :href="book.url"
+        @click="seeDetail()">
+        <a @click="searchOutside">DOI :{{book.doi}}</a>
+        <h3 >{{book.title}}</h3>
         <p>Author: {{book.author}}</p>
             
     </div>
@@ -13,7 +15,26 @@
 
 <script>
     export default {
-        props:["book"]
+        props:["book"],
+        data(){
+            return{
+                
+            }
+        },
+        methods:{
+            //open a new window which shows the details of this book
+            seeDetail(){
+                let routeData = this.$router.resolve({
+                    path: '/detail', 
+                    query:{doi:this.book.doi},   
+                });
+                window.open(routeData.href, "_blank");
+            },
+            searchOutside(){
+                var url="https://care.diabetesjournals.org/search/"+ this.book.doi;
+                window.open(url, "_blank");
+            }
+        }
     }
 </script>
 
