@@ -78,7 +78,7 @@ export default {
 
 .fctlist li{
   height: 70px;
-  width: 250px;
+  width: 100%;
   border-bottom: 1px solid #EBEBEB;
   cursor: pointer;
 }
@@ -90,9 +90,9 @@ export default {
   cursor: pointer;
 }
 .topbar .content{
-  margin-left: auto;
-  margin-right: 50px;
-  text-align: right;
+  margin-left: 20px;
+  margin-right: auto;
+  text-align: left;
 }
 .fctlist span{
   font-size: 25px;

@@ -11,7 +11,7 @@
         > 
             <i slot="prefix" class="el-input__icon el-icon-search"  @click="doSearch"></i>
         </el-input>
-  
+
     
     </div>
 </template>
@@ -21,7 +21,7 @@
         props:["search"],
         data() {
             return {
-                searchText: this.search
+                searchText: this.search,
             }
         },
         methods:{
@@ -55,6 +55,9 @@
     width:60%;
     height:46px;
 } */
+.filter p{
+    margin-bottom:0;
+}
 
 .el-input input{
     outline:none;

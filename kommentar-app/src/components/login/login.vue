@@ -1,11 +1,9 @@
 <template>
     <div>
 
-        <!-- login Button -->
         <div class="login" @click="dialogFormVisible=true"> Login<span class="iconfont icon-denglu"></span></div>
-        <!-- <mt-button type="primary" @click="dialogFormVisible=true" round> Login </mt-button> -->
-        <!-- After clicking, a login form will pop up -->
-        <el-dialog title="Login" :visible.sync="dialogFormVisible">
+        
+        <!-- <el-dialog title="Login" :visible.sync="dialogFormVisible">
             <el-form :model="form">
                 <el-form-item label="Username" :label-width="formLabelWidth">
                     <el-input v-model="form.username"  placeholder="Enter your E-Mail" autocomplete="off"></el-input>
@@ -18,7 +16,17 @@
                 <el-button @click="dialogFormVisible = false">Cancel</el-button>
                 <el-button type="primary" @click.native="confirm" >Confirm</el-button>
             </div>
-        </el-dialog>
+        </el-dialog> -->
+
+        <mt-popup class="popform" v-model="dialogFormVisible" popup-transition="popup-fade">
+            <h3 class="formtitle">Welcome!</h3>
+            <mt-field class="fieldarea" label="Username" placeholder="Enter your E-Mail" v-model="form.username"></mt-field>
+            <mt-field class="fieldarea" label="Password" placeholder="Enter your password" v-model="form.password"></mt-field>
+            <div class="cbuttons">
+                <el-button class="onebtn" @click="dialogFormVisible = false">Cancel</el-button>
+                <el-button class="onebtn" type="primary" @click.native="confirm" >Confirm</el-button>
+            </div>
+        </mt-popup>
 
     </div>
 </template>
@@ -69,5 +77,22 @@
     font-size: 15px;
     line-height: 50px;
     color: #fff;
+ }
+ .popform{
+     width:70%;
+     cursor:default;
+ }
+ .fieldarea{
+     margin: 3% 5%;
+ }
+ .onebtn{
+     margin: auto 3%;
+ }
+ .cbuttons{
+     margin: 3% 3%;
+     padding-left: 3%;
+ }
+ .formtitle{
+     margin: 3%;
  }
 </style>
