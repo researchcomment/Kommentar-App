@@ -43,7 +43,6 @@
 <style>
 .box-card{
     overflow: hidden;
-    padding-bottom: 3vh;
     padding-top: 3vh;
 }
 

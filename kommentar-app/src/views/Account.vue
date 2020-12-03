@@ -1,5 +1,6 @@
 <template>
   <div class="bar">
+    <div class="homepage" @click="goHome"><i class="iconfont icon-zhuye"></i>Home Page</div>
     <div class="account">
       <accounticon class="icon"  v-show="username"></accounticon>
       <div class="buttons">
@@ -28,6 +29,11 @@ export default {
   computed: {
     username: function () {
       return this.$store.state.account.username;
+    },
+  },
+  methods:{
+    goHome(){
+      this.$router.push('/')
     },
   },
   watch:{
@@ -76,5 +82,14 @@ body{
   margin: 0 0px;
   cursor: pointer; 
   margin-right: 2vw;
+}
+.account{
+  float: right;
+}
+.homepage{
+  float: left;
+  color: #fff;
+  margin-left: 2vw;
+  cursor: pointer;
 }
 </style>
