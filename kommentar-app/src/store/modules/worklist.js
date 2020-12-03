@@ -36,9 +36,9 @@ async function get_worklist(keyword, rows, offset,date) {
     keyword = keyword.split(" ");
     keyword = keyword.join("+");
     let datefrom=date.from.getFullYear()+"-"
-    +date.from.getMonth()+"-"+date.from.getDate();
+    +date.from.getMonth()+"-"+(date.from.getDate()<10?"0":"")+date.from.getDate();
     let dateto=date.to.getFullYear()+"-"
-    +date.to.getMonth()+"-"+date.to.getDate();
+    +date.to.getMonth()+"-"+(date.to.getDate()<10?"0":"")+date.to.getDate();
     var search_url = url + keyword +"&filter=from-update-date:"+datefrom
     +",until-update-date:"+dateto+
      "&rows=" + rows + "&offset=" + offset;
@@ -49,6 +49,7 @@ async function get_worklist(keyword, rows, offset,date) {
     }
     return axios.get(search_url).then(res => {
         //get reference : res -> data -> message
+        console.log(res);
         let ref = res.data.message;
         if (!isNull(ref)) {
             for (var i = 0; i < ref.items.length; i++) {
@@ -64,7 +65,7 @@ async function get_worklist(keyword, rows, offset,date) {
                     doi: _doi
                 });
             }
-            returnValue.length = ref.total-results;
+            returnValue.length = ref["total-results"];
            
         } 
         return returnValue;
@@ -86,9 +87,9 @@ const actions = {
         if (to)
             pageto=to;
         //wait inorder to know the setlest and setset will not earlier then them
+        console.log(date);
         let returnValue =await get_worklist(keyword, pageto - pagefrom, pagefrom,date);
         commit('setlist', returnValue.list);
-      
         return returnValue;
     },
 

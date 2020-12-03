@@ -77,7 +77,7 @@ export default {
       // from:new Date().getFullYear()-5, //string e.g. 2015
       // to:new Date().getFullYear(),
       date:{
-          from:new Date().setFullYear(2015),
+          from:new Date (new Date().setFullYear(2015)),
           to:new Date(),
       },
       searchResultList: [],
@@ -144,8 +144,8 @@ export default {
       this.$store
         .dispatch("worklist/search", {
                                 keyword:this.searchText,
-                                    from:(this.page-1)*10+1,
-                                          to:(this.page-1)*10+11,
+                                    from:(this.page-1)*10,
+                                          to:this.page*10,
                                             date:this.date})  
         .then((result) => {
           this.searchResultList = result.list;
