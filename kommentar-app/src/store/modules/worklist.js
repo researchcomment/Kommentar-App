@@ -36,6 +36,7 @@ async function get_worklist(keyword, rows, offset) {
     keyword = keyword.split(" ");
     keyword = keyword.join("+");
     var search_url = url + keyword + "&rows=" + rows + "&offset=" + offset;
+    console.log(search_url);
     let returnValue = {
         list: [],
         length: 0
@@ -57,7 +58,7 @@ async function get_worklist(keyword, rows, offset) {
                     doi: _doi
                 });
             }
-            returnValue.lenth = returnValue.list.length;
+            returnValue.length = returnValue.list.length;
            
         } 
         return returnValue;

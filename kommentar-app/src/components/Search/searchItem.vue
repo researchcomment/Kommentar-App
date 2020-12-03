@@ -5,7 +5,7 @@
         :href="book.url"
         @click="seeDetail()">
         <a @click="searchOutside">DOI :{{book.doi}}</a>
-        <h3 >{{book.title}}</h3>
+        <h2 >{{book.title}}</h2>
         <p>Author: {{book.author}}</p>
             
     </div>
@@ -31,7 +31,7 @@
                 window.open(routeData.href, "_blank");
             },
             searchOutside(){
-                var url="https://care.diabetesjournals.org/search/"+ this.book.doi;
+                var url="https://dx.doi.org/"+ this.book.doi;
                 window.open(url, "_blank");
             }
         }
