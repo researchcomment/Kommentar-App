@@ -8,14 +8,21 @@
     
     <!-- Filterung -->
     <div class="filter" v-if= "!loading">
-      <p v-show='filterflag'>find 1,000,000 results</p>
+
+      <div v-show='filterflag'>find 1,000,000 results
+        <div class="fbtn">
+          <i @click="showfilter" class="iconfont icon-filter" size="small"></i>
+        </div>
+      </div>
+
       <div class="filterselct" v-show='!filterflag'>
         from<input type="text" placeholder="year" v-model="from"> to <input type="text" placeholder="year" v-model="to">
         <button @click="getupdateresult">go</button>
+        <div class="fbtn">
+          <i @click="showfilter" class="iconfont icon-filter-full" size="small"></i>
+        </div>
       </div>
-      <div class="fbtn">
-         <i @click="showfilter" class="iconfont icon-guolv-copy" size="small"></i>
-      </div>
+      
      
     </div>
 
@@ -26,11 +33,11 @@
           <searchItem :book="item" />
         </div>
       </li>
-      <div v-if="(searchResultList.length == 0) && (!loading)">Did not find any content!!</div>
+      
     </ul>
-    
+    <div v-if="(searchResultList.length == 0) && (!loading)"><img class="sorryimg" src="../../public/static/sorry.png" alt=""></div>
     <!-- change Pages -->
-    <div class="pagesetter" v-if= "!loading">
+    <div class="pagesetter" v-if= "(!loading)&&(searchResultList.length != 0)">
       <i class="iconfont icon-zuojiantou" v-show="(!loading)&&(page>1)" @click="gotoPage(page-1)"></i>
       <p>{{page}}</p>
       <i class="iconfont icon-youjiantou" v-show="(!loading)" @click="gotoPage(page+1)"></i>
@@ -155,7 +162,7 @@ export default {
     width:80%;
     font-size: 1.5vw;
 }
-.smalllogo{
+/* .smalllogo{
   cursor: pointer;
     width:5%;
     height:5%;
@@ -163,13 +170,13 @@ export default {
     margin-left: 2%;
     vertical-align:middle;
     margin-top: 2%;
-}
+} */
 .filter{
   display: block;
   margin-left:10%;
   width: 60%;
   line-height: 200%;
-  margin-top: 1%;
+  margin-top: 1vh;
   height: 50%;
   font-size: 1.2vw;
 }
@@ -199,7 +206,7 @@ export default {
 .pagesetter{
   display: bolck;
   margin-left:8%;
-  margin-bottom: 2%;
+  margin: 2vh;
 }
 .pagesetter i{
   display: inline;
@@ -211,5 +218,9 @@ export default {
   display: inline;
   margin: 0 3%;
   font-size: 120%;
+}
+.sorryimg{
+  width: 40vw;
+  margin: 0 30vw;
 }
 </style>

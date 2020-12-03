@@ -28,18 +28,16 @@
     }
     
     .search img{
-        width:50%;
-        height:50%;
-        margin-bottom: 30px;
+        width:70vw;
+        margin: 0 15vw;
     }
     .logo{
         margin: 0 auto;
         text-align: center;
     }
-    /* .searchbar{
-        width: 55%;
-        height:46px;
-        margin:0 auto;
-    } */
+    .searchbar{
+        width: 65vw;
+        margin: 3vh auto;
+    }
 
 </style>
