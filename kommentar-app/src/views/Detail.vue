@@ -1,7 +1,7 @@
 <template>
     <div>
         <p>{{doi}}</p>
-        <bookInfo></bookInfo>
+        <bookInfo :doi="doi"></bookInfo>
         <officialComment :doi="doi" :username="username"></officialComment>
         <unofficialComment :doi="doi" :username="username"></unofficialComment>
         <commentEditor :doi="doi" :username="username"></commentEditor>
