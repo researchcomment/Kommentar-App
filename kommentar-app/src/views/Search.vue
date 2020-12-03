@@ -3,7 +3,6 @@
   <div v-loading.fullscreen.lock="loading">
     
     <div>
-        <img class="smalllogo" @click="goHome" src="../../public/static/logo_small.png">
         <searchBar ref="bar" class="search-top-bar" :from="from" :to="to" @gotoPage="gotoPage" ></searchBar>
     </div>
     
@@ -140,21 +139,21 @@ export default {
 
 <style>
 .search-top-bar{
-    margin-left:2%;
+    margin-left:10%;
     margin-right: auto;
-    width:65%;
+    width:80%;
     margin-top: 15px;
-    display: inline-block;
-    vertical-align: middle;
+    display: block;
 }
 .booklist{
     list-style-type: none;
     padding: 0;
     margin-left:10%;
-    margin-right: 5%;
+    margin-right: 3vw;
     margin-top: 0;
     display: bolck;
-    width:60%;
+    width:80%;
+    font-size: 1.5vw;
 }
 .smalllogo{
   cursor: pointer;
@@ -172,6 +171,7 @@ export default {
   line-height: 200%;
   margin-top: 1%;
   height: 50%;
+  font-size: 1.2vw;
 }
 .filter p{
   display: inline;
