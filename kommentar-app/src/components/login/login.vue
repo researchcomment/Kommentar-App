@@ -1,7 +1,7 @@
 <template>
     <div>
 
-        <div class="login" @click="dialogFormVisible=true"> Login<span class="iconfont icon-denglu"></span></div>
+        <div class="login1" @click="dialogFormVisible=true"> Login<span class="iconfont icon-denglu" style="font-size: inherit"></span></div>
         
         <!-- <el-dialog title="Login" :visible.sync="dialogFormVisible">
             <el-form :model="form">
@@ -71,12 +71,11 @@
 </script>
 
 <style>
- .login{
-    width: 100px;
+ .login1{
+    width: auto;
     height: 50px;
-    font-size: 15px;
-    line-height: 50px;
     color: #fff;
+    
  }
  .popform{
      width:70%;

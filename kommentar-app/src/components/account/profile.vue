@@ -77,36 +77,37 @@ export default {
 }
 
 .fctlist li{
-  height: 70px;
+  height: 12vh;
   width: 100%;
   border-bottom: 1px solid #EBEBEB;
   cursor: pointer;
+  line-height: 12vh;
 }
 .topbar{
-  height: 50px;
+  height: 7vh;
   background-color:#00243E;
   color: #fff;
-  line-height: 50px;
+  line-height: 7vh;
   cursor: pointer;
 }
 .topbar .content{
-  margin-left: 20px;
+  margin-left: 4vh;
   margin-right: auto;
   text-align: left;
 }
 .fctlist span{
-  font-size: 25px;
+  font-size: 4vh;
   color:#76C06B;
-  line-height: 70px;
   margin-left: 10px;
   margin-right: auto;
-  width: 50px;
-  height: 70px;
-  float:left;
+  display: inline-block;
+  margin-right: 2vh;
+  vertical-align: middle;
 }
 .fctlist .texts{
-  line-height: 70px;
-  font-size: 20px;
-  float: left;
+  font-size: 3vh;
+  display: inline-block;
+  vertical-align: middle;
 }
+
 </style>

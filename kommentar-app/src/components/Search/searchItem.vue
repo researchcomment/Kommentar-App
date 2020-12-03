@@ -3,9 +3,12 @@
     <div class="allbox">
         <div class="box-card"
         :href="book.url"
-        @click="seeDetail()">
+        >
         <a @click="searchOutside">DOI :{{book.doi}}</a>
-        <h3 >{{book.title}}</h3>
+        <div>
+            <h3 @click="seeDetail()">{{book.title}}</h3>
+        </div>
+        
         <p>Author: {{book.author}}</p>
             
         </div>
@@ -39,29 +42,34 @@
 
 <style>
 .box-card{
-    border-bottom: 2px solid #EBEBEB;
     overflow: hidden;
-    padding-bottom: 5%;
-    padding-top: 5%;
-    cursor: pointer;
-}
-.allbox :hover{
-    background: #F2F2F2;
+    padding-bottom: 3vh;
+    padding-top: 3vh;
 }
 
 .box-card a{
-    margin-top: 5%;
     text-decoration:none;
     font-size: 100%;
     color:#76C06B;
-    cursor: pointer;
 }
+.box-card a:hover{
+    text-decoration: underline;
+    color: #76C06B;
+    }
 .box-card a:link {color:#76C06B}      /* 未访问链接*/
 .box-card a:visited {color:#76C06B}  /* 已访问链接 */
 
 .box-card h3{
-    margin: 2% auto;
+    margin: 1vh auto;
     font-size: 100%;
+    cursor: pointer;
+     width:auto; 
+     display:inline-block !important; 
+     display:inline;
+}
+.box-card h3:hover{
+    cursor: pointer;
+    text-decoration: underline;
 }
 .box-card p{
     margin: 0 auto;
