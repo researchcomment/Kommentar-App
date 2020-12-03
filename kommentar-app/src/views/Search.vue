@@ -65,6 +65,13 @@
 <script>
 import searchBar from "@/components/Search/searchBar";
 import searchItem from "@/components/Search/searchItem";
+
+function changeDatetoString(date){
+  let datestring=date.getFullYear()+"-"
+    +((date.getMonth()+1)<10?"0":"")+(date.getMonth()+1)+
+    "-"+(date.getDate()<10?"0":"")+date.getDate();
+  return datestring;
+}
 export default {
   name: "search",
   components: {
@@ -88,49 +95,34 @@ export default {
     searchText() { 
       return this.$route.query.keyword;
     },
-    dateString(){
-      var y=this.date.from.getFullYear();  
-      var m=this.date.from.getMonth()+1;  
-      m=m < 10 ? ('0' + m) : m;  
-      var d =this.date.from.getDate();  
-      d = d < 10 ? ('0' + d) : d;   
-      var datefrom = y + '-' + m + '-' + d; 
-      
-      var y=this.date.to.getFullYear();  
-      var m=this.date.to.getMonth()+1;  
-      m = m < 10 ? ('0' + m) : m;  
-      var d=this.date.to.getDate();  
-      d = d< 10 ? ('0' + d) : d;   
-      var dateto=y + '-' + m + '-' + d;
+    dateString(){ 
+      var datefrom = changeDatetoString(this.date.from);   
+      var dateto=changeDatetoString(this.date.to);
       return {from:datefrom,
               to:dateto};
     }
   },
   created() {
-    this.getSearchResult();
+    this.gotoPage(1);
   },
   beforeRouteEnter (to, from, next) {
-    // called before the route that renders this component is confirmed.
-    // does NOT have access to `this` component instance,
-    // because it has not been created yet when this guard is called!
     next(vm => {
       if (!vm.$route.query.keyword)
         next('/');
-    // access to component instance via `vm`
     })
   },
   beforeRouteUpdate(to, from, next) {
-    if (!to.$route.query.keyword)
-      next('/')
-    else{
       next();
-      this.getSearchResult();
-    }
+      if (!this.$route.query.keyword)
+        next('/');
+      else
+        this.gotoPage(1);
+   
   },
   methods: {
     //set the date in query as this.date
     updateDate(){
-      var from=new Date(new Date().setFullYear(2019));
+      var from=new Date(new Date().setFullYear(new Date().getFullYear-1));
       var to=new Date();
       if(this.$route.query.from){
         from=this.changeToDate(this.$route.query.from);
@@ -146,9 +138,7 @@ export default {
       var month=str.substring(5,7);
       var day=str.substring(8,10);
       var date = new Date();
-      date.setDate(day);
-      date.setMonth(month-1);
-      date.setFullYear(year);
+      date.setDate(day).setMonth(month-1).setFullYear(year);
       return date;
     },
     open(picker) {
@@ -157,26 +147,6 @@ export default {
 
     goHome(){
       this.$router.push('/')
-    },
-    //ask data base for top 10 relevant books
-    getSearchResult() {
-      //if (!this.searchText) return;
-      this.loading=true;
-      this.updateDate();
-      //build the msg sent to backend
-      var info = { keyword: this.searchText,
-                   date:this.date};                   
-      this.$store
-        .dispatch("worklist/search", info)  
-        .then((result) => {
-          this.searchResultList = result.list;
-          this.resultLength=result.length;
-        }).catch(err => {
-          console.log(err);
-        })
-    },
-    showfilter: function () {
-        this.filterflag = !this.filterflag;
     },
 
     //goto the n. Page, 1 is the first page
@@ -194,6 +164,7 @@ export default {
                                             date:this.date})  
         .then((result) => {
           this.searchResultList = result.list;
+          this.resultLength=result.length;
         }).catch(err => {
         console.log(err);
       })
@@ -202,11 +173,6 @@ export default {
     showfilter: function () {
       this.filterflag = !this.filterflag;
     },
-    // getupdateresult(){
-    //   this.$refs.bar.doSearch();
-    // }
-
-
   },
   watch:{
     searchResultList(newList,oldList){
