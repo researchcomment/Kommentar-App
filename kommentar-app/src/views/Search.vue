@@ -3,21 +3,41 @@
   <div v-loading.fullscreen.lock="loading">
     
     <div>
-        <searchBar ref="bar" class="search-top-bar" :from="from" :to="to" @gotoPage="gotoPage" ></searchBar>
+        <searchBar ref="bar" class="search-top-bar" :from="dateString.from" :to="dateString.to"  @gotoPage="gotoPage" ></searchBar>
     </div>
     
     <!-- Filterung -->
     <div class="filter" v-if= "!loading">
-
-      <div v-show='filterflag'>find 1,000,000 results
+      <div v-show='filterflag'>find {{resultLength}} results
         <div class="fbtn">
           <i @click="showfilter" class="iconfont icon-filter" size="small"></i>
         </div>
       </div>
-
       <div class="filterselct" v-show='!filterflag'>
-        from<input type="text" placeholder="year" v-model="from"> to <input type="text" placeholder="year" v-model="to">
-        <button @click="getupdateresult">go</button>
+        <!-- from<input type="text" placeholder="year" v-model="from"> to <input type="text" placeholder="year" v-model="to"> -->
+        <!-- <button @click="getupdateresult">go</button> -->
+        <mt-button @click.native="open('datepickerFrom')" size="large">
+          From  {{dateString.from}}
+        </mt-button>
+        <mt-button @click.native="open('datepickerTo')" size="large">To {{dateString.to}}</mt-button>
+        <mt-datetime-picker
+          ref="datepickerFrom"
+          type="date"
+          v-model="date.from"
+          year-format="{value}"
+          month-format="{value}"
+          date-format="{value}"
+         >
+        </mt-datetime-picker>
+        <mt-datetime-picker
+          ref="datepickerTo"
+          type="date"
+          v-model="date.to"
+          year-format="{value}"
+          month-format="{value}"
+          date-format="{value}"
+         >
+        </mt-datetime-picker>
         <div class="fbtn">
           <i @click="showfilter" class="iconfont icon-filter-full" size="small"></i>
         </div>
@@ -42,16 +62,20 @@
       <p>{{page}}</p>
       <i class="iconfont icon-youjiantou" v-show="(!loading)" @click="gotoPage(page+1)"></i>
     </div>
-    
-    
-    
-    
+   
   </div>
 </template>
 
 <script>
 import searchBar from "@/components/Search/searchBar";
 import searchItem from "@/components/Search/searchItem";
+
+function changeDatetoString(date){
+  let datestring=date.getFullYear()+"-"
+    +((date.getMonth()+1)<10?"0":"")+(date.getMonth()+1)+
+    "-"+(date.getDate()<10?"0":"")+date.getDate();
+  return datestring;
+}
 export default {
   name: "search",
   components: {
@@ -60,55 +84,73 @@ export default {
   },
   data() {
     return {
-      from:new Date().getFullYear()-5, //string e.g. 2015
-      to:new Date().getFullYear(),
+      date:{
+          from:new Date(new Date().setFullYear(2019)),
+          to:new Date(),
+      },
       searchResultList: [],
       page:1,  //the first page
       loading:false,
       filterflag:true,
+      resultLength:0,
     };
   },
   computed: {
     searchText() { 
-      if (!this.$route.query.keyword) {
-        this.$message.warning("Search cannot be empty");
-      }
       return this.$route.query.keyword;
     },
+    dateString(){ 
+      var datefrom = changeDatetoString(this.date.from);   
+      var dateto=changeDatetoString(this.date.to);
+      return {from:datefrom,
+              to:dateto};
+    }
   },
   created() {
-     this.getSearchResult();
+    this.gotoPage(1);
+  },
+  beforeRouteEnter (to, from, next) {
+    next(vm => {
+      if (!vm.$route.query.keyword)
+        next('/');
+    })
   },
   beforeRouteUpdate(to, from, next) {
-    next();
-    this.getSearchResult();
-    
+      next();
+      if (!this.$route.query.keyword)
+        next('/');
+      else
+        this.gotoPage(1);
+   
   },
   methods: {
+    //set the date in query as this.date
+    updateDate(){
+      var from=new Date(new Date().setFullYear(new Date().getFullYear-1));
+      var to=new Date();
+      if(this.$route.query.from){
+        from=this.changeToDate(this.$route.query.from);
+      }
+      if(this.$route.query.to){
+        to=this.changeToDate(this.$route.query.to);
+      }
+      this.date = {from:from,
+                   to:to,}
+    },
+    changeToDate(str){
+      var year=str.substring(0,4);
+      var month=str.substring(5,7);
+      var day=str.substring(8,10);
+      var date = new Date();
+      date.setDate(day).setMonth(month-1).setFullYear(year);
+      return date;
+    },
+    open(picker) {
+        this.$refs[picker].open();
+    },
+
     goHome(){
       this.$router.push('/')
-    },
-    //ask data base for top 10 relevant books
-    getSearchResult() {
-      this.loading=true;
-
-      //build the msg sent to backend
-      var date = {
-        from:new Date().setFullYear(this.from),
-        to:new Date().setFullYear(this.to),
-      }
-      var info = { keyword: this.searchText,
-                   date:date};                   
-      this.$store
-        .dispatch("worklist/search", info )  
-        .then((result) => {
-          this.searchResultList = result.list;
-        }).catch(err => {
-        console.log(err);
-        })
-    },
-    showfilter: function () {
-        this.filterflag = !this.filterflag;
     },
 
     //goto the n. Page, 1 is the first page
@@ -116,25 +158,25 @@ export default {
       if(n<=0){
         this.$message.warning("invalid Page number");
       }
+      this.loading=true;
       this.page=n;
       this.$store
-        .dispatch("worklist/changepage", {from:(this.page-1)*10+1,
-                                          to:(this.page-1)*10+11} )  
+        .dispatch("worklist/search", {
+                                keyword:this.searchText,
+                                    from:(this.page-1)*10,
+                                          to:this.page*10,
+                                            date:this.date})  
         .then((result) => {
           this.searchResultList = result.list;
+          this.resultLength=result.length;
         }).catch(err => {
         console.log(err);
       })
     },
     
     showfilter: function () {
-        this.filterflag = !this.filterflag;
+      this.filterflag = !this.filterflag;
     },
-    getupdateresult(){
-      this.$refs.bar.doSearch();
-    }
-
-
   },
   watch:{
     searchResultList(newList,oldList){

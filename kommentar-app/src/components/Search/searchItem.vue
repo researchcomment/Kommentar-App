@@ -33,7 +33,7 @@
                 window.open(routeData.href, "_blank");
             },
             searchOutside(){
-                var url="https://care.diabetesjournals.org/search/"+ this.book.doi;
+                var url="https://dx.doi.org/"+ this.book.doi;
                 window.open(url, "_blank");
             }
         }

@@ -35,7 +35,6 @@ export default {
                             ['blockquote', 'code-block'], 
                             [{ 'size': ['small', false, 'large', 'huge'] }], // front size
                             [{ 'color': [] }],   // front color
-                            ['image']//upload photos
                             ]
                         }} 
 
