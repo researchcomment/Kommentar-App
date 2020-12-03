@@ -30,7 +30,7 @@
           
         <mt-field class="fieldarea" label="Password" placeholder="Enter a password" v-model="form.password"></mt-field>
         
-        <mt-field class="fieldarea" label="Confirm Password" placeholder="Comfirm your password"></mt-field>
+        <mt-field class="fieldarea" label="Confirm Password" placeholder="Comfirm your password"  v-model="form.passwordComfirm"></mt-field>
         <span style="color:red;margin-left:6%;" v-show="passwordNotMatch">Does not match password</span>
         <div class="cbuttons">
           <el-button @click="dialogFormVisible = false">Cancel</el-button>

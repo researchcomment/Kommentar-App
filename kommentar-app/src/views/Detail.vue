@@ -1,6 +1,5 @@
 <template>
     <div>
-        <p>{{doi}}</p>
         <bookInfo :doi="doi"></bookInfo>
         <officialComment :doi="doi" :username="username"></officialComment>
         <unofficialComment :doi="doi" :username="username"></unofficialComment>
