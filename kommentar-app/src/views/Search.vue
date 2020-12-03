@@ -4,15 +4,35 @@
     
     <div>
         <img class="smalllogo" @click="goHome" src="../../public/static/logo_small.png">
-        <searchBar ref="bar" class="search-top-bar" :from="from" :to="to" @gotoPage="gotoPage" ></searchBar>
+        <searchBar ref="bar" class="search-top-bar" :from="date.from" :to="date.to" @gotoPage="gotoPage" ></searchBar>
     </div>
     
     <!-- Filterung -->
     <div class="filter" v-if= "!loading">
       <p v-show='filterflag'>find 1,000,000 results</p>
       <div class="filterselct" v-show='!filterflag'>
-        from<input type="text" placeholder="year" v-model="from"> to <input type="text" placeholder="year" v-model="to">
-        <button @click="getupdateresult">go</button>
+        <!-- from<input type="text" placeholder="year" v-model="from"> to <input type="text" placeholder="year" v-model="to"> -->
+        <!-- <button @click="getupdateresult">go</button> -->
+        <mt-button @click.native="open('datepickerFrom')" size="large">From</mt-button>
+        <mt-datetime-picker
+          ref="datepickerFrom"
+          type="date"
+          v-model="date.from"
+          year-format="{value}"
+          month-format="{value}"
+          date-format="{value}"
+          @confirm="handleChange"
+         >
+        </mt-datetime-picker>
+          <mt-datetime-picker
+          ref="datepickerTo"
+          type="date"
+          v-model="date.to"
+          year-format="{value}"
+          month-format="{value}"
+          date-format="{value}"
+         >
+        </mt-datetime-picker>
       </div>
       <div class="fbtn">
          <i @click="showfilter" class="iconfont icon-guolv-copy" size="small"></i>
@@ -54,8 +74,12 @@ export default {
   },
   data() {
     return {
-      from:new Date().getFullYear()-5, //string e.g. 2015
-      to:new Date().getFullYear(),
+      // from:new Date().getFullYear()-5, //string e.g. 2015
+      // to:new Date().getFullYear(),
+      date:{
+          from:new Date().setFullYear(2015),
+          to:new Date(),
+      },
       searchResultList: [],
       page:1,  //the first page
       loading:false,
@@ -79,6 +103,12 @@ export default {
     
   },
   methods: {
+    open(picker) {
+        this.$refs[picker].open();
+    },
+    handleChange(){
+      console.log(this.date);
+    },
     goHome(){
       this.$router.push('/')
     },
@@ -87,18 +117,18 @@ export default {
       this.loading=true;
 
       //build the msg sent to backend
-      var date = {
-        from:new Date().setFullYear(this.from),
-        to:new Date().setFullYear(this.to),
-      }
+      // var date = {
+      //   from:new Date().setFullYear(this.from),
+      //   to:new Date().setFullYear(this.to),
+      // }
       var info = { keyword: this.searchText,
-                   date:date};                   
+                   date:this.date};                   
       this.$store
-        .dispatch("worklist/search", info )  
+        .dispatch("worklist/search", info)  
         .then((result) => {
           this.searchResultList = result.list;
         }).catch(err => {
-        console.log(err);
+          console.log(err);
         })
     },
     showfilter: function () {
@@ -112,8 +142,11 @@ export default {
       }
       this.page=n;
       this.$store
-        .dispatch("worklist/changepage", {from:(this.page-1)*10+1,
-                                          to:(this.page-1)*10+11} )  
+        .dispatch("worklist/search", {
+                                keyword:this.searchText,
+                                    from:(this.page-1)*10+1,
+                                          to:(this.page-1)*10+11,
+                                            date:this.date})  
         .then((result) => {
           this.searchResultList = result.list;
         }).catch(err => {
@@ -122,7 +155,7 @@ export default {
     },
     
     showfilter: function () {
-        this.filterflag = !this.filterflag;
+      this.filterflag = !this.filterflag;
     },
     getupdateresult(){
       this.$refs.bar.doSearch();

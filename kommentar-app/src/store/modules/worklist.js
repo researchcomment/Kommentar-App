@@ -80,7 +80,7 @@ const actions = {
         //give the first 10 information(Todo), can reuse changepage
         last_keyword = keyword;
         let pagefrom=0;
-        let pageto=0;
+        let pageto=10;
         if (from)
             pagefrom=from;
         if (to)
