@@ -79,6 +79,8 @@ const actions = {
         console.log("keyword is : " + keyword);
         //give the first 10 information(Todo), can reuse changepage
         last_keyword = keyword;
+        let pagefrom=0;
+        let pageto=0;
         if (from)
             pagefrom=from;
         if (to)
