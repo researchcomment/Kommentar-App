@@ -36,9 +36,11 @@ async function get_worklist(keyword, rows, offset,date) {
     keyword = keyword.split(" ");
     keyword = keyword.join("+");
     let datefrom=date.from.getFullYear()+"-"
-    +date.from.getMonth()+"-"+(date.from.getDate()<10?"0":"")+date.from.getDate();
+    +((date.from.getMonth()+1)<10?"0":"")+(date.from.getMonth()+1)+
+    "-"+(date.from.getDate()<10?"0":"")+date.from.getDate();
     let dateto=date.to.getFullYear()+"-"
-    +date.to.getMonth()+"-"+(date.to.getDate()<10?"0":"")+date.to.getDate();
+    +((date.to.getMonth()+1)<10?"0":"")+(date.to.getMonth()+1)+"-"
+    +(date.to.getDate()<10?"0":"")+date.to.getDate();
     var search_url = url + keyword +"&filter=from-update-date:"+datefrom
     +",until-update-date:"+dateto+
      "&rows=" + rows + "&offset=" + offset;
