@@ -4,24 +4,20 @@
     
     <div>
         <img class="smalllogo" @click="goHome" src="../../public/static/logo_small.png">
-        <searchBar class="search-top-bar" :from="from" :to="to" @gotoPage="gotoPage" ></searchBar>
+        <searchBar ref="bar" class="search-top-bar" :from="from" :to="to" @gotoPage="gotoPage" ></searchBar>
     </div>
     
     <!-- Filterung -->
     <div class="filter" v-if= "!loading">
       <p v-show='filterflag'>find 1,000,000 results</p>
       <div class="filterselct" v-show='!filterflag'>
-        <el-select class="timeselect" v-model="value" placeholder="Date" size="mini">
-        <el-option class="timeoption"
-          v-for="item in options"
-          :key="item.value"
-          :label="item.label"
-          :value="item.value">
-        </el-option>
-      </el-select>
+        from<input type="text" placeholder="year" v-model="from"> to <input type="text" placeholder="year" v-model="to">
+        <button @click="getupdateresult">go</button>
       </div>
-
-      <button @click="showfilter" class="fbtn" size="small">filter</button>
+      <div class="fbtn">
+         <i @click="showfilter" class="iconfont icon-guolv-copy" size="small"></i>
+      </div>
+     
     </div>
 
     <!-- show the results -->
@@ -35,9 +31,12 @@
     </ul>
     
     <!-- change Pages -->
-    <button v-show="(!loading)&&(page>1)" @click="gotoPage(page-1)">last Page</button>
-    <p>{{page}}</p>
-    <button v-show="(!loading)" @click="gotoPage(page+1)">next Page</button>
+    <div class="pagesetter" v-if= "!loading">
+      <i class="iconfont icon-zuojiantou" v-show="(!loading)&&(page>1)" @click="gotoPage(page-1)"></i>
+      <p>{{page}}</p>
+      <i class="iconfont icon-youjiantou" v-show="(!loading)" @click="gotoPage(page+1)"></i>
+    </div>
+    
     
     
     
@@ -61,17 +60,6 @@ export default {
       page:1,  //the first page
       loading:false,
       filterflag:true,
-      value:1,
-      options: [{
-          value: '1',
-          label: 'last year'
-        }, {
-          value: '2',
-          label: 'last month'
-        }, {
-          value: '3',
-          label: 'last week'
-        }],
     };
   },
   computed: {
@@ -133,11 +121,14 @@ export default {
       })
     },
     
-    
-   
     showfilter: function () {
         this.filterflag = !this.filterflag;
+    },
+    getupdateresult(){
+      this.$refs.bar.doSearch();
     }
+
+
   },
   watch:{
     searchResultList(newList,oldList){
@@ -154,6 +145,7 @@ export default {
     width:65%;
     margin-top: 15px;
     display: inline-block;
+    vertical-align: middle;
 }
 .booklist{
     list-style-type: none;
@@ -165,6 +157,7 @@ export default {
     width:60%;
 }
 .smalllogo{
+  cursor: pointer;
     width:5%;
     height:5%;
     display: inline-block;
@@ -178,6 +171,7 @@ export default {
   width: 60%;
   line-height: 200%;
   margin-top: 1%;
+  height: 50%;
 }
 .filter p{
   display: inline;
@@ -185,14 +179,37 @@ export default {
 }
 .filter .fbtn{
   display: inline;
-  float: right;
+  margin-left: 1%;
+  color: #76C06B;
+  cursor: pointer;
 }
 .filterselct{
   display: inline;
 }
+.filterselct input{
+  width:10%;
+  
+}
+.filterselct button{
+  margin-left: 1%;
+}
 .timeselect{
   width: 30%;
 }
-.timeoption{
+.pagesetter{
+  display: bolck;
+  margin-left:8%;
+  margin-bottom: 2%;
+}
+.pagesetter i{
+  display: inline;
+  font-size: 120%;
+  color: #76C06B;
+  cursor: pointer;
+}
+.pagesetter p{
+  display: inline;
+  margin: 0 3%;
+  font-size: 120%;
 }
 </style>
