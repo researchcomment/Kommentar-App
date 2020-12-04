@@ -31,19 +31,19 @@ function construct_author(author_ref) {
     return author;
 }
 //async function return promise
-async function get_worklist(keyword, rows, offset,date) {
+async function get_worklist(keyword, rows, offset, date) {
     //convert keyword in this format list : keyword1+keyword2+...
     keyword = keyword.split(" ");
     keyword = keyword.join("+");
-    let datefrom=date.from.getFullYear()+"-"
-    +((date.from.getMonth()+1)<10?"0":"")+(date.from.getMonth()+1)+
-    "-"+(date.from.getDate()<10?"0":"")+date.from.getDate();
-    let dateto=date.to.getFullYear()+"-"
-    +((date.to.getMonth()+1)<10?"0":"")+(date.to.getMonth()+1)+"-"
-    +(date.to.getDate()<10?"0":"")+date.to.getDate();
-    var search_url = url + keyword +"&filter=from-update-date:"+datefrom
-    +",until-update-date:"+dateto+
-     "&rows=" + rows + "&offset=" + offset;
+    let datefrom = date.from.getFullYear() + "-" +
+        ((date.from.getMonth() + 1) < 10 ? "0" : "") + (date.from.getMonth() + 1) +
+        "-" + (date.from.getDate() < 10 ? "0" : "") + date.from.getDate();
+    let dateto = date.to.getFullYear() + "-" +
+        ((date.to.getMonth() + 1) < 10 ? "0" : "") + (date.to.getMonth() + 1) + "-" +
+        (date.to.getDate() < 10 ? "0" : "") + date.to.getDate();
+    var search_url = url + keyword + "&filter=from-update-date:" + datefrom +
+        ",until-update-date:" + dateto +
+        "&rows=" + 100 + "&offset=" + offset;
     console.log(search_url);
     let returnValue = {
         list: [],
@@ -68,36 +68,37 @@ async function get_worklist(keyword, rows, offset,date) {
                 });
             }
             returnValue.length = ref["total-results"];
-           
-        } 
+
+        }
         return returnValue;
     }).catch(err => {
-        console.log(err);}); 
+        console.log(err);
+    });
 }
 
 const actions = {
-    async search({ commit, state }, { keyword,from,to,date }) {
+    async search({ commit, state }, { keyword, from, to, date }) {
         //set the information to the state,filter it into title author and doi(may changed from google firebase side)
         //commit('setlist',list)
         console.log("keyword is : " + keyword);
         //give the first 10 information(Todo), can reuse changepage
         last_keyword = keyword;
-        let pagefrom=0;
-        let pageto=10;
+        let pagefrom = 0;
+        let pageto = 10;
         if (from)
-            pagefrom=from;
+            pagefrom = from;
         if (to)
-            pageto=to;
+            pageto = to;
         //wait inorder to know the setlest and setset will not earlier then them
         console.log(date);
-        let returnValue =await get_worklist(keyword, pageto - pagefrom, pagefrom,date);
+        let returnValue = await get_worklist(keyword, pageto - pagefrom, pagefrom, date);
         commit('setlist', returnValue.list);
         return returnValue;
     },
 
     changepage({ commit, state }, { from, to }) {
-        
-        let returnValue = get_worklist(last_keyword, to - from, from,date.from,data.to);
+
+        let returnValue = get_worklist(last_keyword, to - from, from, date.from, data.to);
         commit('setlist', returnValue.list);
         return returnValue;
     }
@@ -112,8 +113,7 @@ const mutations = {
     },
     setset(state, set) {
         state.set = set
-    }
-    ,
+    },
 
     setusername(state, username) {
         state.username = username
