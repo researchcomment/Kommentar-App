@@ -34,7 +34,7 @@ export default {
     },
     popout: function () {
         this.visible = !this.visible;
-      }
+    }
   },
   computed:{
       username: function(){
@@ -47,9 +47,6 @@ export default {
 <style >
 .iconyonghu{
     color:#fff;
-    font-size: 15px;
-    line-height: 50px;
-    width: 100px;
     height: 50px;
     white-space:pre;
     cursor: pointer;
@@ -57,7 +54,7 @@ export default {
 }
 .pop {
     height: 100%;
-    width: 250px;;
+    width: 35vh;
 
 }
 </style>
