@@ -1,6 +1,6 @@
 <template>
-    <div>
-        <p>Title:{{detail.title}}</p>
+    <div class="details">
+        <h2>{{detail.title}}</h2>
         <p>Author:{{detail.author}}</p>
         <p>Editor:{{detail.editor}}</p>
         <p>Chair:{{detail.chair}}</p>
@@ -35,6 +35,17 @@
     }
 </script>
 
-<style lang="scss" scoped>
-
+<style>
+    .details h2{
+        font-size: 5vh;
+    }
+    .details p{
+        font-size: 3vh;
+    }
+    .details{
+        margin-top: 5vh;
+        margin-left: 10vw;
+        margin-right: 10vw;
+        margin-bottom: 1vh;
+    }
 </style>

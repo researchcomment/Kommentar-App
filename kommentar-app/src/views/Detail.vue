@@ -1,10 +1,16 @@
 <template>
-    <div>
+<div>
+    <div class="maincontent">
+        <div class="detailpage">
         <bookInfo :doi="doi"></bookInfo>
         <officialComment :doi="doi" :username="username"></officialComment>
         <unofficialComment :doi="doi" :username="username"></unofficialComment>
         <commentEditor :doi="doi" :username="username"></commentEditor>
     </div>
+    <bottom></bottom>
+    </div>
+</div>
+    
 </template>
 
 <script>
@@ -12,6 +18,7 @@ import bookInfo from "@/components/detail/bookInfo";
 import officialComment from "@/components/detail/officialComment";
 import unofficialComment from "@/components/detail/unofficialComment";
 import commentEditor from "@/components/detail/commentEditor";
+import bottom from '@/components/footer/bottom'
     export default {
         name:"detail",
         components:{
@@ -19,6 +26,7 @@ import commentEditor from "@/components/detail/commentEditor";
             officialComment,
             unofficialComment,
             commentEditor,
+            bottom
         },
         data(){
             return{
@@ -52,5 +60,8 @@ import commentEditor from "@/components/detail/commentEditor";
 </script>
 
 <style>
-
+.bot{
+    margin: auto 0;
+    width: 100%;
+}
 </style>

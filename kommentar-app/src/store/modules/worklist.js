@@ -130,13 +130,6 @@ const actions = {
         return returnValue;
     },
 
-    changepage({ commit, state }, { from, to }) {
-
-        let returnValue = get_worklist(last_keyword, to - from, from, date.from, data.to);
-        commit('setlist', returnValue.list);
-        return returnValue;
-    }
-
 
 }
 

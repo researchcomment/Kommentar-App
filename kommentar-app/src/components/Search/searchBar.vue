@@ -79,17 +79,15 @@
     outline:none;
     border:solid 2px #00243E;
     box-sizing: border-box;
-    font-size:1.2em;
+    font-size:1.2vw;
     border-radius: 23px;
+    height: 4.7vh;
 }
 .el-input i{
     cursor: pointer;
+    line-height: 200%;
 }
 
-.search-bar{
-	margin:0 auto;
-    width:60%;
-}
 
 
 </style>
