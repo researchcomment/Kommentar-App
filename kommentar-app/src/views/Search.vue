@@ -1,30 +1,77 @@
 <template>
-  <div>
-    <!-- List search results -->
+  <!-- List search results -->
+  <div v-loading.fullscreen.lock="loading">
+    
     <div>
-        <img class="smalllogo" src="../../public/static/logo_small.png">
-        <searchBar class="search-top-bar" :search="searchText"></searchBar>
+        <img class="smalllogo" @click="goHome" src="../../public/static/logo_small.png">
+        <searchBar ref="bar" class="search-top-bar" :from="dateString.from" :to="dateString.to"  @gotoPage="gotoPage" ></searchBar>
     </div>
     
+    <!-- Filterung -->
+    <div class="filter" v-if= "!loading">
+      <p v-show='filterflag'>find {{resultLength}} results</p>
+      <div class="filterselct" v-show='!filterflag'>
+        <!-- from<input type="text" placeholder="year" v-model="from"> to <input type="text" placeholder="year" v-model="to"> -->
+        <!-- <button @click="getupdateresult">go</button> -->
+        <mt-button @click.native="open('datepickerFrom')" size="large">
+          From  {{dateString.from}}
+        </mt-button>
+        <mt-button @click.native="open('datepickerTo')" size="large">To {{dateString.to}}</mt-button>
+        <mt-datetime-picker
+          ref="datepickerFrom"
+          type="date"
+          v-model="date.from"
+          year-format="{value}"
+          month-format="{value}"
+          date-format="{value}"
+         >
+        </mt-datetime-picker>
+        <mt-datetime-picker
+          ref="datepickerTo"
+          type="date"
+          v-model="date.to"
+          year-format="{value}"
+          month-format="{value}"
+          date-format="{value}"
+         >
+        </mt-datetime-picker>
+      </div>
+      <div class="fbtn">
+         <i @click="showfilter" class="iconfont icon-guolv-copy" size="small"></i>
+      </div>
+     
+    </div>
 
-    <ul class="booklist">
+    <!-- show the results -->
+    <ul class="booklist" >
       <li>
-        <div v-for="item in searchResultList" v-bind:key="item.id">
+        <div v-for="item in searchResultList" v-bind:key="item.id" >
           <searchItem :book="item" />
         </div>
       </li>
+      <div v-if="(searchResultList.length == 0) && (!loading)">Did not find any content!!</div>
     </ul>
-    <!-- <div v-for="item in searchResultList" v-bind:key="item.id">
-            <searchItem :book="item"/>
-        </div> -->
-
-    <div v-if="searchResultList.length == 0">Did not find any content!!</div>
+    
+    <!-- change Pages -->
+    <div class="pagesetter" v-if= "!loading">
+      <i class="iconfont icon-zuojiantou" v-show="(!loading)&&(page>1)" @click="gotoPage(page-1)"></i>
+      <p>{{page}}</p>
+      <i class="iconfont icon-youjiantou" v-show="(!loading)" @click="gotoPage(page+1)"></i>
+    </div>
+   
   </div>
 </template>
 
 <script>
 import searchBar from "@/components/Search/searchBar";
 import searchItem from "@/components/Search/searchItem";
+
+function changeDatetoString(date){
+  let datestring=date.getFullYear()+"-"
+    +((date.getMonth()+1)<10?"0":"")+(date.getMonth()+1)+
+    "-"+(date.getDate()<10?"0":"")+date.getDate();
+  return datestring;
+}
 export default {
   name: "search",
   components: {
@@ -33,58 +80,180 @@ export default {
   },
   data() {
     return {
+      date:{
+          from:new Date(new Date().setFullYear(2019)),
+          to:new Date(),
+      },
       searchResultList: [],
+      page:1,  //the first page
+      loading:false,
+      filterflag:true,
+      resultLength:0,
     };
   },
   computed: {
-    searchText() {
-      if (!this.$route.params.searchText) {
-        this.$message.warning("Search cannot be empty");
-      }
-      return this.$route.params.searchText;
+    searchText() { 
+      return this.$route.query.keyword;
     },
+    dateString(){ 
+      var datefrom = changeDatetoString(this.date.from);   
+      var dateto=changeDatetoString(this.date.to);
+      return {from:datefrom,
+              to:dateto};
+    }
   },
   created() {
-    this.getSearchResult();
+    this.gotoPage(1);
+  },
+  beforeRouteEnter (to, from, next) {
+    next(vm => {
+      if (!vm.$route.query.keyword)
+        next('/');
+    })
   },
   beforeRouteUpdate(to, from, next) {
-    next();
-    this.getSearchResult();
+      next();
+      if (!this.$route.query.keyword)
+        next('/');
+      else
+        this.gotoPage(1);
+   
   },
   methods: {
-    getSearchResult() {
+    //set the date in query as this.date
+    updateDate(){
+      var from=new Date(new Date().setFullYear(new Date().getFullYear-1));
+      var to=new Date();
+      if(this.$route.query.from){
+        from=this.changeToDate(this.$route.query.from);
+      }
+      if(this.$route.query.to){
+        to=this.changeToDate(this.$route.query.to);
+      }
+      this.date = {from:from,
+                   to:to,}
+    },
+    changeToDate(str){
+      var year=str.substring(0,4);
+      var month=str.substring(5,7);
+      var day=str.substring(8,10);
+      var date = new Date();
+      date.setDate(day).setMonth(month-1).setFullYear(year);
+      return date;
+    },
+    open(picker) {
+        this.$refs[picker].open();
+    },
+
+    goHome(){
+      this.$router.push('/')
+    },
+
+    //goto the n. Page, 1 is the first page
+    gotoPage(n){
+      if(n<=0){
+        this.$message.warning("invalid Page number");
+      }
+      this.loading=true;
+      this.page=n;
       this.$store
-        .dispatch("worklist/search", { keyword: this.searchText })
+        .dispatch("worklist/search", {
+                                keyword:this.searchText,
+                                    from:(this.page-1)*10,
+                                          to:this.page*10,
+                                            date:this.date})  
         .then((result) => {
           this.searchResultList = result.list;
-        });
+          this.resultLength=result.length;
+        }).catch(err => {
+        console.log(err);
+      })
+    },
+    
+    showfilter: function () {
+      this.filterflag = !this.filterflag;
     },
   },
+  watch:{
+    searchResultList(newList,oldList){
+      this.loading=false;
+    }
+  }
 };
 </script>
 
 <style>
 .search-top-bar{
-    margin-left:20px;
+    margin-left:2%;
     margin-right: auto;
     width:65%;
     margin-top: 15px;
-    float:left;
+    display: inline-block;
+    vertical-align: middle;
 }
 .booklist{
     list-style-type: none;
     padding: 0;
-    margin-top: 20px;
-    float:left;
+    margin-left:10%;
+    margin-right: 5%;
+    margin-top: 0;
+    display: bolck;
     width:60%;
-    margin-left:30px;
 }
 .smalllogo{
-    width:60px;
-    height:60px;
-    float: left;
-    margin-left: 30px;
+  cursor: pointer;
+    width:5%;
+    height:5%;
+    display: inline-block;
+    margin-left: 2%;
     vertical-align:middle;
-    margin-top: 10px;
+    margin-top: 2%;
+}
+.filter{
+  display: block;
+  margin-left:10%;
+  width: 60%;
+  line-height: 200%;
+  margin-top: 1%;
+  height: 50%;
+}
+.filter p{
+  display: inline;
+  
+}
+.filter .fbtn{
+  display: inline;
+  margin-left: 1%;
+  color: #76C06B;
+  cursor: pointer;
+}
+.filterselct{
+  display: inline;
+}
+.filterselct input{
+  width:10%;
+  
+}
+.filterselct button{
+  margin-left: 1%;
+}
+.timeselect{
+  width: 30%;
+}
+.pagesetter{
+  display: bolck;
+  margin-left:8%;
+  margin-bottom: 2%;
+}
+.pagesetter i{
+  display: inline;
+  font-size: 120%;
+  color: #76C06B;
+  cursor: pointer;
+}
+.pagesetter p{
+  display: inline;
+  margin: 0 3%;
+  font-size: 120%;
 }
 </style>

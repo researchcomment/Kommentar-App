@@ -8,7 +8,6 @@
       </div>
       
     </div>
-    
   </div>
 </template>
 
@@ -16,24 +15,22 @@
 import accounticon from "@/components/account/accounticon";
 import login from "@/components/login/login";
 import register from "@/components/login/register";
+import { Toast } from 'mint-ui';
 export default {
   components: {
     accounticon,
     login,
     register,
   },
-  data(){
-    return{
-      
-    }
+  data() {
+    return {};
   },
-  computed:{
-    username: function(){
+  computed: {
+    username: function () {
       return this.$store.state.account.username;
     },
   },
   watch:{
-
     //Monitor login/logout status and prompt success message
     username(newName,oldName){
       if((!oldName)&&newName){
@@ -58,9 +55,7 @@ body{
   box-shadow: 2px 2px 5px #DBD5D7;
   background-color: #00243E;
 }
-.account{
-  margin-right: 20px;
-}
+
 .icon {
   position:relative;
   float: right;
