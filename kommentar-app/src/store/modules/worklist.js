@@ -128,9 +128,7 @@ const actions = {
         let returnValue = await get_worklist(keyword, pageto - pagefrom, pagefrom, date);
         commit('setlist', returnValue.list);
         return returnValue;
-    },
-
-
+    }
 }
 
 const mutations = {
