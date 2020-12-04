@@ -10,6 +10,7 @@ const getters = {}
 var items = [];
 var cache = 100;
 var result_length = 0;
+var last_offset = -1;
 
 function isNull(obj) {
     if (obj) {
@@ -31,7 +32,7 @@ function construct_author(author_ref) {
     author = author.join(" ; ");
     return author;
 }
-
+//construct results from response
 function cons_returnValue(returnValue, from, to) {
     if (items[to]) {
         for (var i = from; i < to; i++) {
@@ -68,7 +69,8 @@ function cons_returnValue(returnValue, from, to) {
 
 //async function return promise
 async function get_worklist(keyword, rows, offset, date) {
-    if (offset % cache == 0) {
+    if (offset % cache == 0 && offset != last_offset) {
+        last_offset = offset;
         //convert keyword in this format list : keyword1+keyword2+...
         keyword = keyword.split(" ");
         keyword = keyword.join("+");
@@ -86,17 +88,19 @@ async function get_worklist(keyword, rows, offset, date) {
             list: [],
             length: 0
         };
+        console.log("request beginning：" + new Date());
         return axios.get(search_url).then(res => {
             //get reference : res -> data -> message
             let ref = res.data.message;
             if (!isNull(ref)) {
                 //save current 100 results in items as a list
                 items = ref.items;
+                console.log("response endding：" + new Date());
                 returnValue = cons_returnValue(returnValue, offset % cache, offset % cache + rows);
                 returnValue.length = ref["total-results"];
                 result_length = returnValue.length;
-                console.log("结果数目：" + result_length);
             }
+            console.log("results construction endding：" + new Date());
             return returnValue;
         }).catch(err => {
             console.log(err);
@@ -106,7 +110,7 @@ async function get_worklist(keyword, rows, offset, date) {
             list: [],
             length: 0
         };
-        returnValue = cons_returnValue(items, returnValue, offset % cache, offset % cache + rows);
+        returnValue = cons_returnValue(returnValue, offset % cache, offset % cache + rows);
         returnValue.length = result_length;
         return returnValue;
     }
@@ -116,7 +120,6 @@ const actions = {
     async search({ commit, state }, { keyword, from, to, date }) {
         //set the information to the state,filter it into title author and doi(may changed from google firebase side)
         //commit('setlist',list)
-        console.log("keyword is : " + keyword);
         //give the first 10 information(Todo), can reuse changepage
         let pagefrom = 0;
         let pageto = 10;
