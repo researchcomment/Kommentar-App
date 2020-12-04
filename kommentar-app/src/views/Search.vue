@@ -1,6 +1,8 @@
 <template>
   <!-- List search results -->
-  <div v-loading.fullscreen.lock="loading">
+  <div>
+    <div class="maincontent">
+      <div v-loading.fullscreen.lock="loading">
     
     <div>
         <searchBar ref="bar" class="search-top-bar" :from="dateString.from" :to="dateString.to"  @gotoPage="gotoPage" ></searchBar>
@@ -16,10 +18,15 @@
       <div class="filterselct" v-show='!filterflag'>
         <!-- from<input type="text" placeholder="year" v-model="from"> to <input type="text" placeholder="year" v-model="to"> -->
         <!-- <button @click="getupdateresult">go</button> -->
-        <mt-button @click.native="open('datepickerFrom')" size="large">
-          From  {{dateString.from}}
+        <div style="display:inline-block;width: 20vh">
+          <span>From</span><mt-button @click.native="open('datepickerFrom')" size="normal">
+         {{dateString.from}}
         </mt-button>
-        <mt-button @click.native="open('datepickerTo')" size="large">To {{dateString.to}}</mt-button>
+        </div>
+        <div style="display:inline-block;width: 20vh">
+          <span>To</span><mt-button @click.native="open('datepickerTo')" size="normal">{{dateString.to}}</mt-button>
+        </div>
+        
         <mt-datetime-picker
           ref="datepickerFrom"
           type="date"
@@ -42,8 +49,7 @@
           <i @click="showfilter" class="iconfont icon-filter-full" size="small"></i>
         </div>
       </div>
-      
-     
+    </div>
     </div>
 
     <!-- show the results -->
@@ -64,11 +70,15 @@
     </div>
    
   </div>
+    <bottom></bottom>
+  </div>
+  
 </template>
 
 <script>
 import searchBar from "@/components/Search/searchBar";
 import searchItem from "@/components/Search/searchItem";
+import bottom from '@/components/footer/bottom'
 
 function changeDatetoString(date){
   let datestring=date.getFullYear()+"-"
@@ -81,6 +91,7 @@ export default {
   components: {
     searchBar,
     searchItem,
+    bottom
   },
   data() {
     return {
@@ -204,15 +215,6 @@ export default {
     width:80%;
     font-size: 1.5vw;
 }
-/* .smalllogo{
-  cursor: pointer;
-    width:5%;
-    height:5%;
-    display: inline-block;
-    margin-left: 2%;
-    vertical-align:middle;
-    margin-top: 2%;
-} */
 .filter{
   display: block;
   margin-left:10%;
@@ -232,8 +234,19 @@ export default {
   color: #76C06B;
   cursor: pointer;
 }
-.filterselct{
-  display: inline;
+.filterselct span{
+  display: inline-block;
+  width: 5vh;
+  font-size: 1vh;
+}
+.filterselct .mint-button{
+  width: 14vh;
+  height: 3vh;
+  line-height: 3vh;
+}
+.filterselct label{
+  font-size: 2vh;
+  
 }
 .filterselct input{
   width:10%;
@@ -241,6 +254,7 @@ export default {
 }
 .filterselct button{
   margin-left: 1%;
+  margin-right: 2%;
 }
 .timeselect{
   width: 30%;

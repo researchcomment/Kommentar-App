@@ -2,29 +2,14 @@
     <div>
 
         <div class="login1" @click="dialogFormVisible=true"> Login<span class="iconfont icon-denglu" style="font-size: inherit"></span></div>
-        
-        <!-- <el-dialog title="Login" :visible.sync="dialogFormVisible">
-            <el-form :model="form">
-                <el-form-item label="Username" :label-width="formLabelWidth">
-                    <el-input v-model="form.username"  placeholder="Enter your E-Mail" autocomplete="off"></el-input>
-                </el-form-item>
-                <el-form-item label="Password" :label-width="formLabelWidth">
-                    <el-input v-model="form.password" placeholder="Enter your password" @keyup.enter.native="confirm" autocomplete="off"></el-input>
-                </el-form-item>
-            </el-form>
-            <div slot="footer" class="dialog-footer">
-                <el-button @click="dialogFormVisible = false">Cancel</el-button>
-                <el-button type="primary" @click.native="confirm" >Confirm</el-button>
-            </div>
-        </el-dialog> -->
-
+    
         <mt-popup class="popform" v-model="dialogFormVisible" popup-transition="popup-fade">
             <h3 class="formtitle">Welcome!</h3>
             <mt-field class="fieldarea" label="Username" placeholder="Enter your E-Mail" v-model="form.username"></mt-field>
             <mt-field class="fieldarea" label="Password" placeholder="Enter your password" v-model="form.password"></mt-field>
             <div class="cbuttons">
-                <el-button class="onebtn" @click="dialogFormVisible = false">Cancel</el-button>
                 <el-button class="onebtn" type="primary" @click.native="confirm" >Confirm</el-button>
+                <el-button class="onebtn" @click="dialogFormVisible = false">Cancel</el-button>
             </div>
         </mt-popup>
 
@@ -75,7 +60,6 @@
     width: auto;
     height: 50px;
     color: #fff;
-    
  }
  .popform{
      width:70%;
@@ -84,14 +68,34 @@
  .fieldarea{
      margin: 3% 5%;
  }
- .onebtn{
-     margin: auto 3%;
+ .popform .mint-cell:hover{
+     color: #6A6A6A;
+     cursor: default;
+ }
+.popform .mint-cell .mint-cell-title{
+    color: black;
+}
+.mint-cell .mint-cell-value{
+    border-bottom: 1px solid #d9d9d9;
+}
+.mint-cell .mint-cell-warpper{
+    background-image: none;
+}
+.cbuttons .el-button{
+    float: right;
+    margin-bottom: 5%;
+    margin-left: 3%;
  }
  .cbuttons{
+     width: auto;
      margin: 3% 3%;
      padding-left: 3%;
  }
  .formtitle{
-     margin: 3%;
+     margin-left: 6%;
+     margin-top: 7%;
+     height: 2.5vh;
+     line-height: 2.5vh;
+     font-size: 110%;
  }
 </style>

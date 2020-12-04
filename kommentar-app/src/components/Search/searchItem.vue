@@ -71,7 +71,7 @@
     text-decoration: underline;
 }
 .box-card p{
-    margin: 0 auto;
+    margin-bottom: 3vh;
     font-size: 100%;
 }
 </style>
