@@ -4,13 +4,15 @@ const state = () => ({
     length: 0
 
 })
-const url = "http://api.crossref.org/works?query=";
+const url = "http://api.crossref.org/works?";
 const getters = {}
 
 var items = [];
 var cache = 100;
 var result_length = 0;
 var last_offset = -1;
+var last_keyword = "";
+var last_date = new Date().setFullYear(2019);
 
 function isNull(obj) {
     if (obj) {
@@ -69,8 +71,10 @@ function cons_returnValue(returnValue, from, to) {
 
 //async function return promise
 async function get_worklist(keyword, rows, offset, date) {
-    if (offset % cache == 0 && offset != last_offset) {
+    if (offset % cache == 0) {
         last_offset = offset;
+        last_keyword = keyword;
+        last_date = date;
         //convert keyword in this format list : keyword1+keyword2+...
         keyword = keyword.split(" ");
         keyword = keyword.join("+");
@@ -80,9 +84,11 @@ async function get_worklist(keyword, rows, offset, date) {
         let dateto = date.to.getFullYear() + "-" +
             ((date.to.getMonth() + 1) < 10 ? "0" : "") + (date.to.getMonth() + 1) + "-" +
             (date.to.getDate() < 10 ? "0" : "") + date.to.getDate();
-        var search_url = url + keyword + "&filter=from-update-date:" + datefrom +
+        /*var search_url = url + keyword + "&filter=from-update-date:" + datefrom +
             ",until-update-date:" + dateto +
-            "&rows=" + cache + "&select=DOI,title,author" + "&offset=" + offset;
+            "&rows=" + cache + "&select=DOI,title,author" + "&offset=" + offset;*/
+        var search_url = url + "filter=from-update-date:" + datefrom +
+            ",until-update-date:" + dateto + "&select=DOI,title,author" + "&query=" + keyword + "&rows=" + cache + "&offset=" + offset;
         console.log(search_url);
         let returnValue = {
             list: [],
