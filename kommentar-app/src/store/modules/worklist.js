@@ -82,7 +82,7 @@ async function get_worklist(keyword, rows, offset, date) {
             (date.to.getDate() < 10 ? "0" : "") + date.to.getDate();
         var search_url = url + keyword + "&filter=from-update-date:" + datefrom +
             ",until-update-date:" + dateto +
-            "&rows=" + cache + "&offset=" + offset;
+            "&rows=" + cache + "&select=DOI,title,author" + "&offset=" + offset;
         console.log(search_url);
         let returnValue = {
             list: [],
