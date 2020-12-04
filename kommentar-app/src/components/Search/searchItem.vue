@@ -5,6 +5,7 @@
         :href="book.url"
         >
         <a @click="searchOutside">DOI :{{book.doi}}</a>
+
         <div>
             <h3 @click="seeDetail()">{{book.title}}</h3>
         </div>
