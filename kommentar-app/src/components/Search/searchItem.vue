@@ -5,14 +5,11 @@
         :href="book.url"
         >
         <a @click="searchOutside">DOI :{{book.doi}}</a>
-<<<<<<< HEAD
-        <h2 >{{book.title}}</h2>
-=======
+
         <div>
             <h3 @click="seeDetail()">{{book.title}}</h3>
         </div>
         
->>>>>>> d0e0461771e785c7f6af493b8937bce5b75c1081
         <p>Author: {{book.author}}</p>
             
         </div>
@@ -75,7 +72,7 @@
     text-decoration: underline;
 }
 .box-card p{
-    margin: 0 auto;
+    margin-bottom: 3vh;
     font-size: 100%;
 }
 </style>

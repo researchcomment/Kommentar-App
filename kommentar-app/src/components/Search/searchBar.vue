@@ -1,13 +1,13 @@
 <template>
     <div class="search-bar">
 
-        <el-input
-        v-focus
-        v-model="keyword" 
-        placeholder="Search..." 
-        class="input-search"
-        @keydown.enter.native="doSearch"
-        clearable
+        <el-input 
+            v-focus
+            v-model="keyword" 
+            placeholder="Search..." 
+            class="input-search"
+            @keydown.enter.native="doSearch"
+            clearable
         > 
             <i slot="prefix" class="el-input__icon el-icon-search"  @click="doSearch"></i>
         </el-input>
@@ -21,13 +21,14 @@
         props:["from","to"],
         data() {
             return {
-                keyword:"",
+                keyword:this.$route.query.keyword,
             }
         },
         methods:{
             doSearch() {   
                 if (!this.keyword) {
                     this.$message.warning("Search cannot be empty");
+                    return;
                 }
                 var sameSearch = (this.keyword == this.$route.query.keyword)&&
                                         (this.from == this.$route.query.from)&&
@@ -38,10 +39,17 @@
                    this.$emit("gotoPage",1); 
                 } 
                 else{
+                    var filter={};
+                    filter.keyword=this.keyword;
+                    if(this.form){
+                        filter.from=this.form;
+                    }
+                    if(this.to){
+                        filter.from=this.to;
+                    }
+                    filter.from=this.from;
                     this.$router.push({path: '/search', 
-                                       query: { keyword: this.keyword,
-                                                from:this.from,
-                                                to:this.to}});  //the form of to and from must be string
+                                       query: filter});  //the form of to and from must be string
                      
                 }
                      

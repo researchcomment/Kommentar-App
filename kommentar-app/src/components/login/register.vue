@@ -2,39 +2,18 @@
   <div>
       <!-- register Button -->
       <div class="reg1" @click="dialogFormVisible = true">Register<span class="iconfont icon-zhuce" style="font-size: inherit"></span></div>
-      
-      <!-- After clicking, a register form will pop up -->
-      <!-- <el-dialog title="Register" :visible.sync="dialogFormVisible">
-        <el-form :model="form">
-          <el-form-item label="Username"  :label-width="formLabelWidth">
-            <el-input v-model="form.username" autocomplete="off" placeholder="Enter your E-Mail"></el-input>
-          </el-form-item>
-          
-          <el-form-item label="Password"  :label-width="formLabelWidth">
-            <el-input v-model="form.password" placeholder="Enter a password" autocomplete="off"></el-input>
-          </el-form-item>
-
-          <el-form-item label="Confirm Password" :label-width="formLabelWidth" >
-            <el-input v-model="passwordComfirm" placeholder="Comfirm your password"  autocomplete="off"></el-input>
-            <span style="color:red" v-show="passwordNotMatch">Does not match password</span> 
-          </el-form-item>
-        </el-form>
-        <div slot="footer" class="dialog-footer">
-          <el-button @click="dialogFormVisible = false">Cancel</el-button>
-          <el-button type="primary" @click.native="confirm">Confirm</el-button>
-        </div>
-      </el-dialog> -->
+     
       <mt-popup class="popform" style="color:black" v-model="dialogFormVisible" popup-transition="popup-fade">
         <h3 class="formtitle">Welcome!</h3>
         <mt-field class="fieldarea" label="Username" placeholder="Enter your E-Mail" v-model="form.username"></mt-field>
           
         <mt-field class="fieldarea" label="Password" placeholder="Enter a password" v-model="form.password"></mt-field>
         
-        <mt-field class="fieldarea" label="Confirm Password" placeholder="Comfirm your password"></mt-field>
+        <mt-field class="fieldarea" label="Confirm Password" placeholder="Comfirm your password"  v-model="form.passwordComfirm"></mt-field>
         <span style="color:red;margin-left:6%;" v-show="passwordNotMatch">Does not match password</span>
         <div class="cbuttons">
-          <el-button @click="dialogFormVisible = false">Cancel</el-button>
           <el-button type="primary" @click.native="confirm">Confirm</el-button>
+          <el-button @click="dialogFormVisible = false">Cancel</el-button>
         </div>
       </mt-popup>
 

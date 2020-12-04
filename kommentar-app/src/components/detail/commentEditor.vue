@@ -1,5 +1,6 @@
 <template>
-    <div>
+    <div class="comeditor">
+        <h3 style="font-size:1.8vw;color:#000">We need your opinion!</h3>
         <quill-editor
             v-model="content"
             ref="quillEditor" 
@@ -8,10 +9,10 @@
             @blur="onEditorBlur()"
         >
         </quill-editor>
-        <button @click="submit">Submit</button>
+        <button @click="submit" style="margin-top:2vh">Submit</button>
 
         <!-- Test:Show the comment in html form -->
-        <p>Test: 实时渲染html格式的comment</p>
+        <p style="margin-bottom:5vh">Test: 实时渲染html格式的comment</p>
         <div v-html="content">
 	            {{content}}
         </div>
@@ -35,7 +36,6 @@ export default {
                             ['blockquote', 'code-block'], 
                             [{ 'size': ['small', false, 'large', 'huge'] }], // front size
                             [{ 'color': [] }],   // front color
-                            ['image']//upload photos
                             ]
                         }} 
 
@@ -73,8 +73,27 @@ export default {
 
 </script>
 
-
 <style>
+.comeditor{
+    margin-bottom: 5vh;
+    margin-left: 10vw;
+    margin-right: 10vw;
+}
 
-
+.comeditor .quill-editor .ql-toolbar{
+    padding: 0.5vh;
+}
+.comeditor .quill-editor .ql-toolbar button svg{
+    width: 2vh;
+}
+.comeditor .quill-editor .ql-toolbar button{
+    width: 3.5vh;
+    padding: 0.4vh 0.4vh;
+}
+.comeditor .quill-editor .ql-toolbar .ql-formats{
+    margin-right: 1vh;
+}
+.comeditor .quill-editor .ql-toolbar .ql-formats .ql-size{
+    width: 12vh;
+}
 </style>
