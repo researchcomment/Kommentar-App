@@ -78,26 +78,36 @@ const actions = {
     //create new Entry in realtime-DB for Editor-Input 
     sendFromEditorToDatabase({ commit, state }, {doi,username,content}){
         //set content with doi username to database
-        
+        const userKey = firebase.auth().currentUser.uid;
         const entry = {
             doi_nr: doi,
+            userId: userKey,
             usr: username,
             details: content
         }
-        console.log(entry);
-        firebase.database().ref('editor_content').push(entry)
+        var commentKey = firebase.database().ref('editor_content').push(entry)
         .then((data) => {
-            //create a key for load access in realtime-DB
-            const key = data.key
-            commit('sendFromEditorToDatabase', {
-                ...entry,
-                id: key 
-            })
+            console.log(data.key);
         })
         .catch((error) => {
             //for debug only, will be finished later
             console.log(error.message);
-        })
+        }).key;
+
+        var newKey = firebase.database().ref('users').push({
+            userId: userKey,
+            comments: null
+        }).key;
+        var updates = {};
+        updates['/users/' + newKey] = {
+            userId: userKey,
+            comments: commentKey
+        }
+        firebase.database().ref().update(updates);
+    },
+    //load comments for work from realtime Database
+    loadComments({commit, state}, {doi}){
+
     }
     
 }
