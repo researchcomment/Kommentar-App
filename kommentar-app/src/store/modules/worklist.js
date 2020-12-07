@@ -28,7 +28,7 @@ function construct_author(author_ref) {
     let author = [];
     for (let i = 0; i < length; i++) {
         author.push(
-            isNull(author_ref[i.given]) ? author_ref[i].family : author_ref[i].given + " " + author_ref[i].family
+            isNull(author_ref[i].given) ? author_ref[i].family : author_ref[i].given + " " + author_ref[i].family
         )
     }
     author = author.join(" ; ");
