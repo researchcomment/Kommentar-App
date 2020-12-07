@@ -1,6 +1,6 @@
 import firebase from 'firebase/app';
-
-
+import axios from 'axios';
+import worklist from './worklist';
 
 const state = () => ({
     title: null,
@@ -22,10 +22,62 @@ const state = () => ({
     }
 })
 
+const url = "http://api.crossref.org/works/";
+
 const getters = {}
 
+function settimestramp(item){
+    if (item.timestamp){
+        return item.timestamp;
+    }
+    if (item["date-time"]){
+        return new Date(item["date-time"].getTime());
+    }
+    if (item["date-parts"]){
+        let datet=item["date-parts"];
+        return new Date(datet[0],datet[1],datet[2]).getTime();
+    }
+    return null;
+}
+function cons_returnValue(item_ref) {
+        //actural reference of result list from crossref
+        //construct info which needed to be return  
+    item_ref.title = item_ref.title ? item_ref.title[0] : null;
+    item_ref.author = item_ref.author ? worklist.construct_author(item_ref.author) :null;
+    item_ref.domain = item_ref["content-domain"].domain ? item_ref["content-domain"].domain[0]:null;
+    item_ref["published-print"] = item_ref["published-print"] ? settimestramp(item_ref["published-print"]):null;
+    item_ref["deposited"] = item_ref["deposited"] ? settimestramp(item_ref["deposited"]):null;
+    item_ref["created"] = item_ref["created"] ? settimestramp(item_ref["created"]):null;
+    
+    return item_ref;
+    
+}
+
+//async function return promise
+async function get_detail(doi) {
+    var search_url = url+doi;
+    console.log(search_url);
+    return axios.get(search_url).then(res => {
+        //get reference : res -> data -> message
+        let ref = res.data.message;
+        let returnValue=null;
+        if (ref) {
+            //save current 100 results in items as a list
+            console.log("response endding：" + new Date());
+            returnValue = cons_returnValue(ref); 
+            
+        }
+       
+        console.log("results construction endding：" + new Date());
+        console.log(returnValue);
+        return returnValue;
+    }).catch(err => {
+        console.log(err);
+    });
+}
+
 const actions = {
-    askfordetail({ commit, state, rootState}, { doi, username }) {
+    async askfordetail({ commit, state, rootState}, { doi, username }) {
         //set the information to the state,filter it into title author and doi(may changed from google firebase side)
         //commit('setlist',list)
 
@@ -49,36 +101,7 @@ const actions = {
         //由于和search结果页面无法同步，而是重新搜索doi关键字，所以信息一致性不能保证
 
         //give the first 5 commit of each part, can reuse changepage
-        let returnValue = {
-            title: "The 'book' of my own ",
-            author: "You know WHO !!!",
-            editor: "Harry Potter",
-            chair: "Ron Weasley",
-            translator: "Hermine Granger",
-            contributor: "Albus Dumbledore",
-            bibliographic: "///",
-            affiliation: ",",
-            doi: "1232334234",
-            commit_private: {
-                data: [
-                    {
-                        content: "This is a new Day!",
-                        author: "Merker"
-                    }
-                ],
-                length: 1
-            },
-            commit_public: {
-                data: [
-                    {
-                        content: "This is a Bad Day!",
-                        author: "John"
-                    }
-                ],
-                length: 1
-            }
-        }
-        //if possible, we can use state instead
+        let returnValue = await get_detail(doi);
         return returnValue;
     },
 
