@@ -165,6 +165,7 @@ export default {
       return date;
     },
     open(picker) {
+      console.log(this.$refs[picker])
         this.$refs[picker].open();
     },
 

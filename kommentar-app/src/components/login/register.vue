@@ -47,7 +47,7 @@ export default {
       confirm(){
         this.resetError();
         //check if the form is filled
-        if(!this.form.username||!this.form.password||!this.passwordComfirm){    
+        if(!this.form.username||!this.form.password||!this.form.passwordComfirm){    
           this.validationErrors.push("Username/Password can not be empty.")
           this.$message.warning('Username/Password can not be empty.');
         }
@@ -57,7 +57,7 @@ export default {
           this.$message.warning("Password must be at least 6 characters long");
         }
         //Test whether the passwords entered twice are the same
-        if (!(this.form.password === this.passwordComfirm)) {
+        if (!(this.form.password === this.form.passwordComfirm)) {
           this.validationErrors.push("Passwords did not match");
           this.passwordNotMatch=true;
           this.$message.warning("Passwords did not match");
