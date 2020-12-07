@@ -36,37 +36,23 @@ function construct_author(author_ref) {
 }
 //construct results from response
 function cons_returnValue(returnValue, from, to) {
-    if (items[to]) {
-        for (var i = from; i < to; i++) {
-            //actural reference of result list from crossref
-            var item_ref = items[i];
-            //construct info which needed to be return
-            var _title = !isNull(item_ref.title) ? item_ref.title[0] : "unkown";
-            var _author = !isNull(item_ref.author) ? construct_author(item_ref.author) : "unkown";
-            var _doi = !isNull(item_ref.DOI) ? item_ref.DOI : "unkown";
-            returnValue.list.push({
-                title: _title,
-                author: _author,
-                doi: _doi
-            });
-        }
-        return returnValue;
-    } else {
-        for (var i = from; i < items.length; i++) {
-            //actural reference of result list from crossref
-            var item_ref = items[i];
-            //construct info which needed to be return
-            var _title = !isNull(item_ref.title) ? item_ref.title[0] : "unkown";
-            var _author = !isNull(item_ref.author) ? construct_author(item_ref.author) : "unkown";
-            var _doi = !isNull(item_ref.DOI) ? item_ref.DOI : "unkown";
-            returnValue.list.push({
-                title: _title,
-                author: _author,
-                doi: _doi
-            });
-        }
-        return returnValue;
+    let length= to<=items.length? to:items.length;
+    
+    for (var i = from; i < length; i++) {
+        //actural reference of result list from crossref
+        var item_ref = items[i];
+        //construct info which needed to be return
+        var _title = !isNull(item_ref.title) ? item_ref.title[0] : "unkown";
+        var _author = !isNull(item_ref.author) ? construct_author(item_ref.author) : "unkown";
+        var _doi = !isNull(item_ref.DOI) ? item_ref.DOI : "unkown";
+        returnValue.list.push({
+            title: _title,
+            author: _author,
+            doi: _doi
+        });
     }
+    return returnValue;
+    
 }
 
 //async function return promise
