@@ -18,7 +18,8 @@ import bookInfo from "@/components/detail/bookInfo";
 import officialComment from "@/components/detail/officialComment";
 import unofficialComment from "@/components/detail/unofficialComment";
 import commentEditor from "@/components/detail/commentEditor";
-import bottom from '@/components/footer/bottom'
+import bottom from '@/components/footer/bottom';
+import firebase from 'firebase/app';
     export default {
         name:"detail",
         components:{
@@ -38,6 +39,7 @@ import bottom from '@/components/footer/bottom'
                 return this.$route.query.doi;
             },
             username: function () {
+                //console.log(firebase.auth().currentUser.uid)
                 return this.$store.state.account.username;
             },
 
