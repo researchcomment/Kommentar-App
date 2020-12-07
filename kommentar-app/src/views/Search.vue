@@ -54,7 +54,7 @@
         </div>
       </div>
     </div>
-    </div>
+  </div>
 
     <!-- show the results -->
     <ul class="booklist" >
@@ -165,6 +165,7 @@ export default {
       return date;
     },
     open(picker) {
+      console.log(this.$refs[picker])
         this.$refs[picker].open();
     },
 
@@ -188,6 +189,7 @@ export default {
         .then((result) => {
           this.searchResultList = result.list;
           this.resultLength=result.length;
+          this.loading=false;
         }).catch(err => {
         console.log(err);
       })
@@ -198,9 +200,7 @@ export default {
     },
   },
   watch:{
-    searchResultList(newList,oldList){
-      this.loading=false;
-    }
+    
   }
 };
 </script>
@@ -219,9 +219,9 @@ export default {
     margin-left:10%;
     margin-right: 3vw;
     margin-top: 0;
-    display: bolck;
+    display: block;
     width:80%;
-    font-size: 1.5vw;
+    font-size: 2.5vh;
 }
 .filter{
   display: block;
@@ -268,7 +268,7 @@ export default {
   width: 30%;
 }
 .pagesetter{
-  display: bolck;
+  display: block;
   margin-left:8%;
   margin: 2vh;
 }

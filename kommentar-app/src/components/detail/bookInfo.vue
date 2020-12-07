@@ -1,14 +1,16 @@
 <template>
     <div class="details">
-        <h2>{{detail.title}}</h2>
-        <p>Author:{{detail.author}}</p>
-        <p>Editor:{{detail.editor}}</p>
-        <p>Chair:{{detail.chair}}</p>
-        <p>Translator:{{detail.translator}}</p>
-        <p>Contributor:{{detail.contributor}}</p>
-        <p>Bibliographic:{{detail.bibliographic}}</p>
-        <p>Affiliation:{{detail.affiliation}}</p>
-        <p>DOI:{{detail.doi}}</p>
+        <div v-loading.fullscreen.lock="loading">
+            <h2>{{detail.title}}</h2> 
+            <h3>Type:{{detail.type}}</h3>
+            <p>Container-title:{{detail.string}}</p>
+            <p>Author:{{detail.author}}</p>
+            <p>Publischer:{{detail.publisher}}</p>
+            <p>Created:{{new Date(detail.created)}}</p>
+            <p>Published-Print:{{new Date(detail["published-print"])}}</p>
+            <p>Deposited:{{new Date(detail.deposited)}}</p>
+            <p>URL:{{detail.URL}}</p>
+        </div>
     </div>
 </template>
 
@@ -18,17 +20,20 @@
         data(){
             return{
                 detail:[],
+                loading:false,
             }
         },
         computed:{
         },
         mounted(){
+            this.loading=true;
             this.$store.dispatch("commitwork/askfordetail", {
                                     doi:this.doi,
                                     username:this.username,})    
                 .then((result) => {
                     this.detail = result;
-                    }).catch(err => {
+                    this.loading=false;
+                }).catch(err => {
                     console.log(err);
             })
         }
@@ -37,10 +42,13 @@
 
 <style>
     .details h2{
-        font-size: 5vh;
+        font-size: 4vh;
+    }
+     .details h3{
+        font-size: 3vh;
     }
     .details p{
-        font-size: 3vh;
+        font-size: 2.5vh;
     }
     .details{
         margin-top: 5vh;
