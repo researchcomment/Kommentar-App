@@ -1,6 +1,5 @@
 import firebase from 'firebase/app';
-
-
+import axios from 'axios';
 
 const state = () => ({
     title: null,
@@ -46,7 +45,9 @@ const actions = {
         })
         */
 
-        //由于和search结果页面无法同步，而是重新搜索doi关键字，所以信息一致性不能保证
+        //直接使用doi向crossref发送
+      
+        
 
         //give the first 5 commit of each part, can reuse changepage
         let returnValue = {
@@ -97,7 +98,23 @@ const actions = {
     },
     
     //create new Entry in realtime-DB for Editor-Input 
-    sendFromEditorToDatabase({ commit, state }, { doi, username, content }) {
+    async sendFromEditorToDatabase({ commit, state }, { doi, username, content }) {
+        const details = 
+        await axios.get("http://api.crossref.org/works/10.4324/9781315175041").then(res=>{
+            console.log(res.data.message);
+            var mes = res.data.message;
+            let returnValue = {
+                title: mes['title'],
+                author: mes['author'],
+                url: mes['URL'],
+                ISBN: mes['ISBN'],
+                DOI: mes['DOI']
+            }
+            return returnValue
+        })
+        
+        console.log(details)
+        
         //set content with doi username to database
         const userKey = firebase.auth().currentUser.uid;
         var aData = new Date();

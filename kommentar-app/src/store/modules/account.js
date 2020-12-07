@@ -7,7 +7,7 @@ const state = () => ({
 })
 
 const getters = {
-    getUser(state, getters, rootState, rootGetters) {
+    getUser(state) {
         return rootState.username;
     },
 
@@ -30,7 +30,7 @@ const actions = {
             .auth()
             .signInWithEmailAndPassword(username, password)
             .then(response => {
-                commit("account/setusername", username);
+                commit("setusername", username);
             })
             .catch(error => {
                 var errorMessage = error.message;
@@ -45,7 +45,7 @@ const actions = {
         .signOut()
         .then(() => {
             commit('setrole',null)
-            commit('account/setusername',null)
+            commit('setusername',null)
         })
         .catch(error => {
             commit("setError", error.message);
@@ -60,7 +60,7 @@ const actions = {
             .createUserWithEmailAndPassword(username, password)
             .then(response => {
                 console.log('true')
-                commit("account/setusername", username);
+                commit("setusername", username);
 
                 //初始化DB中的用户信息
                 var userId = firebase.auth().currentUser.uid;
