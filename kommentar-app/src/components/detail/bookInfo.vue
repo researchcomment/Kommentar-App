@@ -7,7 +7,7 @@
             <p>Author:{{detail.author}}</p>
             <p>Publischer:{{detail.publisher}}</p>
             <p>Created:{{new Date(detail.created)}}</p>
-            <p>Published-Print:{{new Date(detail.published-print)}}</p>
+            <p>Published-Print:{{new Date(detail["published-print"])}}</p>
             <p>Deposited:{{new Date(detail.deposited)}}</p>
             <p>URL:{{detail.URL}}</p>
         </div>
@@ -42,13 +42,13 @@
 
 <style>
     .details h2{
-        font-size: 6vh;
+        font-size: 4vh;
     }
      .details h3{
-        font-size: 5vh;
+        font-size: 3vh;
     }
     .details p{
-        font-size: 4vh;
+        font-size: 2.5vh;
     }
     .details{
         margin-top: 5vh;

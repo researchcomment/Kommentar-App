@@ -44,7 +44,7 @@
 <style>
 .box-card{
     overflow: hidden;
-    padding-top: 3vh;
+    padding-top: 1vh;
 }
 
 .box-card a{
@@ -72,7 +72,7 @@
     text-decoration: underline;
 }
 .box-card p{
-    margin-bottom: 3vh;
+    margin-bottom: 2vh;
     font-size: 100%;
 }
 </style>

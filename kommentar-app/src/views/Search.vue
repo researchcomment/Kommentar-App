@@ -1,6 +1,6 @@
 <template>
   <!-- List search results -->
-
+  <div>
     <div class="maincontent">
       <div v-loading.fullscreen.lock="loading">
     
@@ -54,7 +54,7 @@
         </div>
       </div>
     </div>
- 
+  </div>
 
     <!-- show the results -->
     <ul class="booklist" >
@@ -219,9 +219,9 @@ export default {
     margin-left:10%;
     margin-right: 3vw;
     margin-top: 0;
-    display: bolck;
+    display: block;
     width:80%;
-    font-size: 1.5vw;
+    font-size: 2.5vh;
 }
 .filter{
   display: block;
@@ -230,7 +230,7 @@ export default {
   line-height: 200%;
   margin-top: 1vh;
   height: 50%;
-  font-size: 1.2vw;
+  font-size: 2.5vh;
 }
 .filter p{
   display: inline;
@@ -268,7 +268,7 @@ export default {
   width: 30%;
 }
 .pagesetter{
-  display: bolck;
+  display: block;
   margin-left:8%;
   margin: 2vh;
 }
