@@ -34,6 +34,8 @@
           year-format="{value}"
           month-format="{value}"
           date-format="{value}"
+          :startDate="defaultdate.from"
+          :endDate="date.to"
          >
         </mt-datetime-picker>
         <mt-datetime-picker
@@ -43,6 +45,8 @@
           year-format="{value}"
           month-format="{value}"
           date-format="{value}"
+          :startDate="date.from"
+          :endDate="defaultdate.to"
          >
         </mt-datetime-picker>
         <div class="fbtn">
@@ -104,6 +108,10 @@ export default {
       loading:false,
       filterflag:true,
       resultLength:0,
+      defaultdate:{
+        from:new Date(new Date().setFullYear(1968)),
+        to:new Date()
+      },
     };
   },
   computed: {
