@@ -1,6 +1,6 @@
 <template>
   <!-- List search results -->
-  <div>
+
     <div class="maincontent">
       <div v-loading.fullscreen.lock="loading">
     
@@ -54,7 +54,7 @@
         </div>
       </div>
     </div>
-    </div>
+ 
 
     <!-- show the results -->
     <ul class="booklist" >
@@ -189,6 +189,7 @@ export default {
         .then((result) => {
           this.searchResultList = result.list;
           this.resultLength=result.length;
+          this.loading=false;
         }).catch(err => {
         console.log(err);
       })
@@ -199,9 +200,7 @@ export default {
     },
   },
   watch:{
-    searchResultList(newList,oldList){
-      this.loading=false;
-    }
+    
   }
 };
 </script>
