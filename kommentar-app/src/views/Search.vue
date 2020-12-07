@@ -202,7 +202,7 @@ export default {
     margin-left:10%;
     margin-right: auto;
     width:80%;
-    margin-top: 15px;
+    margin-top: 2vh;
     display: block;
 }
 .booklist{
@@ -220,9 +220,9 @@ export default {
   margin-left:10%;
   width: 60%;
   line-height: 200%;
-  margin-top: 1vh;
+  margin-top: 2vh;
   height: 50%;
-  font-size: 1.2vw;
+  font-size: 1.8vh;
 }
 .filter p{
   display: inline;
@@ -237,7 +237,7 @@ export default {
 .filterselct span{
   display: inline-block;
   width: 5vh;
-  font-size: 1vh;
+  font-size: 2vh;
 }
 .filterselct .mint-button{
   width: 14vh;

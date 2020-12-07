@@ -48,19 +48,19 @@
 
 .box-card a{
     text-decoration:none;
-    font-size: 100%;
+    font-size: 2.3vh;
     color:#76C06B;
 }
 .box-card a:hover{
     text-decoration: underline;
     color: #76C06B;
-    }
+}
 .box-card a:link {color:#76C06B}      /* 未访问链接*/
 .box-card a:visited {color:#76C06B}  /* 已访问链接 */
 
 .box-card h3{
     margin: 1vh auto;
-    font-size: 100%;
+    font-size: 3vh;
     cursor: pointer;
      width:auto; 
      display:inline-block !important; 
@@ -72,6 +72,6 @@
 }
 .box-card p{
     margin-bottom: 3vh;
-    font-size: 100%;
+    font-size: 2vh;
 }
 </style>
