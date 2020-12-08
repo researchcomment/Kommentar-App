@@ -3,6 +3,8 @@ import App from './App.vue'
 import router from './router'
 import store from './store'
 import axios from 'axios'
+import { sync } from 'vuex-router-sync'
+sync(store, router);
 
 import VueAxios from 'vue-axios'
 import "@/plugins/firebase"

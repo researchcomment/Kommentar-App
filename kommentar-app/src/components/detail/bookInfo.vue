@@ -1,14 +1,15 @@
 <template>
     <div class="details">
-        <h2>{{detail.title}}</h2>
-        <p>Author:{{detail.author}}</p>
-        <p>Editor:{{detail.editor}}</p>
-        <p>Chair:{{detail.chair}}</p>
-        <p>Translator:{{detail.translator}}</p>
-        <p>Contributor:{{detail.contributor}}</p>
-        <p>Bibliographic:{{detail.bibliographic}}</p>
-        <p>Affiliation:{{detail.affiliation}}</p>
-        <p>DOI:{{detail.doi}}</p>
+        <div v-loading.fullscreen.lock="loading">
+            <h2>
+                {{detail.title}}
+            </h2> 
+            <div v-for="(item, key) in detail" :key="key">
+                <p v-if="key!='title'">
+                    {{key}}:{{item}}
+                </p>
+            </div>
+        </div>
     </div>
 </template>
 
@@ -18,17 +19,21 @@
         data(){
             return{
                 detail:[],
+                loading:false,
             }
         },
         computed:{
         },
         mounted(){
+            this.loading=true;
             this.$store.dispatch("commitwork/askfordetail", {
                                     doi:this.doi,
                                     username:this.username,})    
                 .then((result) => {
-                    this.detail = result;
-                    }).catch(err => {
+                    this.detail=result;
+
+                    this.loading=false;
+                }).catch(err => {
                     console.log(err);
             })
         }
@@ -37,10 +42,13 @@
 
 <style>
     .details h2{
-        font-size: 5vh;
+        font-size: 4vh;
+    }
+     .details h3{
+        font-size: 3vh;
     }
     .details p{
-        font-size: 3vh;
+        font-size: 2.5vh;
     }
     .details{
         margin-top: 5vh;

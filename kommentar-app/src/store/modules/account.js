@@ -7,8 +7,8 @@ const state = () => ({
 })
 
 const getters = {
-    getUser(state) {
-        return state.username;
+    getUser(state, getters, rootState, rootGetters) {
+        return rootState.username;
     },
 
     isAuth(state) {
@@ -59,14 +59,31 @@ const actions = {
             .auth()
             .createUserWithEmailAndPassword(username, password)
             .then(response => {
+                console.log('true')
                 commit("setusername", username);
+
+                //初始化DB中的用户信息
+                var userId = firebase.auth().currentUser.uid;
+                var entry = {
+                    username: username,
+                    role: 'user',
+                    email: username, 
+                }
+                firebase.database().ref('users/' + userId).set(entry)
+
+                //初始化用户信息中的comments目录
+                var coments = {
+                    defaultKey: "defaultType"
+                }
+                firebase.database().ref('users/' + userId + '/comments').set(coments)
             })
             .catch(error => {
+                console.log('false')
                 var errorMessage = error.message;
                 commit("setError", errorMessage);
-               
-                
             });
+
+        
     }
 }
 

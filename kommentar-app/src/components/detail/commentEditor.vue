@@ -96,4 +96,7 @@ export default {
 .comeditor .quill-editor .ql-toolbar .ql-formats .ql-size{
     width: 12vh;
 }
+.comeditor .quill-editor .ql-toolbar .ql-formats .ql-expanded .ql-size{
+    width: 12vh;
+}
 </style>

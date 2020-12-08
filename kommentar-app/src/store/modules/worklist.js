@@ -14,13 +14,7 @@ var last_offset = -1;
 var last_keyword = "";
 var last_date = new Date().setFullYear(2019);
 
-function isNull(obj) {
-    if (obj) {
-        return false;
-    } else {
-        return true;
-    }
-}
+
 //parameter is a referrence of a list of authors
 //output is a string of author like: alice ; bob ; eve
 function construct_author(author_ref) {
@@ -28,7 +22,7 @@ function construct_author(author_ref) {
     let author = [];
     for (let i = 0; i < length; i++) {
         author.push(
-            isNull(author_ref[i].given) ? author_ref[i].family : author_ref[i].given + " " + author_ref[i].family
+            !author_ref[i].given ? author_ref[i].family : author_ref[i].given + " " + author_ref[i].family
         )
     }
     author = author.join(" ; ");
@@ -36,37 +30,23 @@ function construct_author(author_ref) {
 }
 //construct results from response
 function cons_returnValue(returnValue, from, to) {
-    if (items[to]) {
-        for (var i = from; i < to; i++) {
-            //actural reference of result list from crossref
-            var item_ref = items[i];
-            //construct info which needed to be return
-            var _title = !isNull(item_ref.title) ? item_ref.title[0] : "unkown";
-            var _author = !isNull(item_ref.author) ? construct_author(item_ref.author) : "unkown";
-            var _doi = !isNull(item_ref.DOI) ? item_ref.DOI : "unkown";
-            returnValue.list.push({
-                title: _title,
-                author: _author,
-                doi: _doi
-            });
-        }
-        return returnValue;
-    } else {
-        for (var i = from; i < items.length; i++) {
-            //actural reference of result list from crossref
-            var item_ref = items[i];
-            //construct info which needed to be return
-            var _title = !isNull(item_ref.title) ? item_ref.title[0] : "unkown";
-            var _author = !isNull(item_ref.author) ? construct_author(item_ref.author) : "unkown";
-            var _doi = !isNull(item_ref.DOI) ? item_ref.DOI : "unkown";
-            returnValue.list.push({
-                title: _title,
-                author: _author,
-                doi: _doi
-            });
-        }
-        return returnValue;
+    let length= to<=items.length? to:items.length;
+
+    for (var i = from; i < length; i++) {
+        //actural reference of result list from crossref
+        var item_ref = items[i];
+        //construct info which needed to be return
+        var _title = item_ref.title ? item_ref.title[0] : "unkown";
+        var _author = item_ref.author ? construct_author(item_ref.author) : "unkown";
+        var _doi = item_ref.DOI ? item_ref.DOI : "unkown";
+        returnValue.list.push({
+            title: _title,
+            author: _author,
+            doi: _doi
+        });
     }
+    return returnValue;
+
 }
 
 //async function return promise
@@ -98,7 +78,7 @@ async function get_worklist(keyword, rows, offset, date) {
         return axios.get(search_url).then(res => {
             //get reference : res -> data -> message
             let ref = res.data.message;
-            if (!isNull(ref)) {
+            if (ref) {
                 //save current 100 results in items as a list
                 items = ref.items;
                 console.log("response endding：" + new Date());
@@ -121,9 +101,10 @@ async function get_worklist(keyword, rows, offset, date) {
         return returnValue;
     }
 }
-
+//type=[""]
+//flag=true/false true:new search false:page change
 const actions = {
-    async search({ commit, state }, { keyword, from, to, date }) {
+    async search({ commit, state }, { keyword, from, to, date, type,flag }) {
         //set the information to the state,filter it into title author and doi(may changed from google firebase side)
         //commit('setlist',list)
         //give the first 10 information(Todo), can reuse changepage
@@ -161,5 +142,6 @@ export default {
     state,
     getters,
     actions,
-    mutations
+    mutations,
+    construct_author
 }
