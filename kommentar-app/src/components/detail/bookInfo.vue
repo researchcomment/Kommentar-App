@@ -1,15 +1,14 @@
 <template>
     <div class="details">
         <div v-loading.fullscreen.lock="loading">
-            <h2>{{detail.title}}</h2> 
-            <h3>Type:{{detail.type}}</h3>
-            <p>Container-title:{{detail.string}}</p>
-            <p>Author:{{detail.author}}</p>
-            <p>Publischer:{{detail.publisher}}</p>
-            <p>Created:{{new Date(detail.created)}}</p>
-            <p>Published-Print:{{new Date(detail["published-print"])}}</p>
-            <p>Deposited:{{new Date(detail.deposited)}}</p>
-            <p>URL:{{detail.URL}}</p>
+            <h2>
+                {{detail.title}}
+            </h2> 
+            <div v-for="(item, key) in detail" :key="key">
+                <p v-if="key!='title'">
+                    {{key}}:{{item}}
+                </p>
+            </div>
         </div>
     </div>
 </template>
@@ -31,7 +30,8 @@
                                     doi:this.doi,
                                     username:this.username,})    
                 .then((result) => {
-                    this.detail = result;
+                    this.detail=result;
+
                     this.loading=false;
                 }).catch(err => {
                     console.log(err);
