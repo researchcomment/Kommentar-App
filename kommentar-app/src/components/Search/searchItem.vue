@@ -72,12 +72,7 @@
     text-decoration: underline;
 }
 .box-card p{
-<<<<<<< HEAD
     margin-bottom: 3vh;
     font-size: 2vh;
-=======
-    margin-bottom: 2vh;
-    font-size: 100%;
->>>>>>> jldev/issuefix
 }
 </style>

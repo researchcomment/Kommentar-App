@@ -56,4 +56,7 @@
         margin-right: 10vw;
         margin-bottom: 1vh;
     }
+    .details{
+        word-break: break-all;
+    }
 </style>
