@@ -66,4 +66,5 @@ import firebase from 'firebase/app';
     margin: auto 0;
     width: 100%;
 }
+
 </style>
