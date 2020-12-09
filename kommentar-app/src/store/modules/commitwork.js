@@ -166,6 +166,7 @@ const actions = {
             //comments是空的
             firebase.database().ref('doi_repository/' + doi_key + '/comments').push(newComent)
         }
+        //
         //firebase.database().ref('doi_repository/' + newDoi_key + '/comments').set(newComent)   
         /*
         firebase.database().ref('doi_repository').push(newComent)
