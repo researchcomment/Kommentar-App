@@ -21,17 +21,15 @@ function construct_author(author_ref) {
     var length = author_ref.length;
     let author = [];
     for (let i = 0; i < length; i++) {
-        author.push(
-            !author_ref[i].given ? author_ref[i].family : author_ref[i].given + " " + author_ref[i].family
-        )
+        author.push(!author_ref[i].given ? author_ref[i].family : author_ref[i].given + " " + author_ref[i].family)
     }
     author = author.join(" ; ");
     return author;
 }
 //construct results from response
 function cons_returnValue(returnValue, from, to) {
-    let length= to<=items.length? to:items.length;
-    
+    let length = to <= items.length ? to : items.length;
+
     for (var i = from; i < length; i++) {
         //actural reference of result list from crossref
         var item_ref = items[i];
@@ -46,12 +44,14 @@ function cons_returnValue(returnValue, from, to) {
         });
     }
     return returnValue;
-    
+
 }
 
 //async function return promise
-async function get_worklist(keyword, rows, offset, date) {
-    if (offset % cache == 0) {
+//flag=true : send new request, get results from response; 
+//falg=false : do not send request, get result from cache
+async function get_worklist(keyword, rows, offset, date, type, flag) {
+    if (offset % cache == 0 || flag) {
         last_offset = offset;
         last_keyword = keyword;
         last_date = date;
@@ -66,8 +66,9 @@ async function get_worklist(keyword, rows, offset, date) {
         /*var search_url = url + keyword + "&filter=from-update-date:" + datefrom +
             ",until-update-date:" + dateto +
             "&rows=" + cache + "&select=DOI,title,author" + "&offset=" + offset;*/
+        var filter_type = type.map(x => "type:" + x).join(",");
         var search_url = url + "filter=from-update-date:" + datefrom +
-            ",until-update-date:" + dateto + "&select=DOI,title,author" + "&query=" + keyword + "&rows=" + cache + "&offset=" + offset;
+            ",until-update-date:" + dateto + "&select=DOI,title,author" + "&filter=" + filter_type + "&query=" + keyword + "&rows=" + cache + "&offset=" + offset;
         console.log(search_url);
         let returnValue = {
             list: [],
@@ -103,7 +104,7 @@ async function get_worklist(keyword, rows, offset, date) {
 //type=[""]
 //flag=true/false true:new search false:page change
 const actions = {
-    async search({ commit, state }, { keyword, from, to, date, type,flag }) {
+    async search({ commit, state }, { keyword, from, to, date, type, flag }) {
         //set the information to the state,filter it into title author and doi(may changed from google firebase side)
         //commit('setlist',list)
         //give the first 10 information(Todo), can reuse changepage
@@ -114,7 +115,7 @@ const actions = {
         if (to)
             pageto = to;
         //wait inorder to know the setlest and setset will not earlier then them
-        let returnValue = await get_worklist(keyword, pageto - pagefrom, pagefrom, date);
+        let returnValue = await get_worklist(keyword, pageto - pagefrom, pagefrom, date, type, flag);
         commit('setlist', returnValue.list);
         return returnValue;
     }
