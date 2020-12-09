@@ -220,6 +220,7 @@ const actions = {
                 return commentsList.slice().reverse()
             }
         })
+        console.log(resultList);
         return resultList
     },
     async loadOfficialComments({ commit, state }, { doi, rankType }) {

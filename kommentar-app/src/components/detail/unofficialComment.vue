@@ -58,9 +58,15 @@ export default {
                         [
                         ]
                         */
-            var result = await this.$store.dispatch("commitwork/loadUnOfficialComments", 
+            this.$store.dispatch("commitwork/loadUnOfficialComments", 
             {doi : this.doi})
-            this.commentList = result;
+            .then((result) => {
+                console.log(result);
+                this.commentList = result;
+                }).catch(err => {
+                    console.log(err);
+            })
+            
         }
     }
         
