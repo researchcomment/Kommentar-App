@@ -76,32 +76,35 @@ async function get_detail(doi) {
 }
 async function getDoi_key(doi) {
     //每次打details页面的时候在数据库中寻找对应doi的键并定义当前状态的doi_key,方法sendFromEditorToDatabase进行调用
-        //这个定义doi_key的位置需要优化，注意异步操作
-        var doi_key = null;
-        firebase.database().ref('doi_repository').once('value').then((snapshot) => {
-            var doi_found = false;
-            snapshot.forEach((childSnapshot) => {
-                var doiKey = childSnapshot.key;
-                var childDoi = childSnapshot.doi_nr;
-                if (childDoi === doi) {
-                    doi_found = true;
-                    doi_key = doiKey
-                }
-            })
-            if(doi_found === false){
-                var newDoiKey = firebase.database().ref('doi_repository').push().key;
-                doi_key = newDoiKey
+    //这个定义doi_key的位置需要优化，注意异步操作
+    const currentDoi = doi;
+    firebase.database().ref('doi_repository').once('value').then((snapshot) => {
+        //遍历所有doi_key(works),查看doi_key目录下的doi_nr是否已经存在，如果存在返回所属的doi_key，否侧返回null
+        snapshot.forEach((childSnapshot) => {
+            //doi_key
+            const doiKey = childSnapshot.key;
+            //doi_nr
+            const childDoi = childSnapshot.doi_nr;
+
+            if (childDoi === currentDoi) {
+                //doi_nr已经存在
+                return doiKey
             }
         })
-            .catch((error) => {
-                console.log(error)
-            })
-            return doi_key
+    })
+        .catch((error) => {
+            console.log(error)
+        })
+    const init_doi_key_item = firebase.database().ref('doi_repository').push({
+        doi_nr: doi
+    }).key
+    return init_doi_key_item;
 }
 
 const actions = {
     async askfordetail({ commit, state, rootState }, { doi, username }) {
-       
+        //give the first 5 commit of each part, can reuse changepage
+        let returnValue = await get_detail(doi);
         return returnValue;
     },
 
@@ -157,8 +160,15 @@ const actions = {
         }
         //在doi资料库中生成一个评论的key,并把key加入用户数据的comments项中
         //此处只能使用firebase自动配置的key，doi形式不适合作为key
-
-        firebase.database().ref('doi_repository/' + doi_key).push(newComent)
+        let doi_key = await getDoi_key(doi);
+        console.log(doi_key)
+        if (!!!firebase.database().ref('doi_repository' + doi_key).comments) {
+            //comments是空的
+            firebase.database().ref('doi_repository/' + doi_key + '/comments').push(newComent)
+        }
+        //firebase.database().ref('doi_repository/' + newDoi_key + '/comments').set(newComent)   
+        /*
+        firebase.database().ref('doi_repository').push(newComent)
             .then((data) => {
                 //读取一次当前用户在DB中的信息,并且更新用户信息中的comments目录
                 firebase.database().ref('/users/' + userKey).once('value').then((snapshot) => {
@@ -174,6 +184,7 @@ const actions = {
                 //for debug only, will be finished later
                 console.log(error.message);
             }).key;
+        */
     },
 
     //load comments for work from realtime Database
@@ -251,11 +262,7 @@ const mutations = {
 
     setusername(state, username) {
         state.username = username
-    },
-    setdoi_key(state, doi_key) {
-        state.doi_key = doi_key
     }
-
 }
 
 
