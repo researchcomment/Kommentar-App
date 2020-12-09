@@ -12,7 +12,7 @@ const getters = {
     },
 
     isAuth(state) {
-        return !!state.username;
+        return state.username;
     },
 
     getError(state) {
@@ -33,8 +33,7 @@ const actions = {
                 commit("setusername", username);
             })
             .catch(error => {
-                var errorMessage = error.message;
-                commit("setError", errorMessage);
+                commit("setError", error.message);
             });
     },
 
@@ -78,9 +77,8 @@ const actions = {
                 firebase.database().ref('users/' + userId + '/comments').set(coments)
             })
             .catch(error => {
-                console.log('false')
-                var errorMessage = error.message;
-                commit("setError", errorMessage);
+                console.log('false');
+                commit("setError", error.message);
             });
 
         

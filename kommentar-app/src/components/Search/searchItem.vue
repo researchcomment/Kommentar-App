@@ -4,13 +4,11 @@
         <div class="box-card"
         :href="book.url"
         >
-        <a @click="searchOutside">DOI :{{book.doi}}</a>
-
-        <div>
-            <h3 @click="seeDetail()">{{book.title}}</h3>
-        </div>
-        
-        <p>Author: {{book.author}}</p>
+            <a @click="searchOutside">DOI :{{book.doi}}</a>
+            <div>
+                <h3 @click="seeDetail()">{{book.title}}</h3>
+            </div>
+            <p>Author: {{book.author}}</p>
             
         </div>
     </div>
@@ -65,7 +63,6 @@
     cursor: pointer;
      width:auto; 
      display:inline-block !important; 
-     display:inline;
 }
 .box-card h3:hover{
     cursor: pointer;

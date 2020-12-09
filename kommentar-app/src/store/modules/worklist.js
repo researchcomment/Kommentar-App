@@ -56,8 +56,7 @@ async function get_worklist(keyword, rows, offset, date) {
         last_keyword = keyword;
         last_date = date;
         //convert keyword in this format list : keyword1+keyword2+...
-        keyword = keyword.split(" ");
-        keyword = keyword.join("+");
+        keyword = keyword.split(" ").join("+");
         let datefrom = date.from.getFullYear() + "-" +
             ((date.from.getMonth() + 1) < 10 ? "0" : "") + (date.from.getMonth() + 1) +
             "-" + (date.from.getDate() < 10 ? "0" : "") + date.from.getDate();
