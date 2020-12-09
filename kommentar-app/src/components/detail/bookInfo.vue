@@ -7,7 +7,7 @@
             <div>
                 <div v-for="(item, key) in detail" :key="key">
                 <img src="../../../public/static/book.jpg" align="right"  v-if="item == 'book-chapter'" class="workimg">
-                <img src="../../../public/static/journal-article.jpg" align="right"  v-if="item == 'journal-article'" class="workimg">
+                <img src="../../../public/static/journal-article.jpg" align="right"  v-if="item == 'journal'" class="workimg">
                 <img src="../../../public/static/proceeding.jpg" align="right"  v-if="item == 'proceedings'" class="workimg">
                 <img src="../../../public/static/dissertations.jpg" align="right"  v-if="item == 'dissertations'" class="workimg">
                 <img src="../../../public/static/components.jpg" align="right"  v-if="item == 'component'" class="workimg">

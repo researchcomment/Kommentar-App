@@ -66,9 +66,9 @@ async function get_worklist(keyword, rows, offset, date, type, flag) {
         /*var search_url = url + keyword + "&filter=from-update-date:" + datefrom +
             ",until-update-date:" + dateto +
             "&rows=" + cache + "&select=DOI,title,author" + "&offset=" + offset;*/
-        var filter_type = type.map(x => "type:" + x).join(",");
-        var search_url = url + "filter=from-update-date:" + datefrom +
-            ",until-update-date:" + dateto + "&select=DOI,title,author" + "&filter=" + filter_type + "&query=" + keyword + "&rows=" + cache + "&offset=" + offset;
+        var filter_type = type.map(x => "type:" + x).join(',');
+        var search_url = url + "select=DOI,title,author&query=" + keyword + "&filter=from-update-date:" + datefrom +
+            ",until-update-date:"  + dateto +","+ filter_type + "&rows=" + cache + "&offset=" + offset;
         console.log(search_url);
         let returnValue = {
             list: [],
@@ -114,6 +114,8 @@ const actions = {
             pagefrom = from;
         if (to)
             pageto = to;
+        if (!type)
+            type=["monograph","report","book","proceedings-article","journal","dissertation"];
         //wait inorder to know the setlest and setset will not earlier then them
         let returnValue = await get_worklist(keyword, pageto - pagefrom, pagefrom, date, type, flag);
         commit('setlist', returnValue.list);
