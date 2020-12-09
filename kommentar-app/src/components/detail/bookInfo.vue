@@ -1,15 +1,28 @@
 <template>
     <div class="details">
         <div v-loading.fullscreen.lock="loading">
-            <h2>{{detail.title}}</h2> 
-            <h3>Type:{{detail.type}}</h3>
-            <p>Container-title:{{detail.string}}</p>
-            <p>Author:{{detail.author}}</p>
-            <p>Publischer:{{detail.publisher}}</p>
-            <p>Created:{{new Date(detail.created)}}</p>
-            <p>Published-Print:{{new Date(detail["published-print"])}}</p>
-            <p>Deposited:{{new Date(detail.deposited)}}</p>
-            <p>URL:{{detail.URL}}</p>
+            <h2>
+                {{detail.title}}
+            </h2> 
+            <div>
+                <div v-for="(item, key) in detail" :key="key">
+                <img src="../../../public/static/book.jpg" align="right"  v-if="item == 'book-chapter'" class="workimg">
+                <img src="../../../public/static/journal-article.jpg" align="right"  v-if="item == 'journal-article'" class="workimg">
+                <img src="../../../public/static/proceeding.jpg" align="right"  v-if="item == 'proceedings'" class="workimg">
+                <img src="../../../public/static/dissertations.jpg" align="right"  v-if="item == 'dissertations'" class="workimg">
+                <img src="../../../public/static/components.jpg" align="right"  v-if="item == 'component'" class="workimg">
+                <p v-if=" key=='type'">
+                    {{key}}: {{item}}
+                </p>
+                
+            </div>
+            </div>
+            <div v-for="(item, key) in detail" :key="key">
+                <p v-if="(key!='title')&&(item!=null)&&(item[0]!=null)&&(key!='type')">
+                    {{key}}: {{item}}
+                </p>
+                
+            </div>
         </div>
     </div>
 </template>
@@ -58,5 +71,11 @@
     }
     .details{
         word-break: break-all;
+    }
+    .workimg{
+        width: 40vw;
+        top: 0vh;
+        padding: 2vh;
+        padding-right: 0;
     }
 </style>
