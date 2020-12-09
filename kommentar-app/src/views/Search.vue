@@ -68,9 +68,9 @@
     <div v-if="(searchResultList.length == 0) && (!loading)"><img class="sorryimg" src="../../public/static/sorry.png" alt=""></div>
     <!-- change Pages -->
     <div class="pagesetter" v-if= "(!loading)&&(searchResultList.length != 0)">
-      <i class="iconfont icon-zuojiantou" v-show="(!loading)&&(page>1)" @click="gotoPage(page-1)"></i>
+      <i class="iconfont icon-zuojiantou" v-show="(!loading)&&(page>1)" @click="gotoPage(page-1,false)"></i>
       <p>{{page}}</p>
-      <i class="iconfont icon-youjiantou" v-show="(!loading)" @click="gotoPage(page+1)"></i>
+      <i class="iconfont icon-youjiantou" v-show="(!loading)" @click="gotoPage(page+1,false)"></i>
     </div>
    
   </div>
@@ -126,7 +126,7 @@ export default {
     }
   },
   created() {
-    this.gotoPage(1);
+    this.gotoPage(1,true);
   },
   beforeRouteEnter (to, from, next) {
     next(vm => {
@@ -139,7 +139,7 @@ export default {
       if (!this.$route.query.keyword)
         next('/');
       else
-        this.gotoPage(1);
+        this.gotoPage(1,true);
    
   },
   methods: {
@@ -174,7 +174,7 @@ export default {
     },
 
     //goto the n. Page, 1 is the first page
-    gotoPage(n){
+    gotoPage(n,flagg){
       if(n<=0){
         this.$message.warning("invalid Page number");
       }
@@ -185,7 +185,7 @@ export default {
                                 keyword:this.searchText,
                                     from:(this.page-1)*10,
                                           to:this.page*10,
-                                            date:this.date})  
+                                            date:this.date,flag:flagg})  
         .then((result) => {
           this.searchResultList = result.list;
           this.resultLength=result.length;

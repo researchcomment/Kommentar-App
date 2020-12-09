@@ -1,15 +1,6 @@
 <template>
   <div>
       <!-- Personal information -->
-      <!-- <p>Profile</p>
-      <p> 
-        <span>Username : </span>
-        <span>{{username}}</span>
-      </p>
-      <p>
-        <span>Role :</span> 
-        <span>{{role}}</span>
-      </p> -->
       <div @click="close" class="topbar">
         <div class="content">
           <span class="iconfont icon-yonghu"></span>{{username}}

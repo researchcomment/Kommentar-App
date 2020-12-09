@@ -49,11 +49,13 @@ export default {
     computed: {
         editor() {
             return this.$refs.quillEditor.quill;
-        },
+        }
+        /*,
         username: function () {
                 //console.log(firebase.auth().currentUser.uid)
                 return this.$store.state.account.username;
         },
+        */
     },
     methods: {
         //upload the comment to backend 

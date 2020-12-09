@@ -18,19 +18,13 @@
 <script>
 import comment from "./comment"
 export default {
+    props:["doi","username"],
     components:{
         comment,
     },
     data(){
         return {
-            commentList:[
-                        {content:"234234",
-                            author:"xxxxx",},
-                        {content:"234234",
-                            author:"xxxxx",},
-                        {content:"234234",
-                            author:"xxxxx",}
-                        ],
+            commentList:[],
         }
     },
     created() {
@@ -47,7 +41,12 @@ export default {
     },
     methods:{
         //ask data base the comments
-        getComments(){
+
+        //后端提供方法:loadUnOfficialComments, rankType
+        //输入需要 doi
+        //返回所有对于给出doi的作品的unofficalcomments的list，结构期望的相同
+        async getComments(){
+            /*
             this.commentList=[
                         {content:"234234",
                             author:"xxxxx",},
@@ -55,7 +54,19 @@ export default {
                             author:"xxxxx",},
                         {content:"234234",
                             author:"xxxxx",}
-                        ];
+                        ]，
+                        [
+                        ]
+                        */
+            this.$store.dispatch("commitwork/loadUnOfficialComments", 
+            {doi : this.doi})
+            .then((result) => {
+                console.log(result);
+                this.commentList = result;
+                }).catch(err => {
+                    console.log(err);
+            })
+            
         }
     }
         

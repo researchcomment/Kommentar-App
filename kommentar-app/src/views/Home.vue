@@ -15,7 +15,6 @@
 <script>
    import searchBar from '@/components/Search/searchBar'
    import bottom from '@/components/footer/bottom'
-import Bottom from '../components/footer/bottom.vue'
     export default {
         name: 'home',
         components:{
