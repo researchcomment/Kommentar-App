@@ -1,14 +1,14 @@
 <template>
     <div class="details">
         <h2>{{detail.title}}</h2>
-        <p>Author:{{detail.author}}</p>
-        <p>Editor:{{detail.editor}}</p>
+        <p>Created:{{new Date(detail.created)}}</p>
+        <p>Editor:{{detail.author}}</p>
         <p>Chair:{{detail.chair}}</p>
         <p>Translator:{{detail.translator}}</p>
         <p>Contributor:{{detail.contributor}}</p>
         <p>Bibliographic:{{detail.bibliographic}}</p>
         <p>Affiliation:{{detail.affiliation}}</p>
-        <p>DOI:{{detail.doi}}</p>
+        <p>DOI:{{detail.DOI}}</p>
     </div>
 </template>
 

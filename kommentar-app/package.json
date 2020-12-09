@@ -10,7 +10,7 @@
     "@tinymce/tinymce-vue": "^4.0.0",
     "ant-design-vue": "^1.7.2",
     "axios": "^0.21.0",
-    "core-js": "^3.8.0",
+    "core-js": "^3.8.1",
     "element-ui": "^2.14.1",
     "firebase": "^8.1.2",
     "mint-ui": "^2.2.13",
