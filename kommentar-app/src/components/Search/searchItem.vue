@@ -69,7 +69,12 @@
     text-decoration: underline;
 }
 .box-card p{
+<<<<<<< HEAD
     margin-bottom: 2vh;
     font-size: 100%;
+=======
+    margin-bottom: 3vh;
+    font-size: 2vh;
+>>>>>>> a16b737b2d2585e9b5c7c99473fadc523053ba21
 }
 </style>
