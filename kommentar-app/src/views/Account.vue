@@ -36,14 +36,34 @@ export default {
       this.$router.push('/')
     },
   },
+  mounted(){
+    var username=sessionStorage.getItem("username")||localStorage.getItem("username");
+    if(username){
+      this.$store.commit("account/setusername",username);
+    }
+    
+  },
   watch:{
     //Monitor login/logout status and prompt success message
     username(newName,oldName){
+      var username=sessionStorage.getItem("username")||localStorage.getItem("username");
+      if(username){
+        return;
+      }
       if((!oldName)&&newName){
-        this.$message.success("Login successfully. Welcome!");
+        sessionStorage.setItem("username",newName);
+        this.$message({
+          type: 'success',
+          message: "Login successfully. Welcome!",
+          duration: 1000
+        });
       }
       if((!newName)&&oldName){
-        this.$message.success("Logout successfully. Goodbye!");
+        this.$message({
+          type: 'success',
+          message: "Logout successfully. Goodbye!",
+          duration: 1000
+        });
       }
     }
 

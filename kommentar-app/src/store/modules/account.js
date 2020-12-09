@@ -29,7 +29,7 @@ const actions = {
         return firebase
             .auth()
             .signInWithEmailAndPassword(username, password)
-            .then(response => {
+            .then(response => {  
                 commit("setusername", username);
             })
             .catch(error => {
@@ -43,6 +43,8 @@ const actions = {
         .auth()
         .signOut()
         .then(() => {
+            sessionStorage.clear();
+            localStorage.clear();
             commit('setrole',null)
             commit('setusername',null)
         })
@@ -60,7 +62,7 @@ const actions = {
             .then(response => {
                 console.log('true')
                 commit("setusername", username);
-
+                
                 //初始化DB中的用户信息
                 var userId = firebase.auth().currentUser.uid;
                 var entry = {

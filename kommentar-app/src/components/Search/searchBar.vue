@@ -18,41 +18,27 @@
 
 <script>
     export default {
-        props:["from","to"],
         data() {
             return {
                 keyword:this.$route.query.keyword,
             }
         },
         methods:{
+            /**do a search request and refresh the search page */
             doSearch() {   
                 if (!this.keyword) {
                     this.$message.warning("Search cannot be empty");
                     return;
                 }
-                var sameSearch = (this.keyword == this.$route.query.keyword)&&
-                                        (this.from == this.$route.query.from)&&
-                                            (this.to == this.$route.query.to); 
-               
+                var sameSearch = (this.keyword == this.$route.query.keyword);        
                 if(sameSearch){
                     //jump back to the first page
-                   this.$emit("gotoPage",1); 
+                   this.$emit("gotoPage",1,false); 
                 } 
                 else{
-                    var filter={};
-                    filter.keyword=this.keyword;
-                    if(this.form){
-                        filter.from=this.form;
-                    }
-                    if(this.to){
-                        filter.from=this.to;
-                    }
-                    filter.from=this.from;
                     this.$router.push({path: '/search', 
-                                       query: filter});  //the form of to and from must be string
-                     
-                }
-                     
+                                       query: {keyword : this.keyword}});                
+                }         
             },
         },
         directives: {

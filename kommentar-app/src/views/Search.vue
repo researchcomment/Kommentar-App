@@ -5,54 +5,61 @@
       <div v-loading.fullscreen.lock="loading">
     
     <div>
-        <searchBar ref="bar" class="search-top-bar" :from="dateString.from" :to="dateString.to"  @gotoPage="gotoPage" ></searchBar>
+        <searchBar ref="bar" class="search-top-bar" @gotoPage="gotoPage" ></searchBar>
     </div>
     
     <!-- Filterung -->
     <div class="filter" v-if= "!loading">
-      <div v-show='filterflag'>find {{resultLength}} results
+      <div >find {{resultLength}} results
         <div class="fbtn">
-          <i @click="showfilter" class="iconfont icon-filter" size="small"></i>
+          <i @click="filterDialog=true" class="iconfont icon-filter" size="small"></i>
         </div>
       </div>
-      <div class="filterselct" v-show='!filterflag'>
-        <!-- from<input type="text" placeholder="year" v-model="from"> to <input type="text" placeholder="year" v-model="to"> -->
-        <!-- <button @click="getupdateresult">go</button> -->
-        <div style="display:inline-block;width: 20vh">
-          <span>From</span><mt-button @click.native="open('datepickerFrom')" size="normal">
-         {{dateString.from}}
-        </mt-button>
-        </div>
-        <div style="display:inline-block;width: 20vh">
-          <span>To</span><mt-button @click.native="open('datepickerTo')" size="normal">{{dateString.to}}</mt-button>
-        </div>
+
+        <mt-popup
+          v-model="filterDialog"
+          model="true"
+          popup-transition="popup-fade"
+          class="mint-popup"
+          position="right">
+          <div style="display:inline-block;width: 20vh">
+            From
+            <mt-button @click.native="open('datepickerFrom')" size="normal">
+              {{date.from.getUTCFullYear()}}-{{date.from.getUTCMonth()}}
+            </mt-button>
+          </div>
+          <div style="display:inline-block;width: 20vh">
+            To
+            <mt-button @click.native="open('datepickerTo')" size="normal">
+              {{date.to.getUTCFullYear()}}-{{date.to.getUTCMonth()}}
+            </mt-button>
+          </div>
+          
+          <mt-datetime-picker
+            ref="datepickerFrom"
+            type="date"
+            v-model="date.from"
+            year-format="{value}"
+            month-format="{value}"
+            :startDate="defaultdate.from"
+            :endDate="date.to"
+          >
+          </mt-datetime-picker>
+          <mt-datetime-picker
+            ref="datepickerTo"
+            type="date"
+            v-model="date.to"
+            year-format="{value}"
+            month-format="{value}"
+            :startDate="date.from"
+            :endDate="defaultdate.to"
+          >
+          </mt-datetime-picker>
+          <typeSelection  @setTypeList="setTypeList($event)"></typeSelection>
+          <mt-button @click.native="filter" size="large" type="primary">Confirm</mt-button>
+          <mt-button @click.native="filterDialog=false" size="large" type="primary">Cancel</mt-button>
+        </mt-popup>
         
-        <mt-datetime-picker
-          ref="datepickerFrom"
-          type="date"
-          v-model="date.from"
-          year-format="{value}"
-          month-format="{value}"
-          date-format="{value}"
-          :startDate="defaultdate.from"
-          :endDate="date.to"
-         >
-        </mt-datetime-picker>
-        <mt-datetime-picker
-          ref="datepickerTo"
-          type="date"
-          v-model="date.to"
-          year-format="{value}"
-          month-format="{value}"
-          date-format="{value}"
-          :startDate="date.from"
-          :endDate="defaultdate.to"
-         >
-        </mt-datetime-picker>
-        <div class="fbtn">
-          <i @click="showfilter" class="iconfont icon-filter-full" size="small"></i>
-        </div>
-      </div>
     </div>
   </div>
 
@@ -82,48 +89,45 @@
 <script>
 import searchBar from "@/components/Search/searchBar";
 import searchItem from "@/components/Search/searchItem";
-import bottom from '@/components/footer/bottom'
+import bottom from '@/components/footer/bottom';
+import typeSelection from "@/components/Search/typeSelection";
 
-function changeDatetoString(date){
-  let datestring=date.getFullYear()+"-"
-    +((date.getMonth()+1)<10?"0":"")+(date.getMonth()+1)+
-    "-"+(date.getDate()<10?"0":"")+date.getDate();
-  return datestring;
-}
 export default {
   name: "search",
   components: {
     searchBar,
     searchItem,
-    bottom
+    bottom,
+    typeSelection
   },
   data() {
     return {
       date:{
-          from:new Date(new Date().setFullYear(2019)),
-          to:new Date(),
+        from:new Date(new Date().setFullYear(2019)),
+        to:new Date(),
       },
-      searchResultList: [],
-      page:1,  //the first page
-      loading:false,
-      filterflag:true,
-      resultLength:0,
+      oldDate:{
+        from:new Date(new Date().setFullYear(2019)),
+        to:new Date(),
+      },
       defaultdate:{
         from:new Date(new Date().setFullYear(1968)),
         to:new Date()
       },
+      oldSelectedType:["monograph","report","book","proceedings-article","journal","dissertation"],
+      selectedType:["monograph","report","book","proceedings-article","journal","dissertation"],
+      searchResultList: [],
+      page:1,  //the first page
+      loading:false,
+      filterDialog:false,
+      resultLength:0,
+      
     };
   },
   computed: {
     searchText() { 
       return this.$route.query.keyword;
     },
-    dateString(){ 
-      var datefrom = changeDatetoString(this.date.from);   
-      var dateto=changeDatetoString(this.date.to);
-      return {from:datefrom,
-              to:dateto};
-    }
   },
   created() {
     this.gotoPage(1,true);
@@ -139,53 +143,59 @@ export default {
       if (!this.$route.query.keyword)
         next('/');
       else
-        this.gotoPage(1,true);
-   
+        this.gotoPage(1,true); 
   },
   methods: {
-    //set the date in query as this.date
-    updateDate(){
-      var from=new Date(new Date().setFullYear(new Date().getFullYear-1));
-      var to=new Date();
-      if(this.$route.query.from){
-        from=this.changeToDate(this.$route.query.from);
-      }
-      if(this.$route.query.to){
-        to=this.changeToDate(this.$route.query.to);
-      }
-      this.date = {from:from,
-                   to:to,}
-    },
-    changeToDate(str){
-      var year=str.substring(0,4);
-      var month=str.substring(5,7);
-      var day=str.substring(8,10);
-      var date = new Date();
-      date.setDate(day).setMonth(month-1).setFullYear(year);
-      return date;
-    },
+
+    /**
+     * !BUG delete the day option of only one date picker
+     * open the date picker
+     */
     open(picker) {
-      console.log(this.$refs[picker])
-        this.$refs[picker].open();
+      this.$refs[picker].open();
+      var pickerSlot = document.getElementsByClassName('picker-slot');
+      pickerSlot[2].style.display = 'none'
+      
     },
 
     goHome(){
       this.$router.push('/')
     },
+    
+  /**Re-search according to whether the filter conditions are changed*/
+    filter(){
+      this.filterDialog =false;
+      var sameFilterCondition = (this.oldDate.from==this.date.from)&&
+                                (this.oldDate.to==this.date.to)&&
+                                (this.selectedType=this.oldSelectedType);
+      if(!sameFilterCondition){
+        this.gotoPage(1,true);
+      }
+    },
+    setTypeList(list){
+      this.selectedType=list;
+    },
 
-    //goto the n. Page, 1 is the first page
-    gotoPage(n,flagg){
+  /**change to the n. Page
+   * @param n   the sequence of the new Page
+   * @param newSearch   true if the search condition is changed
+   */
+    gotoPage(n,newSearch){
       if(n<=0){
         this.$message.warning("invalid Page number");
       }
       this.loading=true;
       this.page=n;
+      this.oldDate = this.date;
+      this.oldSelectedType=this.selectedType;
       this.$store
         .dispatch("worklist/search", {
                                 keyword:this.searchText,
                                     from:(this.page-1)*10,
                                           to:this.page*10,
-                                            date:this.date,flag:flagg})  
+                                            date:this.date,
+                                              type:this.selectedType,
+                                                flag:newSearch})   //flag = false , it is change page,not new search
         .then((result) => {
           this.searchResultList = result.list;
           this.resultLength=result.length;
@@ -193,10 +203,6 @@ export default {
         }).catch(err => {
         console.log(err);
       })
-    },
-    
-    showfilter: function () {
-      this.filterflag = !this.filterflag;
     },
   },
   watch:{
@@ -286,5 +292,11 @@ export default {
 .sorryimg{
   width: 40vw;
   margin: 0 30vw;
+}
+
+.mint-popup{
+  width: 100%;
+  height: 100%;
+  background-color: #fff;
 }
 </style>
