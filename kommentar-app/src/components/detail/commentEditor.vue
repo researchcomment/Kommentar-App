@@ -1,12 +1,15 @@
 <template>
     <div class="comeditor">
         <h3 style="font-size:1.8vw;color:#000">We need your opinion!</h3>
-        <quill-editor
+        <div class="notlog" v-show="!username">Please login</div>
+        <div v-show="username">
+            <quill-editor
             v-model="content"
             ref="quillEditor" 
             :options="editorOption"
             @focus="onEditorFocus()"
             @blur="onEditorBlur()"
+            
         >
         </quill-editor>
         <button @click="submit" style="margin-top:2vh">Submit</button>
@@ -16,6 +19,8 @@
         <div v-html="content">
 	            {{content}}
         </div>
+        </div>
+        
     </div>
 </template>
 <script>
@@ -45,7 +50,10 @@ export default {
         editor() {
             return this.$refs.quillEditor.quill;
         },
-       
+        username: function () {
+                //console.log(firebase.auth().currentUser.uid)
+                return this.$store.state.account.username;
+        },
     },
     methods: {
         //upload the comment to backend 
@@ -96,7 +104,12 @@ export default {
 .comeditor .quill-editor .ql-toolbar .ql-formats .ql-size{
     width: 12vh;
 }
-.comeditor .quill-editor .ql-toolbar .ql-formats .ql-expanded .ql-size{
+.comeditor .quill-editor .ql-toolbar .ql-formats .ql-expanded .ql-picker-options{
     width: 12vh;
+    overflow: scroll;
+    height: 12vh;
+}
+.comeditor .quill-editor .ql-container{
+    height: 20vh;
 }
 </style>
