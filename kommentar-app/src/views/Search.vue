@@ -185,7 +185,7 @@ export default {
                                 keyword:this.searchText,
                                     from:(this.page-1)*10,
                                           to:this.page*10,
-                                            date:this.date,flag:false,flagg})  
+                                            date:this.date,flag:flagg})  
         .then((result) => {
           this.searchResultList = result.list;
           this.resultLength=result.length;

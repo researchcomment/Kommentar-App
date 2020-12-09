@@ -9,10 +9,9 @@ const getters = {}
 
 var items = [];
 var cache = 100;
+var cachebegin,cacheend;
 var result_length = 0;
-var last_offset = -1;
-var last_keyword = "";
-var last_date = new Date().setFullYear(2019);
+
 
 
 //parameter is a referrence of a list of authors
@@ -50,11 +49,16 @@ function cons_returnValue(returnValue, from, to) {
 //async function return promise
 //flag=true : send new request, get results from response; 
 //falg=false : do not send request, get result from cache
-async function get_worklist(keyword, rows, offset, date, type, flag) {
-    if (offset % cache == 0 || flag) {
-        last_offset = offset;
-        last_keyword = keyword;
-        last_date = date;
+async function get_worklist(keyword, rows, offset, date, type) {
+    console.log(cachebegin);
+    console.log(cacheend);
+    console.log(offset);
+    console.log(rows);
+    
+    if ((offset<cachebegin) || ((offset+rows)>cacheend)) {
+        
+        cachebegin=(~~(offset/cache))*cache;
+        cacheend=(~~(offset/cache)+1)*cache;
         //convert keyword in this format list : keyword1+keyword2+...
         keyword = keyword.split(" ").join("+");
         let datefrom = date.from.getFullYear() + "-" +
@@ -68,7 +72,7 @@ async function get_worklist(keyword, rows, offset, date, type, flag) {
             "&rows=" + cache + "&select=DOI,title,author" + "&offset=" + offset;*/
         var filter_type = type.map(x => "type:" + x).join(',');
         var search_url = url + "select=DOI,title,author&query=" + keyword + "&filter=from-update-date:" + datefrom +
-            ",until-update-date:"  + dateto +","+ filter_type + "&rows=" + cache + "&offset=" + offset;
+            ",until-update-date:"  + dateto +","+ filter_type + "&rows=" + cache + "&offset=" + cachebegin;
         console.log(search_url);
         let returnValue = {
             list: [],
@@ -117,7 +121,11 @@ const actions = {
         if (!type)
             type=["monograph","report","book","proceedings-article","journal","dissertation"];
         //wait inorder to know the setlest and setset will not earlier then them
-        let returnValue = await get_worklist(keyword, pageto - pagefrom, pagefrom, date, type, flag);
+        if (flag) {
+            cachebegin=0;
+            cacheend=0;
+        }
+        let returnValue = await get_worklist(keyword, pageto - pagefrom, pagefrom, date, type);
         commit('setlist', returnValue.list);
         return returnValue;
     }
