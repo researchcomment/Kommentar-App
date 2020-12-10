@@ -18,24 +18,31 @@
 
         <mt-popup
           v-model="filterDialog"
-          model="true"
-          popup-transition="popup-fade"
-          class="mint-popup"
-          position="right">
-          <div style="display:inline-block;width: 20vh">
-            From
-            <mt-button @click.native="open('datepickerFrom')" size="normal">
-              {{date.from.getUTCFullYear()}}-{{date.from.getUTCMonth()}}
-            </mt-button>
-          </div>
-          <div style="display:inline-block;width: 20vh">
-            To
-            <mt-button @click.native="open('datepickerTo')" size="normal">
-              {{date.to.getUTCFullYear()}}-{{date.to.getUTCMonth()}}
-            </mt-button>
-          </div>
+          position="right"
+          closeOnClickModal="false"
+          class="filterpopup"
+        >
+         
+            <div style="width: 20vh">
+              From
+              <mt-button @click.native="open('datepickerFrom')" size="normal">
+                {{date.from.getFullYear()}}-{{date.from.getMonth()+1}}
+              </mt-button>
+            </div>
+            <div style="width: 20vh">
+              To
+              <mt-button @click.native="open('datepickerTo')" size="normal">
+                {{date.to.getFullYear()}}-{{date.to.getMonth()+1}}
+              </mt-button>
+            </div>
+        
           
-          <mt-datetime-picker
+          
+          <typeSelection  @setTypeList="setTypeList($event)"></typeSelection>
+          <mt-button @click.native="filter" size="large" type="primary">Confirm</mt-button>
+          <mt-button @click.native="filterDialog=false" size="large" type="primary">Cancel</mt-button>
+        </mt-popup>
+        <mt-datetime-picker
             ref="datepickerFrom"
             type="date"
             v-model="date.from"
@@ -43,6 +50,9 @@
             month-format="{value}"
             :startDate="defaultdate.from"
             :endDate="date.to"
+            @cancel="close('datepickerFrom')"
+            @confirm="close('datepickerFrom')"
+           
           >
           </mt-datetime-picker>
           <mt-datetime-picker
@@ -53,12 +63,10 @@
             month-format="{value}"
             :startDate="date.from"
             :endDate="defaultdate.to"
+            @cancel="close('datepickerTo')"
+            @confirm="close('datepickerTo')"
           >
           </mt-datetime-picker>
-          <typeSelection  @setTypeList="setTypeList($event)"></typeSelection>
-          <mt-button @click.native="filter" size="large" type="primary">Confirm</mt-button>
-          <mt-button @click.native="filterDialog=false" size="large" type="primary">Cancel</mt-button>
-        </mt-popup>
         
     </div>
   </div>
@@ -155,7 +163,12 @@ export default {
       this.$refs[picker].open();
       var pickerSlot = document.getElementsByClassName('picker-slot');
       pickerSlot[2].style.display = 'none'
+      pickerSlot[5].style.display = 'none'
       
+    },
+    close(picker){
+      this.$refs[picker].close();
+      console.log(34);
     },
 
     goHome(){
@@ -212,6 +225,8 @@ export default {
 </script>
 
 <style>
+
+
 .search-top-bar{
     margin-left:10%;
     margin-right: auto;
@@ -294,9 +309,10 @@ export default {
   margin: 0 30vw;
 }
 
-.mint-popup{
-  width: 100%;
-  height: 100%;
+.filterpopup{
+  height:100vh;
+  overflow:auto;
+
   background-color: #fff;
 }
 </style>
