@@ -50,9 +50,6 @@
             month-format="{value}"
             :startDate="defaultdate.from"
             :endDate="date.to"
-            @cancel="close('datepickerFrom')"
-            @confirm="close('datepickerFrom')"
-           
           >
           </mt-datetime-picker>
           <mt-datetime-picker
@@ -63,8 +60,6 @@
             month-format="{value}"
             :startDate="date.from"
             :endDate="defaultdate.to"
-            @cancel="close('datepickerTo')"
-            @confirm="close('datepickerTo')"
           >
           </mt-datetime-picker>
         
@@ -165,10 +160,6 @@ export default {
       pickerSlot[2].style.display = 'none'
       pickerSlot[5].style.display = 'none'
       
-    },
-    close(picker){
-      this.$refs[picker].close();
-      console.log(34);
     },
 
     goHome(){
@@ -314,5 +305,9 @@ export default {
   overflow:auto;
 
   background-color: #fff;
+}
+
+.mint-popup{
+  overflow:auto;
 }
 </style>
