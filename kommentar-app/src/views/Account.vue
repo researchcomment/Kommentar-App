@@ -51,8 +51,8 @@ export default {
         return;
       }
       if((!oldName)&&newName){
-        sessionStorage.setItem("username",newName);
-        this.$message({
+        sessionStorage.setItem("username",newName); //cache account information
+        this.$message({          //Cached account information will be deleted at account/logout
           type: 'success',
           message: "Login successfully. Welcome!",
           duration: 1000

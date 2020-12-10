@@ -13,6 +13,12 @@
             Role : {{role}}
           </div>
         </li>
+        <li v-show="isAdmin" @click="openAdmin">
+          <span class="iconfont icon-jiaose"></span>
+          <div class="texts">
+            Admin
+          </div>
+        </li>
         <li>
           <span class="iconfont icon-youxiang"></span>
           <div class="texts">
@@ -45,6 +51,17 @@ export default {
     },
     role:function(){
       return this.$store.state.account.role;
+    },
+    isAdmin(){
+      return true; //!for test
+
+      if(this.username){
+          //check whether the logged user is Admin
+          return (this.role.indexOf("Admin"))>-1;
+      }
+      else{
+          return false;
+      }
     }
   },
   methods:{
@@ -54,6 +71,9 @@ export default {
     logout(){
       this.$store.dispatch('account/logout');
       this.$emit('logout');
+    },
+    openAdmin(){
+      this.$router.push('/Admin');
     }
   }
 

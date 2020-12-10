@@ -3,6 +3,7 @@ import VueRouter from 'vue-router'
 import Home from '../views/Home.vue'
 import Search from  '../views/Search.vue'
 import Detail from  '../views/Detail.vue'
+import Admin from  '../views/Admin.vue'
 Vue.use(VueRouter)
 
 
@@ -29,6 +30,11 @@ export default new VueRouter({
       path: '/Detail',
       name: 'detail',
       component: Detail
+    },
+    {
+      path: '/Admin',
+      name: 'admin',
+      component: Admin
     },
     {
       path: '*',

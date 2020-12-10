@@ -2,7 +2,7 @@ import firebase from 'firebase/app';
 
 const state = () => ({
     username: null,
-    role: null,
+    role: null, //['default', 'Researcher', 'Reviewer','Moderator','Admin']  from JJY
     error: null
 })
 
@@ -44,7 +44,7 @@ const actions = {
         .signOut()
         .then(() => {
             sessionStorage.clear();
-            localStorage.clear();
+            localStorage.clear(); //Delete cached account information
             commit('setrole',null)
             commit('setusername',null)
         })
