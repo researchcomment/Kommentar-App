@@ -10,59 +10,8 @@
     
     <!-- Filterung -->
     <div class="filter" v-if= "!loading">
-      <div >find {{resultLength}} results
-        <div class="fbtn">
-          <i @click="filterDialog=true" class="iconfont icon-filter" size="small"></i>
-        </div>
-      </div>
-
-        <mt-popup
-          v-model="filterDialog"
-          position="right"
-          closeOnClickModal="false"
-          class="filterpopup"
-        >
-         
-            <div style="width: 20vh">
-              From
-              <mt-button @click.native="open('datepickerFrom')" size="normal">
-                {{date.from.getFullYear()}}-{{date.from.getMonth()+1}}
-              </mt-button>
-            </div>
-            <div style="width: 20vh">
-              To
-              <mt-button @click.native="open('datepickerTo')" size="normal">
-                {{date.to.getFullYear()}}-{{date.to.getMonth()+1}}
-              </mt-button>
-            </div>
-        
-          
-          
-          <typeSelection  @setTypeList="setTypeList($event)"></typeSelection>
-          <mt-button @click.native="filter" size="large" type="primary">Confirm</mt-button>
-          <mt-button @click.native="filterDialog=false" size="large" type="primary">Cancel</mt-button>
-        </mt-popup>
-        <mt-datetime-picker
-            ref="datepickerFrom"
-            type="date"
-            v-model="date.from"
-            year-format="{value}"
-            month-format="{value}"
-            :startDate="defaultdate.from"
-            :endDate="date.to"
-          >
-          </mt-datetime-picker>
-          <mt-datetime-picker
-            ref="datepickerTo"
-            type="date"
-            v-model="date.to"
-            year-format="{value}"
-            month-format="{value}"
-            :startDate="date.from"
-            :endDate="defaultdate.to"
-          >
-          </mt-datetime-picker>
-        
+      <div>find {{resultLength}} results</div>
+      <filterPopup @filter="filter"></filterPopup>
     </div>
   </div>
 
@@ -78,8 +27,12 @@
     <div v-if="(searchResultList.length == 0) && (!loading)"><img class="sorryimg" src="../../public/static/sorry.png" alt=""></div>
     <!-- change Pages -->
     <div class="pagesetter" v-if= "(!loading)&&(searchResultList.length != 0)">
-      <i class="iconfont icon-zuojiantou" v-show="(!loading)&&(page>1)" @click="gotoPage(page-1,false)"></i>
+      <i class="iconfont icon-zuojiantou" v-show="page>1" @click="gotoPage(page-1,false)"></i>
+      <p v-show="page-2>1" @click="gotoPage(page-2,false)">{{page-2}}</p>
+      <p v-show="page-1>1" @click="gotoPage(page-1,false)">{{page-1}}</p>
       <p>{{page}}</p>
+      <p v-show="resultLength/10>=page+1" @click="gotoPage(page-1,false)">{{page+1}}</p>
+      <p v-show="resultLength/10>=page+2" @click="gotoPage(page-1,false)">{{page+2}}</p>
       <i class="iconfont icon-youjiantou" v-show="(!loading)" @click="gotoPage(page+1,false)"></i>
     </div>
    
@@ -93,7 +46,7 @@
 import searchBar from "@/components/Search/searchBar";
 import searchItem from "@/components/Search/searchItem";
 import bottom from '@/components/footer/bottom';
-import typeSelection from "@/components/Search/typeSelection";
+import filterPopup from "@/components/Search/filterPopup";
 
 export default {
   name: "search",
@@ -101,30 +54,21 @@ export default {
     searchBar,
     searchItem,
     bottom,
-    typeSelection
+    filterPopup
   },
   data() {
     return {
-      date:{
-        from:new Date(new Date().setFullYear(2019)),
-        to:new Date(),
+      filterCondition:{
+        date:{
+            from:new Date(new Date().setFullYear(2019)),
+            to:new Date(),
+        },
+        selectedType:["monograph","report","book","proceedings-article","journal","dissertation"],
       },
-      oldDate:{
-        from:new Date(new Date().setFullYear(2019)),
-        to:new Date(),
-      },
-      defaultdate:{
-        from:new Date(new Date().setFullYear(1968)),
-        to:new Date()
-      },
-      oldSelectedType:["monograph","report","book","proceedings-article","journal","dissertation"],
-      selectedType:["monograph","report","book","proceedings-article","journal","dissertation"],
       searchResultList: [],
       page:1,  //the first page
       loading:false,
-      filterDialog:false,
-      resultLength:0,
-      
+      resultLength:0,   
     };
   },
   computed: {
@@ -150,35 +94,25 @@ export default {
   },
   methods: {
 
-    /**
-     * !BUG delete the day option of only one date picker
-     * open the date picker
-     */
-    open(picker) {
-      this.$refs[picker].open();
-      var pickerSlot = document.getElementsByClassName('picker-slot');
-      pickerSlot[2].style.display = 'none'
-      pickerSlot[5].style.display = 'none'
-      
-    },
-
     goHome(){
       this.$router.push('/')
     },
     
-  /**Re-search according to whether the filter conditions are changed*/
-    filter(){
-      this.filterDialog =false;
-      var sameFilterCondition = (this.oldDate.from==this.date.from)&&
-                                (this.oldDate.to==this.date.to)&&
-                                (this.selectedType=this.oldSelectedType);
+  /**
+   * Re-search according to whether the filter conditions are changed
+   * @param newfilter  the filter date from FilterPopup-Component
+   * */
+    filter(newfilter){
+      
+      var sameFilterCondition = (newfilter.date.to.toDateString())==(this.filterCondition.date.to.toDateString());
+      sameFilterCondition = sameFilterCondition && (newfilter.date.from.toDateString())==(this.filterCondition.date.from.toDateString());
+      sameFilterCondition = sameFilterCondition && (JSON.stringify(newfilter.selectedType)==JSON.stringify(this.filterCondition.selectedType));
       if(!sameFilterCondition){
+        this.filterCondition = newfilter;
         this.gotoPage(1,true);
       }
     },
-    setTypeList(list){
-      this.selectedType=list;
-    },
+
 
   /**change to the n. Page
    * @param n   the sequence of the new Page
@@ -189,16 +123,13 @@ export default {
         this.$message.warning("invalid Page number");
       }
       this.loading=true;
-      this.page=n;
-      this.oldDate = this.date;
-      this.oldSelectedType=this.selectedType;
-      this.$store
-        .dispatch("worklist/search", {
+      this.page=n;  
+      this.$store.dispatch("worklist/search", {
                                 keyword:this.searchText,
                                     from:(this.page-1)*10,
                                           to:this.page*10,
-                                            date:this.date,
-                                              type:this.selectedType,
+                                            date:this.filterCondition.date,
+                                              type:this.filterCondition.selectedType,
                                                 flag:newSearch})   //flag = false , it is change page,not new search
         .then((result) => {
           this.searchResultList = result.list;
@@ -248,12 +179,12 @@ export default {
   display: inline;
   
 }
-.filter .fbtn{
+/* .filter .fbtn{
   display: inline;
   margin-left: 1%;
   color: #76C06B;
   cursor: pointer;
-}
+} */
 .filterselct span{
   display: inline-block;
   width: 5vh;
@@ -300,14 +231,4 @@ export default {
   margin: 0 30vw;
 }
 
-.filterpopup{
-  height:100vh;
-  overflow:auto;
-
-  background-color: #fff;
-}
-
-.mint-popup{
-  overflow:auto;
-}
 </style>
