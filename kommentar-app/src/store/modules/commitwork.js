@@ -73,7 +73,7 @@ function cons_returnValue(item_ref) {
         
     }
     
-    returnValue.abstract=item_ref.abstract.toString();
+    returnValue.abstract=item_ref.abstract;
     console.log(returnValue);
     return returnValue;
 }

@@ -45,10 +45,11 @@
                                     username:this.username,})    
                 .then((result) => {
                     this.detail = result;
-                    
-                    var template = document.getElementById('abstract');
-                    this.detail.abstract = this.detail.abstract.trim(); // Never return a text node of whitespace as the result
-                    template.innerHTML = this.detail.abstract;
+                    if (this.detail.abstract){
+                        var template = document.getElementById('abstract');
+                        this.detail.abstract = this.detail.abstract.trim(); // Never return a text node of whitespace as the result
+                        template.innerHTML = this.detail.abstract;
+                    }
                     this.loading=false;
                 }).catch(err => {
                     console.log(err);
