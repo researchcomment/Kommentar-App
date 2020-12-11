@@ -1,10 +1,8 @@
 <template>
     <div>
-        <mt-button type="danger" @click.native="updateRole">Confirm</mt-button>
-
-        <!-- user List -->
-        <li  v-for="(user, index) in userList" v-bind:key="index">
-            <div>
+        <h3 style="margin-top:5vh;margin-left:10vh;font-size:5vh">User Management</h3>
+        <div>
+            <div  v-for="(user, index) in userList" v-bind:key="index" class="userlists">
                 <p>Username:{{user.username}}</p>
                 <mt-checklist
                     v-model="user.role"
@@ -12,9 +10,12 @@
                     @change="addChangedUserList(index)">
                 </mt-checklist>  
                 
-            </div>
-        </li>
-       
+        </div>
+        </div>
+
+        <!-- user List -->
+        
+       <mt-button class="combtn" type="danger" @click.native="updateRole">Confirm</mt-button>
     </div>
 </template>
 
@@ -99,5 +100,22 @@
 </script>
 
 <style>
+.userlists{
+    margin: 10vh;
+    border: 1px solid rgba(0,0,0,.125);
+    padding: 2vh;
+    border-radius: .25rem;
 
+}
+.userlists .mint-checklist .mint-cell .mint-cell-wrapper{
+  cursor: default;
+  background-image: none;
+}
+.userlists .mint-checklist .mint-cell{
+  background-image: none;
+}
+.combtn{
+    display: block;
+    margin-left: 10vh;
+}
 </style>
