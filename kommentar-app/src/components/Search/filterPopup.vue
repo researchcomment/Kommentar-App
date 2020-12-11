@@ -155,6 +155,9 @@
   font-size: 2.5vh;
   color: black;
 }
+.mint-popup .mint-checklist .mint-cell{
+  background-image: none;
+}
 .mint-popup .mint-checklist .mint-cell .mint-cell-wrapper .mint-cell-value{
   display: none;
   cursor: default;
