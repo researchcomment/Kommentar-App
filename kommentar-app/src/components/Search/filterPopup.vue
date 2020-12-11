@@ -7,20 +7,24 @@
 
         <mt-popup
           v-model="filterDialog"
-          position="right"
           closeOnClickModal="false"
           class="filterpopup"
         >
-            <!-- date Picker -->
-            <div style="width: 20vh">
-              From
-              <mt-button @click.native="open('datepickerFrom')" size="normal">
+          <div style="margin:3vh">
+            <div>
+              <!-- date Picker -->
+              <div class="fromto">
+                From
+              </div>
+              <mt-button @click.native="open('datepickerFrom')" size="normal" style="cursor:pointer">
                 {{filterCondition.date.from.getFullYear()}}-{{filterCondition.date.from.getMonth()+1}}
               </mt-button>
             </div>
-            <div style="width: 20vh">
+            <div>
+                <div class="fromto">
                 To
-              <mt-button @click.native="open('datepickerTo')" size="normal">
+              </div>
+              <mt-button @click.native="open('datepickerTo')" size="normal" style="cursor:pointer">
                 {{filterCondition.date.to.getFullYear()}}-{{filterCondition.date.to.getMonth()+1}}
               </mt-button>
             </div>
@@ -33,7 +37,7 @@
             </mt-checklist>
             
              <!-- Type List 2 -->
-            <mt-button @click.native="moreType=!moreType">  ~more Types~  </mt-button>
+            <mt-button @click.native="moreType=!moreType" class="morebtn">~more Types~</mt-button>
             <div  v-show="moreType">
                 <mt-checklist
                 title="Type"
@@ -41,10 +45,16 @@
                 :options= "options2">
                 </mt-checklist>
             </div>
- 
+
+          <div>
+            <mt-button class="comfirmbtn" style="margin-right:2vh" @click.native="confirm" size="large" type="primary">Confirm</mt-button>
+            <mt-button class="comfirmbtn" @click.native="filterDialog=false" size="large" type="default">Cancel</mt-button>
+          
+          </div>
           <!-- Submit Buttons -->
-          <mt-button @click.native="confirm" size="large" type="primary">Confirm</mt-button>
-          <mt-button @click.native="filterDialog=false" size="large" type="primary">Cancel</mt-button>
+         </div>
+            
+            
         </mt-popup>
         <mt-datetime-picker
           ref="datepickerFrom"
@@ -126,12 +136,64 @@
   cursor: pointer;
 }
 .filterpopup{
-  height:100vh;
+  height:50vh;
+  width: 70vw;
   overflow:auto;
   background-color: #fff;
 }
 .mint-popup{
   overflow:auto;
 }
-
+.fromto{
+  display: inline-block;
+  width: 7vh;
+  font-size: 2.5vh;
+  color: black;
+}
+.mint-popup .mint-checklist .mint-checklist-title{
+  margin: 2vh 0;
+  font-size: 2.5vh;
+  color: black;
+}
+.mint-popup .mint-checklist .mint-cell{
+  background-image: none;
+}
+.mint-popup .mint-checklist .mint-cell .mint-cell-wrapper .mint-cell-value{
+  display: none;
+  cursor: default;
+}
+.mint-popup .mint-checklist .mint-cell .mint-cell-wrapper{
+  padding: 0 1vh;
+  cursor: default;
+}
+.mint-popup .mint-checklist .mint-cell .mint-cell-wrapper .mint-cell-title .mint-checklist-label{
+  padding: 0;
+}
+.mint-popup .mint-checklist .mint-cell .mint-cell-wrapper .mint-cell-title .mint-checklist-label .mint-checkbox-core{
+  width:2vh;
+  height: 2vh;
+}
+.mint-popup .mint-checklist .mint-cell .mint-cell-wrapper .mint-cell-title .mint-checklist-label .mint-checkbox-label{
+  word-break: break-all;
+}
+.morebtn{
+  width: 18vh;
+  height: 2vh;
+  margin-bottom: 3vh;
+  cursor: pointer;
+}
+.morebtn .mint-button-text{
+  font-size: 2vh;
+  white-space: pre;
+}
+.filterpopup .comfirmbtn{
+  width: 10vh;
+  display: inline-block;
+  height: 5vh;
+  cursor: pointer;
+}
+.filterpopup .comfirmbtn .mint-button-text{
+  font-size: 2vh;
+  
+}
 </style>

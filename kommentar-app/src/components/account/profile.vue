@@ -14,7 +14,7 @@
           </div>
         </li>
         <li v-show="isAdmin" @click="openAdmin">
-          <span class="iconfont icon-jiaose"></span>
+          <span class="iconfont icon-biaoqiankuozhan_guanli-159"></span>
           <div class="texts">
             Admin
           </div>
