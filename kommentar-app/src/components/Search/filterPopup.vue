@@ -41,12 +41,11 @@
                 :options= "options2">
                 </mt-checklist>
             </div>
-
+ 
           <!-- Submit Buttons -->
           <mt-button @click.native="confirm" size="large" type="primary">Confirm</mt-button>
           <mt-button @click.native="filterDialog=false" size="large" type="primary">Cancel</mt-button>
         </mt-popup>
-
         <mt-datetime-picker
           ref="datepickerFrom"
           type="date"
@@ -67,6 +66,7 @@
           :endDate="defaultdate.to"
         >
         </mt-datetime-picker>
+       
     </div>
 </template>
 
