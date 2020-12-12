@@ -60,8 +60,6 @@
           ref="datepickerFrom"
           type="date"
           v-model="filterCondition.date.from"
-          year-format="{value}"
-          month-format="{value}"
           :startDate="defaultdate.from"
           :endDate="filterCondition.date.to"
         >
@@ -70,8 +68,6 @@
           ref="datepickerTo"
           type="date"
           v-model="filterCondition.date.to"
-          year-format="{value}"
-          month-format="{value}"
           :startDate="filterCondition.date.from"
           :endDate="defaultdate.to"
         >
@@ -86,12 +82,12 @@
             return{
                 filterDialog:false,
                 filterCondition:{
-                    date:{
-                        from:new Date(new Date().setFullYear(2019)),
-                        to:new Date(),
-                    },
-                    selectedType:["monograph","report","book","proceedings-article","journal","dissertation"],
-                },
+                                  date:{
+                                      from:new Date(new Date().setFullYear(2019)),
+                                      to:new Date(),
+                                  },
+                                  selectedType:["monograph","report","book","proceedings-article","journal","dissertation"],
+                                },
                 defaultdate:{
                     from:new Date(new Date().setFullYear(1968)),
                     to:new Date()
@@ -124,7 +120,12 @@
                 }
                 this.$emit("filter",this.filterCondition);
             },
+            updateFliter(newFliter){
+              this.filterCondition=newFliter
+              console.log("【Filter】"+this.filterCondition.date.from)
+            }
         },
+
     }
 </script>
 

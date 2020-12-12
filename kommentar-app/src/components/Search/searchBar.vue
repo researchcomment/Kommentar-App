@@ -18,10 +18,18 @@
 
 <script>
     export default {
+        props:["filterCondition"],
         data() {
             return {
                 keyword:this.$route.query.keyword,
-            }
+                filter:{
+                                date:{
+                                    from:new Date(new Date().setFullYear(2019)),
+                                    to:new Date(),
+                                },
+                                selectedType:["monograph","report","book","proceedings-article","journal","dissertation"],
+                                },
+                }
         },
         methods:{
             /**do a search request and refresh the search page */
@@ -37,7 +45,8 @@
                 } 
                 else{
                     this.$router.push({path: '/search', 
-                                       query: {keyword : this.keyword}});                
+                                       query: {keyword : this.keyword,
+                                                }});                
                 }         
             },
         },
@@ -47,6 +56,11 @@
                     el.focus()
                 }
             }
+        },
+        watch:{
+          filterCondition(){
+            this.filter=this.oldfilterCondition;
+          }
         }
     }
 </script>
