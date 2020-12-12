@@ -135,7 +135,6 @@ const actions = {
         }
         //在doi资料库中生成一个评论的key,并把key加入用户数据的comments项中
         //此处只能使用firebase自动配置的key，doi形式不适合作为key
-<<<<<<< HEAD
         firebase.database().ref('doi_repository').once('value').then((snapshot) => {
             //snapshot是doiKey
             let got_Doi_Nr = snapshot.forEach((childSnapshot) => {
@@ -160,15 +159,6 @@ const actions = {
                 })
             }
         })
-=======
-        let doi_key = await getDoi_key(doi);
-        console.log(doi_key)
-        if (!!!firebase.database().ref('doi_repository' + doi_key).comments) {
-            //comments是空的
-            firebase.database().ref('doi_repository/' + doi_key + '/comments').push(newComent)
-        }
-        //
->>>>>>> 5ef84aef6d7160e2f9d1c660e9512abcdcff6dc5
         //firebase.database().ref('doi_repository/' + newDoi_key + '/comments').set(newComent)   
         /*
         firebase.database().ref('doi_repository').push(newComent)
@@ -225,7 +215,6 @@ const actions = {
                     }
                 })
                 if(rankType === 'onlyfromCurrentUser'){
-                    console.log(commentsList_CurrentUser.slice().reverse())
                     return commentsList_CurrentUser.slice().reverse();
                 }
                 else{
