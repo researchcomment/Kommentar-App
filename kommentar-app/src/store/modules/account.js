@@ -30,6 +30,7 @@ const actions = {
             .auth()
             .signInWithEmailAndPassword(username, password)
             .then(response => {  
+                window.localStorage.setItem("username",username); //cache account information
                 commit("setusername", username);
             })
             .catch(error => {
@@ -43,8 +44,7 @@ const actions = {
         .auth()
         .signOut()
         .then(() => {
-            sessionStorage.clear();
-            localStorage.clear(); //Delete cached account information
+            window.localStorage.removeItem('username');  //delete cached account information
             commit('setrole',null)
             commit('setusername',null)
         })
