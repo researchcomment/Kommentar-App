@@ -59,7 +59,7 @@ export default {
                         ]
                         */
             var result = await this.$store.dispatch("commitwork/loadUnOfficialComments", 
-            {doi : this.doi, rankType : 'onlyfromCurrentUser'})
+            {doi : this.doi, rankType : 'submittime'})
             console.log(result)
             this.commentList = result;
         }

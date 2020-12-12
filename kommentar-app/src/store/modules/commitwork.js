@@ -208,52 +208,63 @@ const actions = {
                     if (childSnapshot.val().type === 'unofficial') {
                         var content = childSnapshot.val().details
                         var author = childSnapshot.val().usr
-                        commentsList.push({ content: content, author: author})
-                        if(childSnapshot.val().userId === firebase.auth().currentUser.uid){
-                            commentsList_CurrentUser.push({ content: content, author: author})
+                        commentsList.push({ content: content, author: author })
+                        if (childSnapshot.val().userId === firebase.auth().currentUser.uid) {
+                            commentsList_CurrentUser.push({ content: content, author: author })
                         }
                     }
                 })
-                if(rankType === 'onlyfromCurrentUser'){
+                if (rankType === 'onlyfromCurrentUser') {
                     console.log(commentsList_CurrentUser.slice().reverse())
                     return commentsList_CurrentUser.slice().reverse();
                 }
-                else{
+                else {
                     return commentsList.slice().reverse();
                 }
             })
+        return result
     },
 
     async loadOfficialComments({ commit, state }, { doi, rankType }) {
         //rankType: 'submittime', 'onlyfromCurrentUser'
         //首先每次调用此方法的时候，应该在DB收集所有doi为给入doi的comments条目
-        let resultList = await firebase.database().ref('/editor_content/').once('value').then((snapshot) => {
-            var commentsList = [];
-            var commentsCurrentUser = [];
-            snapshot.forEach(childSnapshot => {
-                var childVal = childSnapshot.val();
-                var childUsr = childVal.usr;
-                var childDoi = childVal.doi_nr;
-                var commentType = childVal.type;
-                var commentDetail = childVal.details;
-                var commentAuthor = childVal.usr;
-                if (childDoi === doi && (commentType === "officalType")) {
-                    commentsList.push({ content: commentDetail, author: commentAuthor })
-                    //check current username and childusername, not work because login state is not snyc, this.username ist undefined
-                    if (childUsr === this.username) {
-                        commentsCurrentUser.push({ content: commentDetail, author: commentAuthor })
-                    }
+        let doiKey = await firebase.database().ref('doi_repository').once('value').then((snapshot) => {
+            var result = null;
+            snapshot.forEach((childSnapshot) => {
+                var child_doi_nr = childSnapshot.val().doi_nr;
+                var childKey = childSnapshot.key;
+                if (child_doi_nr === doi) {
+                    result = childSnapshot.key;
                 }
             })
-            if (rankType === "onlyfromCurrentUser") {
-                console.log(commentsCurrentUser)
-                return commentsCurrentUser.slice().reverse()
-            }
-            else {
-                return commentsList.slice().reverse()
-            }
+            return result;
         })
-        return resultList
+        let result = await firebase
+            .database()
+            .ref('doi_repository/' + doiKey + '/comments')
+            .once('value')
+            .then((snapshot) => {
+                var commentsList = []
+                var commentsList_CurrentUser = []
+                snapshot.forEach((childSnapshot) => {
+                    if (childSnapshot.val().type === 'official') {
+                        var content = childSnapshot.val().details
+                        var author = childSnapshot.val().usr
+                        commentsList.push({ content: content, author: author })
+                        if (childSnapshot.val().userId === firebase.auth().currentUser.uid) {
+                            commentsList_CurrentUser.push({ content: content, author: author })
+                        }
+                    }
+                })
+                if (rankType === 'onlyfromCurrentUser') {
+                    console.log(commentsList_CurrentUser.slice().reverse())
+                    return commentsList_CurrentUser.slice().reverse();
+                }
+                else {
+                    return commentsList.slice().reverse();
+                }
+            })
+        return result
     }
 }
 
