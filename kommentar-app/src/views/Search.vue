@@ -102,13 +102,14 @@ export default {
     },
     
   /**
-   * auRe-search according to whether the filter conditions are changed
+   * Re-search according to the filter conditions
    * @param newfilter  the filter date from FilterPopup-Component
    * */
     filter(newfilter){  
       this.filterCondition=newfilter;
-      this.gotoPage(1,true);
-       
+      if(this.$refs.bar.keyword==this.$route.query.keyword){ //do not search when the keyword is changed
+        this.gotoPage(1,true);
+      } 
     },
 
 

@@ -45,13 +45,13 @@
                 :options= "options2">
                 </mt-checklist>
             </div>
-
+          
+          <!-- Submit Buttons -->
           <div>
             <mt-button class="comfirmbtn" style="margin-right:2vh" @click.native="confirm" size="large" type="primary">Confirm</mt-button>
             <mt-button class="comfirmbtn" @click.native="filterDialog=false" size="large" type="default">Cancel</mt-button>
-          
           </div>
-          <!-- Submit Buttons -->
+         
          </div>
             
             
