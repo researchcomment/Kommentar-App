@@ -30,16 +30,11 @@
                     this.$message.warning("Search cannot be empty");
                     return;
                 }
-                var sameSearch = (this.keyword == this.$route.query.keyword);        
-                if(sameSearch){
-                    //jump back to the first page
-                   this.$emit("gotoPage",1,false); 
-                } 
-                else{
-                    this.$router.push({path: '/search', 
-                                       query: {keyword : this.keyword,
-                                                }});                
-                }         
+
+                this.$router.push({path: '/search', 
+                                    query: {keyword : this.keyword,
+                                            }});                
+                         
             },
         },
         directives: {
@@ -49,11 +44,6 @@
                 }
             }
         },
-        watch:{
-          filterCondition(){
-            this.filter=this.oldfilterCondition;
-          }
-        }
     }
 </script>
 
