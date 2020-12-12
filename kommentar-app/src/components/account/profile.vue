@@ -40,21 +40,18 @@
 
 <script>
 export default {
+  props:["username"],
   data(){
     return{
 
     }
   },
   computed:{
-    username: function(){
-      return this.$store.state.account.username;
-    },
     role:function(){
       return this.$store.state.account.role;
     },
     isAdmin(){
       return true; //!for test
-
       if(this.username){
           //check whether the logged user is Admin
           return (this.role.indexOf("Admin"))>-1;

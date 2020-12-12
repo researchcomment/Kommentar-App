@@ -5,24 +5,24 @@
                 {{detail.title}}
             </h2> 
             <div>
-                <div v-for="(item, key) in detail" :key="key">
-                <img src="../../../public/static/book.jpg" align="right"  v-if="item == 'book-chapter'" class="workimg">
-                <img src="../../../public/static/journal-article.jpg" align="right"  v-if="item == 'journal'" class="workimg">
-                <img src="../../../public/static/proceeding.jpg" align="right"  v-if="item == 'proceedings'" class="workimg">
-                <img src="../../../public/static/dissertations.jpg" align="right"  v-if="item == 'dissertations'" class="workimg">
-                <img src="../../../public/static/components.jpg" align="right"  v-if="item == 'component'" class="workimg">
-                <p v-if=" key=='type'">
+                <img src="../../../public/static/book.jpg" align="right"  v-if="detail.type == 'book-chapter'" class="workimg">
+                <img src="../../../public/static/journal-article.jpg" align="right"  v-if="detail.type == 'journal'" class="workimg">
+                <img src="../../../public/static/proceeding.jpg" align="right"  v-if="detail.type == 'proceedings'" class="workimg">
+                <img src="../../../public/static/dissertations.jpg" align="right"  v-if="detail.type == 'dissertations'" class="workimg">
+                <img src="../../../public/static/components.jpg" align="right"  v-if="detail.type == 'component'" class="workimg">
+                <h3>
+                    type: {{detail.type}}
+                </h3>
+            </div>
+            <div v-for="(item, key) in detail" v-bind:key="key">
+                <p v-if="(key!='title')&&(item)&&(key!='type')&&(key!='abstract')">
                     {{key}}: {{item}}
                 </p>
-                
             </div>
+            <div id="abstract">
             </div>
-            <div v-for="(item, key) in detail" :key="key">
-                <p v-if="(key!='title')&&(item!=null)&&(item[0]!=null)&&(key!='type')">
-                    {{key}}: {{item}}
-                </p>
-                
-            </div>
+     
+           
         </div>
     </div>
 </template>
@@ -45,6 +45,11 @@
                                     username:this.username,})    
                 .then((result) => {
                     this.detail = result;
+                    if (this.detail.abstract){
+                        var template = document.getElementById('abstract');
+                        this.detail.abstract = this.detail.abstract.trim(); // Never return a text node of whitespace as the result
+                        template.innerHTML = this.detail.abstract;
+                    }
                     this.loading=false;
                 }).catch(err => {
                     console.log(err);

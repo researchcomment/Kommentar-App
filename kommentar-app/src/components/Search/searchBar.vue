@@ -21,7 +21,14 @@
         data() {
             return {
                 keyword:this.$route.query.keyword,
-            }
+                filter:{
+                                date:{
+                                    from:new Date(new Date().setFullYear(2019)),
+                                    to:new Date(),
+                                },
+                                selectedType:["monograph","report","book","proceedings-article","journal","dissertation"],
+                                },
+                }
         },
         methods:{
             /**do a search request and refresh the search page */
@@ -30,15 +37,11 @@
                     this.$message.warning("Search cannot be empty");
                     return;
                 }
-                var sameSearch = (this.keyword == this.$route.query.keyword);        
-                if(sameSearch){
-                    //jump back to the first page
-                   this.$emit("gotoPage",1,false); 
-                } 
-                else{
-                    this.$router.push({path: '/search', 
-                                       query: {keyword : this.keyword}});                
-                }         
+
+                this.$router.push({path: '/search', 
+                                    query: {keyword : this.keyword,
+                                            }});                
+                         
             },
         },
         directives: {
@@ -47,7 +50,7 @@
                     el.focus()
                 }
             }
-        }
+        },
     }
 </script>
 

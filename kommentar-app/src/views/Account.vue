@@ -2,7 +2,7 @@
   <div class="bar">
     <div class="homepage" @click="goHome"><i class="iconfont icon-zhuye"></i>Home Page</div>
     <div class="account">
-      <accounticon class="icon"  v-show="username"></accounticon>
+      <accounticon class="icon"  v-show="username" :username="username"></accounticon>
       <div class="buttons">
         <login class="log" v-show="!username"></login>
         <register class="reg" v-show="!username"></register>
@@ -30,6 +30,7 @@ export default {
     username: function () {
       return this.$store.state.account.username;
     },
+
   },
   methods:{
     goHome(){
@@ -37,22 +38,13 @@ export default {
     },
   },
   mounted(){
-    var username=sessionStorage.getItem("username")||localStorage.getItem("username");
-    if(username){
-      this.$store.commit("account/setusername",username);
-    }
-    
+
   },
   watch:{
     //Monitor login/logout status and prompt success message
     username(newName,oldName){
-      var username=sessionStorage.getItem("username")||localStorage.getItem("username");
-      if(username){
-        return;
-      }
       if((!oldName)&&newName){
-        sessionStorage.setItem("username",newName); //cache account information
-        this.$message({          //Cached account information will be deleted at account/logout
+        this.$message({         
           type: 'success',
           message: "Login successfully. Welcome!",
           duration: 1000
@@ -65,10 +57,9 @@ export default {
           duration: 1000
         });
       }
-    }
-
+    },
   }
-};
+}
 </script>
 
 <style>

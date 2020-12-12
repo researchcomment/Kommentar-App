@@ -28,29 +28,54 @@ const url = "http://api.crossref.org/works/";
 
 const getters = {}
 
-function settimestramp(item) {
+function settime(item) {
     if (item.timestamp) {
-        return item.timestamp;
+        return new Date(item.timestamp);
     }
     if (item["date-time"]) {
-        return new Date(item["date-time"].getTime());
+        return new Date(item["date-time"]);
     }
     if (item["date-parts"]) {
-        let datet = item["date-parts"];
-        return new Date(datet[0], datet[1], datet[2]).getTime();
+        let datet = item["date-parts"][0];
+        return new Date(datet[0], datet[1], datet[2]);
     }
     return null;
 }
+
 function cons_returnValue(item_ref) {
     //actural reference of result list from crossref
     //construct info which needed to be return  
-    item_ref.title = item_ref.title ? item_ref.title[0] : null;
-    item_ref.author = item_ref.author ? worklist.construct_author(item_ref.author) : null;
     item_ref.domain = item_ref["content-domain"].domain ? item_ref["content-domain"].domain[0] : null;
-    item_ref["published-print"] = item_ref["published-print"] ? settimestramp(item_ref["published-print"]) : null;
-    item_ref["deposited"] = item_ref["deposited"] ? settimestramp(item_ref["deposited"]) : null;
-    item_ref["created"] = item_ref["created"] ? settimestramp(item_ref["created"]) : null;
-    return item_ref;
+    console.log(item_ref);
+    let returnValue={};
+    returnValue.title=item_ref.title ? item_ref.title[0] : null;
+    returnValue.type=item_ref.type;
+    returnValue.author=item_ref.author ? worklist.construct_author(item_ref.author) : null;
+    returnValue.publisher=item_ref.publisher;
+    returnValue.ISBN=item_ref.ISBN ? item_ref.ISBN[0] : null;
+    if (item_ref["published-print"]){
+        returnValue["published-print"]=settime(item_ref["published-print"]);
+    } else if (item_ref["published-online"]){
+        returnValue["published-online"]=settime(item_ref["published-online"]);
+    }
+    else if (item_ref["created"])
+    {
+        returnValue["created"]=settime(item_ref["created"]);
+    }
+    else if (item_ref["deposited"])
+    {
+        returnValue["deposited"]=settime(item_ref["deposited"]);
+    }
+   
+    if (returnValue.type=="dissertation")
+    {
+        returnValue.institution=item_ref.institution;
+        
+    }
+    
+    returnValue.abstract=item_ref.abstract;
+    console.log(returnValue);
+    return returnValue;
 }
 
 //async function return promise

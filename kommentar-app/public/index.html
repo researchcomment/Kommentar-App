@@ -7,6 +7,15 @@
     <link rel="shortcut icon" href="./static/logo_small.png" type="image/x-icon">
     <title><%= htmlWebpackPlugin.options.title %></title>
     <link rel="stylesheet" href="./font/iconfont.css">
+    <script>
+      (() => {
+        window.addEventListener('storage', (event) => {
+          if (event.key === 'username') {
+            window.location.reload()
+          }
+        })
+      })()
+      </script>
   </head>
   <body>
     <noscript>
