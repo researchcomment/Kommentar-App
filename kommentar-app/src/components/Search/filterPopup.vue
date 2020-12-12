@@ -110,10 +110,8 @@
             /** Submit filter data */
             confirm(){
                 this.filterDialog=false;
-                this.filterCondition.selectedType =this.selectedType1;
-                for(var i in this.selectedType2){
-                        this.filterCondition.selectedType.push(this.selectedType2[i]);
-                }
+                this.filterCondition.selectedType =this.selectedType1.concat(this.selectedType2);
+                console.log(this.filterCondition);
                 this.$emit("filter",this.filterCondition);
             },
         },
