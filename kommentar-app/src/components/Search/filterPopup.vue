@@ -78,16 +78,12 @@
 
 <script>
     export default {
+        props:["filterCondition"],
         data(){
+            
             return{
                 filterDialog:false,
-                filterCondition:{
-                                  date:{
-                                      from:new Date(new Date().setFullYear(2019)),
-                                      to:new Date(),
-                                  },
-                                  selectedType:["monograph","report","book","proceedings-article","journal","dissertation"],
-                                },
+                
                 defaultdate:{
                     from:new Date(new Date().setFullYear(1968)),
                     to:new Date()
@@ -120,10 +116,6 @@
                 }
                 this.$emit("filter",this.filterCondition);
             },
-            updateFliter(newFliter){
-              this.filterCondition=newFliter
-              console.log("【Filter】"+this.filterCondition.date.from)
-            }
         },
 
     }

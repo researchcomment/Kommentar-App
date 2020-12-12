@@ -50,10 +50,6 @@ function cons_returnValue(returnValue, from, to) {
 //flag=true : send new request, get results from response; 
 //falg=false : do not send request, get result from cache
 async function get_worklist(keyword, rows, offset, date, type) {
-    console.log(cachebegin);
-    console.log(cacheend);
-    console.log(offset);
-    console.log(rows);
     
     if ((offset<cachebegin) || ((offset+rows)>cacheend)) {
         

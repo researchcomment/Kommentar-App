@@ -5,14 +5,15 @@
       <div v-loading.fullscreen.lock="loading">
     
     <div>
-        <searchBar ref="bar" class="search-top-bar" @gotoPage="gotoPage" :filterCondition="filterCondition"  ></searchBar>
+        <searchBar ref="bar" class="search-top-bar" @gotoPage="gotoPage" ></searchBar>
     </div>
     
     <!-- Filterung -->
-    <div class="filter" v-if= "!loading">
+    <div class="filter">
       <div>find {{resultLength}} results</div>
       <filterPopup 
         ref="filterPopup" 
+        :filterCondition="filterCondition"
         @filter="filter"  ></filterPopup>
     </div>
   </div>
@@ -103,16 +104,10 @@ export default {
    * auRe-search according to whether the filter conditions are changed
    * @param newfilter  the filter date from FilterPopup-Component
    * */
-    filter(newfilter){    
-      var sameFilterCondition = (newfilter.date.to.toDateString())==(this.filterCondition.date.to.toDateString());
-      sameFilterCondition = sameFilterCondition && (newfilter.date.from.toDateString())==(this.filterCondition.date.from.toDateString());
-      sameFilterCondition = sameFilterCondition && (JSON.stringify(newfilter.selectedType)==JSON.stringify(this.filterCondition.selectedType));
-      if(!sameFilterCondition){
-        this.filterCondition = newfilter;
-        this.gotoPage(1,true);
-        setTimeout(this.$refs.filterPopup.updateFliter(this.filterCondition), 3000); //!BUG the popup component has got the new Filter but when we open it, the date is the default one
-        //this.$refs.filterPopup.updateFliter(this.filterCondition);//!actually the page will not be reloaded by filter.
-      }
+    filter(newfilter){  
+      this.filterCondition=newfilter;
+      this.gotoPage(1,true);
+       
     },
 
 
