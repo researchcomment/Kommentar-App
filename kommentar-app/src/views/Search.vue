@@ -8,8 +8,9 @@
         <searchBar ref="bar" class="search-top-bar" @gotoPage="gotoPage" ></searchBar>
     </div>
     
+    
     <!-- Filterung -->
-    <div class="filter">
+    <div class="filter"  v-show="!loading">
       <div>find {{resultLength}} results</div>
       <filterPopup 
         ref="filterPopup" 
