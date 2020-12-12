@@ -79,7 +79,7 @@
     outline:none;
     border:solid 2px #00243E;
     box-sizing: border-box;
-    font-size:1.2vw;
+    font-size:2vh;
     border-radius: 23px;
     height: 4.7vh;
 }

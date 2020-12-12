@@ -54,7 +54,7 @@
         </div>
       </div>
     </div>
-    </div>
+  </div>
 
     <!-- show the results -->
     <ul class="booklist" >
@@ -189,6 +189,7 @@ export default {
         .then((result) => {
           this.searchResultList = result.list;
           this.resultLength=result.length;
+          this.loading=false;
         }).catch(err => {
         console.log(err);
       })
@@ -199,9 +200,7 @@ export default {
     },
   },
   watch:{
-    searchResultList(newList,oldList){
-      this.loading=false;
-    }
+    
   }
 };
 </script>
@@ -211,7 +210,7 @@ export default {
     margin-left:10%;
     margin-right: auto;
     width:80%;
-    margin-top: 15px;
+    margin-top: 2vh;
     display: block;
 }
 .booklist{
@@ -220,18 +219,18 @@ export default {
     margin-left:10%;
     margin-right: 3vw;
     margin-top: 0;
-    display: bolck;
+    display: block;
     width:80%;
-    font-size: 1.5vw;
+    font-size: 2.5vh;
 }
 .filter{
   display: block;
   margin-left:10%;
   width: 60%;
   line-height: 200%;
-  margin-top: 1vh;
+  margin-top: 2vh;
   height: 50%;
-  font-size: 1.2vw;
+  font-size: 1.8vh;
 }
 .filter p{
   display: inline;
@@ -246,7 +245,7 @@ export default {
 .filterselct span{
   display: inline-block;
   width: 5vh;
-  font-size: 1vh;
+  font-size: 2vh;
 }
 .filterselct .mint-button{
   width: 14vh;
@@ -269,7 +268,7 @@ export default {
   width: 30%;
 }
 .pagesetter{
-  display: bolck;
+  display: block;
   margin-left:8%;
   margin: 2vh;
 }
