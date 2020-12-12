@@ -37,7 +37,12 @@ function settime(item) {
     }
     if (item["date-parts"]) {
         let datet = item["date-parts"][0];
-        return new Date(datet[0], datet[1], datet[2]);
+        if (datet) {
+            return datet[0] ? datet[1] ? datet[2] ? new Date(datet[0], datet[1], datet[2]) :
+                new Date(datet[0], datet[1]) : new Date(new Date().setFullYear(datet[0])) : null
+                //注：new Date() 只传年份，会自动转换为毫秒数
+        }
+        //return new Date(datet[0], datet[1], datet[2]);
     }
     return null;
 }
@@ -47,33 +52,37 @@ function cons_returnValue(item_ref) {
     //construct info which needed to be return  
     item_ref.domain = item_ref["content-domain"].domain ? item_ref["content-domain"].domain[0] : null;
     console.log(item_ref);
-    let returnValue={};
-    returnValue.title=item_ref.title ? item_ref.title[0] : null;
-    returnValue.type=item_ref.type;
-    returnValue.author=item_ref.author ? worklist.construct_author(item_ref.author) : null;
-    returnValue.publisher=item_ref.publisher;
-    returnValue.ISBN=item_ref.ISBN ? item_ref.ISBN[0] : null;
-    if (item_ref["published-print"]){
-        returnValue["published-print"]=settime(item_ref["published-print"]);
-    } else if (item_ref["published-online"]){
-        returnValue["published-online"]=settime(item_ref["published-online"]);
+    let returnValue = {};
+    returnValue.title = item_ref.title ? item_ref.title[0] : null;
+    returnValue.type = item_ref.type;
+    returnValue.author = item_ref.author ? worklist.construct_author(item_ref.author) : null;
+    returnValue.publisher = item_ref.publisher;
+    returnValue.ISBN = item_ref.ISBN ? item_ref.ISBN[0] : null;
+    if (item_ref["published-print"]) {
+        returnValue["published-print"] = settime(item_ref["published-print"]);
+    } else if (item_ref["published-online"]) {
+        returnValue["published-online"] = settime(item_ref["published-online"]);
+    } else if (item_ref["created"]) {
+        returnValue["created"] = settime(item_ref["created"]);
+    } else if (item_ref["deposited"]) {
+        returnValue["deposited"] = settime(item_ref["deposited"]);
     }
-    else if (item_ref["created"])
-    {
-        returnValue["created"]=settime(item_ref["created"]);
+
+    switch (returnValue.type) {
+        case "dissertation":
+            returnValue.institution = item_ref.institution;
+            break;
+        case "book":
+
+            break;
+
     }
-    else if (item_ref["deposited"])
-    {
-        returnValue["deposited"]=settime(item_ref["deposited"]);
-    }
-   
-    if (returnValue.type=="dissertation")
-    {
-        returnValue.institution=item_ref.institution;
-        
-    }
-    
-    returnValue.abstract=item_ref.abstract;
+    // if (returnValue.type=="dissertation")
+    // {
+    //     returnValue.institution=item_ref.institution;
+    // }
+
+    returnValue.abstract = item_ref.abstract;
     console.log(returnValue);
     return returnValue;
 }
@@ -104,19 +113,19 @@ async function getDoi_key(doi) {
     //这个定义doi_key的位置需要优化，注意异步操作
     const currentDoi = doi;
     firebase.database().ref('doi_repository').once('value').then((snapshot) => {
-        //遍历所有doi_key(works),查看doi_key目录下的doi_nr是否已经存在，如果存在返回所属的doi_key，否侧返回null
-        snapshot.forEach((childSnapshot) => {
-            //doi_key
-            const doiKey = childSnapshot.key;
-            //doi_nr
-            const childDoi = childSnapshot.doi_nr;
+            //遍历所有doi_key(works),查看doi_key目录下的doi_nr是否已经存在，如果存在返回所属的doi_key，否侧返回null
+            snapshot.forEach((childSnapshot) => {
+                //doi_key
+                const doiKey = childSnapshot.key;
+                //doi_nr
+                const childDoi = childSnapshot.doi_nr;
 
-            if (childDoi === currentDoi) {
-                //doi_nr已经存在
-                return doiKey
-            }
+                if (childDoi === currentDoi) {
+                    //doi_nr已经存在
+                    return doiKey
+                }
+            })
         })
-    })
         .catch((error) => {
             console.log(error)
         })
@@ -171,20 +180,20 @@ const actions = {
         //version 2
         //set content with doi username to database
         const userKey = firebase.auth().currentUser.uid;
-        var aData = new Date();//utc
+        var aData = new Date(); //utc
         //uhrzeit, die Zeit von verschiedenen Regionen anzupassen.
         const value = aData.getFullYear() + "-" + (aData.getMonth() + 1) + "-" + aData.getDate();
         const newComent = {
-            //doi is optional
-            doi_nr: doi,
-            userId: userKey,
-            usr: username,
-            details: content,
-            createDate: value,
-            type: 'defaultType'
-        }
-        //在doi资料库中生成一个评论的key,并把key加入用户数据的comments项中
-        //此处只能使用firebase自动配置的key，doi形式不适合作为key
+                //doi is optional
+                doi_nr: doi,
+                userId: userKey,
+                usr: username,
+                details: content,
+                createDate: value,
+                type: 'defaultType'
+            }
+            //在doi资料库中生成一个评论的key,并把key加入用户数据的comments项中
+            //此处只能使用firebase自动配置的key，doi形式不适合作为key
         let doi_key = await getDoi_key(doi);
         console.log(doi_key)
         if (!!!firebase.database().ref('doi_repository' + doi_key).comments) {
@@ -231,7 +240,7 @@ const actions = {
                 var commentAuthor = childVal.usr;
                 if (childDoi === doi && (commentType === "defaultType")) {
                     commentsList.push({ content: commentDetail, author: commentAuthor })
-                    //check current username and childusername, not work because login state is not snyc, this.username ist undefined
+                        //check current username and childusername, not work because login state is not snyc, this.username ist undefined
                     if (childUsr === this.username) {
                         commentsCurrentUser.push({ content: commentDetail, author: commentAuthor })
                     }
@@ -240,8 +249,7 @@ const actions = {
             if (rankType === "onlyfromCurrentUser") {
                 console.log(commentsCurrentUser)
                 return commentsCurrentUser.slice().reverse()
-            }
-            else {
+            } else {
                 return commentsList.slice().reverse()
             }
         })
@@ -263,7 +271,7 @@ const actions = {
                 var commentAuthor = childVal.usr;
                 if (childDoi === doi && (commentType === "officalType")) {
                     commentsList.push({ content: commentDetail, author: commentAuthor })
-                    //check current username and childusername, not work because login state is not snyc, this.username ist undefined
+                        //check current username and childusername, not work because login state is not snyc, this.username ist undefined
                     if (childUsr === this.username) {
                         commentsCurrentUser.push({ content: commentDetail, author: commentAuthor })
                     }
@@ -272,8 +280,7 @@ const actions = {
             if (rankType === "onlyfromCurrentUser") {
                 console.log(commentsCurrentUser)
                 return commentsCurrentUser.slice().reverse()
-            }
-            else {
+            } else {
                 return commentsList.slice().reverse()
             }
         })
