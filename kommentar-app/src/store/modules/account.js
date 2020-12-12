@@ -70,12 +70,6 @@ const actions = {
                     email: username, 
                 }
                 firebase.database().ref('users/' + userId).set(entry)
-
-                //初始化用户信息中的comments目录
-                var coments = {
-                    defaultKey: "defaultType"
-                }
-                firebase.database().ref('users/' + userId + '/comments').set(coments)
             })
             .catch(error => {
                 console.log('false')

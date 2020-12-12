@@ -59,7 +59,8 @@ export default {
                         ]
                         */
             var result = await this.$store.dispatch("commitwork/loadUnOfficialComments", 
-            {doi : this.doi})
+            {doi : this.doi, rankType : 'onlyfromCurrentUser'})
+            console.log(result)
             this.commentList = result;
         }
     }
