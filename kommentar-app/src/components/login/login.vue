@@ -78,7 +78,7 @@
 .mint-cell .mint-cell-value{
     border-bottom: 1px solid #d9d9d9;
 }
-.mint-cell .mint-cell-warpper{
+.mint-popup .mint-cell .mint-cell-wrapper{
     background-image: none;
 }
 .cbuttons .el-button{

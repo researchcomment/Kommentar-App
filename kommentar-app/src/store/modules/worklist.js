@@ -56,8 +56,7 @@ async function get_worklist(keyword, rows, offset, date) {
         last_keyword = keyword;
         last_date = date;
         //convert keyword in this format list : keyword1+keyword2+...
-        keyword = keyword.split(" ");
-        keyword = keyword.join("+");
+        keyword = keyword.split(" ").join("+");
         let datefrom = date.from.getFullYear() + "-" +
             ((date.from.getMonth() + 1) < 10 ? "0" : "") + (date.from.getMonth() + 1) +
             "-" + (date.from.getDate() < 10 ? "0" : "") + date.from.getDate();
@@ -101,9 +100,10 @@ async function get_worklist(keyword, rows, offset, date) {
         return returnValue;
     }
 }
-
+//type=[""]
+//flag=true/false true:new search false:page change
 const actions = {
-    async search({ commit, state }, { keyword, from, to, date }) {
+    async search({ commit, state }, { keyword, from, to, date, type,flag }) {
         //set the information to the state,filter it into title author and doi(may changed from google firebase side)
         //commit('setlist',list)
         //give the first 10 information(Todo), can reuse changepage

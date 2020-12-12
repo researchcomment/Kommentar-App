@@ -69,19 +69,19 @@ body{
   float: right;
   width: auto;
   height: 50px;
-  margin-right: 2vw;
+  margin-right: 2vh;
 }
 
 .log{
   float: right;
   cursor: pointer; 
-  margin-right: 2vw;
+  margin-right: 2vh;
 }
 .reg{
   float: right;
   margin: 0 0px;
   cursor: pointer; 
-  margin-right: 2vw;
+  margin-right: 2vh;
 }
 .account{
   float: right;
@@ -89,7 +89,7 @@ body{
 .homepage{
   float: left;
   color: #fff;
-  margin-left: 2vw;
+  margin-left: 2vh;
   cursor: pointer;
 }
 </style>
