@@ -107,9 +107,8 @@ export default {
    * */
     filter(newfilter){  
       this.filterCondition=newfilter;
-      if(this.$refs.bar.keyword==this.$route.query.keyword){ //do not search when the keyword is changed
-        this.gotoPage(1,true);
-      } 
+      this.$refs.bar.keyword=this.$route.query.keyword;//do not search when the keyword is changed
+      this.gotoPage(1,true);
     },
 
 
