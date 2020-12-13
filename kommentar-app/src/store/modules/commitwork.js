@@ -240,6 +240,7 @@ const actions = {
                         var content = childSnapshot.val().details
                         var author = childSnapshot.val().usr
                         commentsList.push({ content: content, author: author })
+                        if (firebase.auth().currentUser)
                         if (childSnapshot.val().userId === firebase.auth().currentUser.uid) {
                             commentsList_CurrentUser.push({ content: content, author: author })
                         }
@@ -282,6 +283,7 @@ const actions = {
                         var content = childSnapshot.val().details
                         var author = childSnapshot.val().usr
                         commentsList.push({ content: content, author: author })
+                        if (firebase.auth().currentUser) 
                         if (childSnapshot.val().userId === firebase.auth().currentUser.uid) {
                             commentsList_CurrentUser.push({ content: content, author: author })
                         }
