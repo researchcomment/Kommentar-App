@@ -58,6 +58,7 @@ export default {
                         [
                         ]
                         */
+<<<<<<< HEAD
             this.$store.dispatch("commitwork/loadUnOfficialComments", 
             {doi : this.doi})
             .then((result) => {
@@ -67,6 +68,12 @@ export default {
                     console.log(err);
             })
             
+=======
+            var result = await this.$store.dispatch("commitwork/loadUnOfficialComments", 
+            {doi : this.doi, rankType : 'submittime'})
+            console.log(result)
+            this.commentList = result;
+>>>>>>> origin/ycdev/realtime_Db
         }
     }
         
