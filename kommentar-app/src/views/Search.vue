@@ -24,7 +24,7 @@
       </li>
       
     </ul>
-    <div v-if="(searchResultList.length == 0) && (!loading)"><img class="sorryimg" src="../../public/static/sorry.png" alt=""></div>
+    <div v-if="(searchResultList.length == 0) && (!loading)"><img class="sorryimg" src="../pics/sorry.png" alt=""></div>
     <!-- change Pages -->
     <div class="pagesetter" v-if= "(!loading)&&(searchResultList.length != 0)">
       <i class="iconfont icon-zuojiantou" v-show="page>1" @click="gotoPage(page-1,false)"></i>

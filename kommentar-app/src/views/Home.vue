@@ -2,7 +2,7 @@
 <div>
     <div class="maincontent">
         <div class="search">
-       <div class="logo"><img src="../../public/static/logo1.png" alt=""></div>
+       <div class="logo"><img src="../pics/logo1.png" alt=""></div>
        <searchBar class="searchbar"></searchBar>
     </div>
     </div>
