@@ -1,5 +1,5 @@
 <template>
-    <div class="ucomment">
+    <div class="ucomment" v-loading.fullscreen.lock="loading">
         <h2 style="font-size:2vw;color:#000">Comments <span style="color:#ABABAB;font-size:1.5vw">{{uncomnum}}</span></h2>
         <ul>
             <li v-for="item in commentList" v-bind:key="item.id">
@@ -25,6 +25,7 @@ export default {
     data(){
         return {
             commentList:[],
+            loading:false,
         }
     },
     created() {
@@ -58,12 +59,14 @@ export default {
                         [
                         ]
                         */
+            this.loading=true; //open the loading 
             var result = await this.$store.dispatch("commitwork/loadUnOfficialComments", 
             {doi : this.doi, rankType : 'submittime'}).catch(err => {
                 console.log(err);
             })
             console.log(result)
             this.commentList = result;
+            this.loading=false; //close the loading 
         }
     }
         

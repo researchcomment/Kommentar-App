@@ -5,7 +5,7 @@
         <bookInfo :doi="doi"></bookInfo>
         <officialComment :doi="doi" :username="username"></officialComment>
         <unofficialComment :doi="doi" :username="username"></unofficialComment>
-        <commentEditor :doi="doi" :username="username"></commentEditor>
+        <commentEditor :doi="doi" :username="username" @submit="refresh"></commentEditor>
     </div>
     <bottom></bottom>
     </div>
@@ -31,7 +31,6 @@ import firebase from 'firebase/app';
         },
         data(){
             return{
-
             }
         },
         computed:{
@@ -56,6 +55,9 @@ import firebase from 'firebase/app';
         methods:{
             getDetailfromDB(){
                 //get Details: book information and commentars from backends
+            },
+            refresh(){
+                this.$router.go(0);
             }
         }
         
