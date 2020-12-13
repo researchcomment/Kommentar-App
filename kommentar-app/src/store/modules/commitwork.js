@@ -39,7 +39,7 @@ function settime(item) {
         let datet = item["date-parts"][0];
         if (datet) {
             return datet[0] ? datet[1] ? datet[2] ? new Date(datet[0], datet[1], datet[2]) :
-                new Date(datet[0], datet[1]) : new Date(new Date().setFullYear(datet[0])) : null
+                new Date(datet[0], datet[1]) : new Date(datet[0],0) : null
                 //注：new Date() 只传年份，会自动转换为毫秒数
         }
         //return new Date(datet[0], datet[1], datet[2]);
@@ -51,7 +51,6 @@ function cons_returnValue(item_ref) {
     //actural reference of result list from crossref
     //construct info which needed to be return  
     item_ref.domain = item_ref["content-domain"].domain ? item_ref["content-domain"].domain[0] : null;
-    console.log(item_ref);
     let returnValue = {};
     returnValue.title = item_ref.title ? item_ref.title[0] : null;
     returnValue.type = item_ref.type;
@@ -83,7 +82,6 @@ function cons_returnValue(item_ref) {
     // }
 
     returnValue.abstract = item_ref.abstract;
-    console.log(returnValue);
     return returnValue;
 }
 
@@ -102,7 +100,6 @@ async function get_detail(doi) {
         }
 
         console.log("results construction endding：" + new Date());
-        console.log(returnValue);
         return returnValue;
     }).catch(err => {
         console.log(err);
