@@ -37,7 +37,7 @@
       <p>{{page}}</p>
       <p v-show="(resultLength/10)>=(page+1)" @click="gotoPage(page+1,false)">{{page+1}}</p>
       <p v-show="(resultLength/10)>=(page+2)" @click="gotoPage(page+2,false)">{{page+2}}</p>
-      <i class="iconfont icon-youjiantou" v-show="(!loading)" @click="gotoPage(page+1,false)"></i>
+      <i class="iconfont icon-youjiantou" v-show="(!loading)&&(resultLength/10)>=(page+1)" @click="gotoPage(page+1,false)"></i>
     </div>
   </div>
     <bottom></bottom>
