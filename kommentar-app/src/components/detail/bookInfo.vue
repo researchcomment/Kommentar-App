@@ -1,14 +1,29 @@
 <template>
     <div class="details">
-        <h2>{{detail.title}}</h2>
-        <p>Author:{{detail.author}}</p>
-        <p>Editor:{{detail.editor}}</p>
-        <p>Chair:{{detail.chair}}</p>
-        <p>Translator:{{detail.translator}}</p>
-        <p>Contributor:{{detail.contributor}}</p>
-        <p>Bibliographic:{{detail.bibliographic}}</p>
-        <p>Affiliation:{{detail.affiliation}}</p>
-        <p>DOI:{{detail.doi}}</p>
+        <div v-loading.fullscreen.lock="loading">
+            <h2>
+                {{detail.title}}
+            </h2> 
+            <div>
+                <img src="../../../public/static/book.jpg" align="right"  v-if="detail.type == 'book-chapter'" class="workimg">
+                <img src="../../../public/static/journal-article.jpg" align="right"  v-if="detail.type == 'journal'" class="workimg">
+                <img src="../../../public/static/proceeding.jpg" align="right"  v-if="detail.type == 'proceedings'" class="workimg">
+                <img src="../../../public/static/dissertations.jpg" align="right"  v-if="detail.type == 'dissertations'" class="workimg">
+                <img src="../../../public/static/components.jpg" align="right"  v-if="detail.type == 'component'" class="workimg">
+                <h3>
+                    type: {{detail.type}}
+                </h3>
+            </div>
+            <div v-for="(item, key) in detail" v-bind:key="key">
+                <p v-if="(key!='title')&&(item)&&(key!='type')&&(key!='abstract')">
+                    {{key}}: {{item}}
+                </p>
+            </div>
+            <div v-if="detail.abstract" v-html="detail.abstract">
+            </div>
+     
+           
+        </div>
     </div>
 </template>
 
@@ -18,17 +33,20 @@
         data(){
             return{
                 detail:[],
+                loading:false,
             }
         },
         computed:{
         },
         mounted(){
+            this.loading=true;
             this.$store.dispatch("commitwork/askfordetail", {
                                     doi:this.doi,
                                     username:this.username,})    
                 .then((result) => {
                     this.detail = result;
-                    }).catch(err => {
+                    this.loading=false;
+                }).catch(err => {
                     console.log(err);
             })
         }
@@ -37,15 +55,27 @@
 
 <style>
     .details h2{
-        font-size: 5vh;
+        font-size: 4vh;
+    }
+     .details h3{
+        font-size: 3vh;
     }
     .details p{
-        font-size: 3vh;
+        font-size: 2.5vh;
     }
     .details{
         margin-top: 5vh;
         margin-left: 10vw;
         margin-right: 10vw;
         margin-bottom: 1vh;
+    }
+    .details{
+        word-break: break-all;
+    }
+    .workimg{
+        width: 40vw;
+        top: 0vh;
+        padding: 2vh;
+        padding-right: 0;
     }
 </style>

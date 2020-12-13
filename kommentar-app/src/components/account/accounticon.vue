@@ -1,15 +1,12 @@
 <template>
   <div>
     <!-- <el-popover placement="bottom" trigger="click" v-model="visible">
-      <profile @logout="logout"></profile>
-
-      <i class="el-icon-user" style="color: #fff" slot="reference"></i>
       Your Account
     </el-popover> -->
     <div class="iconyonghu" @click="popout"><span class="iconfont icon-yonghu"></span>{{username}}</div>
     <mt-popup class="pop" v-model="visible" position="right" slot="reference">
          
-        <profile class="prof" @logout="logout"></profile>
+        <profile class="prof" @logout="logout" :username="username"></profile>
     </mt-popup>
     <!-- <profile class="prof" v-show="visible" @logout="logout"></profile> -->
         
@@ -20,6 +17,7 @@
 <script>
 import profile from "./profile";
 export default {
+  props:["username"],
   components: {
     profile,
   },
@@ -36,11 +34,6 @@ export default {
         this.visible = !this.visible;
     }
   },
-  computed:{
-      username: function(){
-      return this.$store.state.account.username;
-    },
-  }
 };
 </script>
 

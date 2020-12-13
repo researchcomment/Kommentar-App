@@ -2,17 +2,17 @@ import firebase from 'firebase/app';
 
 const state = () => ({
     username: null,
-    role: null,
+    role: null, //['default', 'Researcher', 'Reviewer','Moderator','Admin']  from JJY
     error: null
 })
 
 const getters = {
     getUser(state) {
-        return state.username;
+        return rootState.username;
     },
 
     isAuth(state) {
-        return !!state.username;
+        return state.username;
     },
 
     getError(state) {
@@ -29,12 +29,12 @@ const actions = {
         return firebase
             .auth()
             .signInWithEmailAndPassword(username, password)
-            .then(response => {
+            .then(response => {  
+                window.localStorage.setItem("username",username); //cache account information
                 commit("setusername", username);
             })
             .catch(error => {
-                var errorMessage = error.message;
-                commit("setError", errorMessage);
+                commit("setError", error.message);
             });
     },
 
@@ -44,6 +44,7 @@ const actions = {
         .auth()
         .signOut()
         .then(() => {
+            window.localStorage.removeItem('username');  //delete cached account information
             commit('setrole',null)
             commit('setusername',null)
         })
@@ -59,14 +60,24 @@ const actions = {
             .auth()
             .createUserWithEmailAndPassword(username, password)
             .then(response => {
+                console.log('true')
                 commit("setusername", username);
+                
+                //初始化DB中的用户信息
+                var userId = firebase.auth().currentUser.uid;
+                var entry = {
+                    username: username,
+                    role: 'user',
+                    email: username, 
+                }
+                firebase.database().ref('users/' + userId).set(entry)
             })
             .catch(error => {
-                var errorMessage = error.message;
-                commit("setError", errorMessage);
-               
-                
+                console.log('false');
+                commit("setError", error.message);
             });
+
+        
     }
 }
 

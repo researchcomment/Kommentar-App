@@ -1,21 +1,26 @@
 <template>
     <div class="comeditor">
         <h3 style="font-size:1.8vw;color:#000">We need your opinion!</h3>
-        <quill-editor
+        <div class="notlog" v-show="!username">Please login</div>
+        <div v-show="username">
+            <quill-editor
             v-model="content"
             ref="quillEditor" 
             :options="editorOption"
             @focus="onEditorFocus()"
             @blur="onEditorBlur()"
+            
         >
         </quill-editor>
         <button @click="submit" style="margin-top:2vh">Submit</button>
 
         <!-- Test:Show the comment in html form -->
-        <p style="margin-bottom:5vh">Test: 实时渲染html格式的comment</p>
+        <!-- <p style="margin-bottom:5vh">Test: 实时渲染html格式的comment</p>
         <div v-html="content">
 	            {{content}}
+        </div> -->
         </div>
+        
     </div>
 </template>
 <script>
@@ -34,7 +39,7 @@ export default {
                     toolbar:[
                             ['bold', 'italic', 'underline', 'strike'],    // toggled buttons
                             ['blockquote', 'code-block'], 
-                            [{ 'size': ['small', false, 'large', 'huge'] }], // front size
+                            // [{ 'size': ['small', false, 'large', 'huge'] }], // front size
                             [{ 'color': [] }],   // front color
                             ]
                         }} 
@@ -44,8 +49,13 @@ export default {
     computed: {
         editor() {
             return this.$refs.quillEditor.quill;
+        }
+        /*,
+        username: function () {
+                //console.log(firebase.auth().currentUser.uid)
+                return this.$store.state.account.username;
         },
-       
+        */
     },
     methods: {
         //upload the comment to backend 
@@ -59,8 +69,8 @@ export default {
                 username:this.username,
                 content:this.content, //the comment is in html form 
             }
-            
-            this.$store.dispatch('commitwork/sendFromEditorToDatabase',entry)
+            this.$store.dispatch('commitwork/sendFromEditorToDatabase',entry);
+            this.$emit("submit");
         },
         onEditorFocus(){  // Focuses the editor 
             
@@ -95,5 +105,13 @@ export default {
 }
 .comeditor .quill-editor .ql-toolbar .ql-formats .ql-size{
     width: 12vh;
+}
+.comeditor .quill-editor .ql-toolbar .ql-formats .ql-expanded .ql-picker-options{
+    width: 12vh;
+    overflow: scroll;
+    height: 12vh;
+}
+.comeditor .quill-editor .ql-container{
+    height: 20vh;
 }
 </style>

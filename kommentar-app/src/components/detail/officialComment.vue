@@ -1,5 +1,5 @@
 <template>
-    <div class="ocomment">
+    <div class="ocomment" v-loading.fullscreen.lock="loading">
         <h2 style="font-size:2.5vw;color:#76C06B">Official Comments <span style="color:#ABABAB;font-size:1.5vw">{{comnum}}</span></h2>
         <ul>
             <li  v-for="item in commentList" v-bind:key="item.id" >
@@ -23,13 +23,14 @@ export default {
     data(){
         return {
             commentList:[
-                        {content:"234234",
-                            author:"xxxxx",},
-                        {content:"234234",
-                            author:"xxxxx",},
-                        {content:"234234",
-                            author:"xxxxx",}
+                        // {content:"a test comment",
+                        //     author:"xxxxx",},
+                        // {content:"a test comment",
+                        //     author:"xxxxx",},
+                        // {content:"a test comment",
+                        //     author:"xxxxx",}
                         ],
+            loading:false,
         }
     },
     created() {
@@ -47,14 +48,16 @@ export default {
     methods:{
         //ask data base the comments
         getComments(){
+            this.loading=true;
             this.commentList=[
-                        {content:"234234",
-                            author:"xxxxx",},
-                        {content:"234234",
-                            author:"xxxxx",},
-                        {content:"234234",
-                            author:"xxxxx",}
+                        // {content:"a test comment",
+                        //     author:"xxxxx",},
+                        // {content:"a test comment",
+                        //     author:"xxxxx",},
+                        // {content:"a test comment",
+                        //     author:"xxxxx",}
                         ];
+            this.loading=false;
         }
     }
         

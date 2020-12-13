@@ -1,5 +1,5 @@
 <template>
-    <div class="ucomment">
+    <div class="ucomment" v-loading.fullscreen.lock="loading">
         <h2 style="font-size:2vw;color:#000">Comments <span style="color:#ABABAB;font-size:1.5vw">{{uncomnum}}</span></h2>
         <ul>
             <li v-for="item in commentList" v-bind:key="item.id">
@@ -18,19 +18,14 @@
 <script>
 import comment from "./comment"
 export default {
+    props:["doi","username"],
     components:{
         comment,
     },
     data(){
         return {
-            commentList:[
-                        {content:"234234",
-                            author:"xxxxx",},
-                        {content:"234234",
-                            author:"xxxxx",},
-                        {content:"234234",
-                            author:"xxxxx",}
-                        ],
+            commentList:[],
+            loading:false,
         }
     },
     created() {
@@ -47,7 +42,12 @@ export default {
     },
     methods:{
         //ask data base the comments
-        getComments(){
+
+        //后端提供方法:loadUnOfficialComments, rankType
+        //输入需要 doi
+        //返回所有对于给出doi的作品的unofficalcomments的list，结构期望的相同
+        async getComments(){
+            /*
             this.commentList=[
                         {content:"234234",
                             author:"xxxxx",},
@@ -55,7 +55,18 @@ export default {
                             author:"xxxxx",},
                         {content:"234234",
                             author:"xxxxx",}
-                        ];
+                        ]，
+                        [
+                        ]
+                        */
+            this.loading=true; //open the loading 
+            var result = await this.$store.dispatch("commitwork/loadUnOfficialComments", 
+            {doi : this.doi, rankType : 'submittime'}).catch(err => {
+                console.log(err);
+            })
+            console.log(result)
+            this.commentList = result;
+            this.loading=false; //close the loading 
         }
     }
         

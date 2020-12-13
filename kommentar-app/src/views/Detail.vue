@@ -5,7 +5,7 @@
         <bookInfo :doi="doi"></bookInfo>
         <officialComment :doi="doi" :username="username"></officialComment>
         <unofficialComment :doi="doi" :username="username"></unofficialComment>
-        <commentEditor :doi="doi" :username="username"></commentEditor>
+        <commentEditor :doi="doi" :username="username" @submit="refresh"></commentEditor>
     </div>
     <bottom></bottom>
     </div>
@@ -18,7 +18,8 @@ import bookInfo from "@/components/detail/bookInfo";
 import officialComment from "@/components/detail/officialComment";
 import unofficialComment from "@/components/detail/unofficialComment";
 import commentEditor from "@/components/detail/commentEditor";
-import bottom from '@/components/footer/bottom'
+import bottom from '@/components/footer/bottom';
+import firebase from 'firebase/app';
     export default {
         name:"detail",
         components:{
@@ -30,7 +31,6 @@ import bottom from '@/components/footer/bottom'
         },
         data(){
             return{
-
             }
         },
         computed:{
@@ -38,6 +38,7 @@ import bottom from '@/components/footer/bottom'
                 return this.$route.query.doi;
             },
             username: function () {
+                //console.log(firebase.auth().currentUser.uid)
                 return this.$store.state.account.username;
             },
 
@@ -47,12 +48,16 @@ import bottom from '@/components/footer/bottom'
         },
         beforeRouteUpdate(to, from, next) {
             next();
+
             this.getDetailfromDB();
     
         },
         methods:{
             getDetailfromDB(){
                 //get Details: book information and commentars from backends
+            },
+            refresh(){
+                this.$router.go(0);
             }
         }
         
@@ -64,4 +69,5 @@ import bottom from '@/components/footer/bottom'
     margin: auto 0;
     width: 100%;
 }
+
 </style>

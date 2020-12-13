@@ -74,12 +74,16 @@
  }
 .popform .mint-cell .mint-cell-title{
     color: black;
+    
 }
 .mint-cell .mint-cell-value{
     border-bottom: 1px solid #d9d9d9;
+    margin-top: 2vh;
+    margin-bottom: 2vh;
 }
-.mint-cell .mint-cell-warpper{
+.mint-popup .mint-cell .mint-cell-wrapper{
     background-image: none;
+    display: block;
 }
 .cbuttons .el-button{
     float: right;
@@ -96,6 +100,7 @@
      margin-top: 7%;
      height: 2.5vh;
      line-height: 2.5vh;
-     font-size: 110%;
+     font-size: 3vh;
+     margin-bottom: 2vh;
  }
 </style>

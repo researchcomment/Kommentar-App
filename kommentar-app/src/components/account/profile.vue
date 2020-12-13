@@ -1,15 +1,6 @@
 <template>
   <div>
       <!-- Personal information -->
-      <!-- <p>Profile</p>
-      <p> 
-        <span>Username : </span>
-        <span>{{username}}</span>
-      </p>
-      <p>
-        <span>Role :</span> 
-        <span>{{role}}</span>
-      </p> -->
       <div @click="close" class="topbar">
         <div class="content">
           <span class="iconfont icon-yonghu"></span>{{username}}
@@ -20,6 +11,12 @@
           <span class="iconfont icon-jiaose"></span>
           <div class="texts">
             Role : {{role}}
+          </div>
+        </li>
+        <li v-show="isAdmin" @click="openAdmin">
+          <span class="iconfont icon-biaoqiankuozhan_guanli-159"></span>
+          <div class="texts">
+            Admin
           </div>
         </li>
         <li>
@@ -43,17 +40,25 @@
 
 <script>
 export default {
+  props:["username"],
   data(){
     return{
 
     }
   },
   computed:{
-    username: function(){
-      return this.$store.state.account.username;
-    },
     role:function(){
       return this.$store.state.account.role;
+    },
+    isAdmin(){
+      return true; //!for test
+      if(this.username){
+          //check whether the logged user is Admin
+          return (this.role.indexOf("Admin"))>-1;
+      }
+      else{
+          return false;
+      }
     }
   },
   methods:{
@@ -63,6 +68,9 @@ export default {
     logout(){
       this.$store.dispatch('account/logout');
       this.$emit('logout');
+    },
+    openAdmin(){
+      this.$router.push('/Admin');
     }
   }
 
