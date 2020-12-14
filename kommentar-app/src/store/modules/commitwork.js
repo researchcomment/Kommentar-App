@@ -225,6 +225,7 @@ const actions = {
     async loadUnOfficialComments({ commit, state }, { doi, rankType, username}) {
         //rankType: 'submittime', 'onlyfromCurrentUser'
         //首先每次调用此方法的时候，应该在DB收集所有doi为给入doi的comments条目
+        
         let doiKey = await firebase.database().ref('doi_repository').once('value').then((snapshot) => {
             var result = null;
             snapshot.forEach((childSnapshot) => {
@@ -236,6 +237,7 @@ const actions = {
             })
             return result;
         })
+      
         let result = await firebase
             .database()
             .ref('doi_repository/' + doiKey + '/comments')
@@ -260,7 +262,8 @@ const actions = {
                     return commentsList.slice().reverse();
                 }
             })
-        return result
+            return result
+        
     },
 
     async loadOfficialComments({ commit, state }, { doi, rankType, username}) {

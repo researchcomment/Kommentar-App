@@ -59,17 +59,17 @@ export default {
     },
     methods: {
         //upload the comment to backend 
-        submit(){
+        async submit(){
             if(!this.username){
                 MessageBox.alert("Please login", "Notice");
                 return;
             }
             var entry={
                 doi:this.doi,
-                username:this.username,
+                username:this.$store.state.account.username,
                 content:this.content, //the comment is in html form 
             }
-            this.$store.dispatch('commitwork/sendFromEditorToDatabase',entry);
+            let result= await this.$store.dispatch('commitwork/sendFromEditorToDatabase',entry);
             this.$emit("submit");
         },
         onEditorFocus(){  // Focuses the editor 

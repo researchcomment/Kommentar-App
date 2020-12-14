@@ -63,7 +63,7 @@ export default {
       this.loading = true;
       var result = await this.$store.dispatch(
         "commitwork/loadOfficialComments",
-        { doi: this.doi, rankType: "submittime", username: this.username }
+        { doi: this.doi, rankType: "submittime", username:this.$store.state.account.username }
       );
       console.log(result);
       this.commentList = result;
