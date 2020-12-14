@@ -63,11 +63,11 @@ export default {
       //this.loading = true;
       var result = await this.$store.dispatch(
         "commitwork/loadOfficialComments",
-        { doi: this.doi, rankType: "submittime", username: this.username }
+        { doi: this.doi, rankType: "submittime", username:this.$store.state.account.username }
       );
       console.log(result);
       this.commentList = result;
-      //this.loading = false;
+      this.loading = false;
     },
   },
 };
@@ -81,24 +81,25 @@ export default {
 .ocomment li {
   margin-bottom: 5vh;
 }
-.ocomment {
-  margin: 3vh 10vw;
+.ocomment{
+    margin: 3vh 10vw;
+    margin-top: 8vh;
 }
-.ocomment .ant-comment-inner {
-  padding: 0;
+.ant-comment-inner{
+    padding: 0;
 }
-.ocomment .ant-comment-content-author a {
-  font-size: 3vh;
+.ant-comment-content-author a{
+    font-size: 3vh;
 }
-.ocomment .ant-comment-content-detail p {
-  font-size: 4vh;
-  margin-bottom: 0;
+.ant-comment-content-detail p{
+    font-size: 4vh;
+    margin-bottom: 0;
 }
-.ocomment .ant-comment-actions {
-  margin: 0;
-  padding: 0;
+.ant-comment-actions{
+    margin: 0;
+    padding: 0;
 }
-.ocomment .ant-comment-actions span {
-  font-size: 2vh;
+.ant-comment-actions span{
+    font-size: 2vh;
 }
 </style>

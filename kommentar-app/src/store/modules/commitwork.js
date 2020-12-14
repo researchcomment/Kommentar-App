@@ -117,6 +117,7 @@ const actions = {
     //create new Entry in realtime-DB for Editor-Input 
     async sendFromEditorToDatabase({ commit, state }, { doi, username, content }) {
         console.log('submit')
+        console.log(doi)
         //version 2
         //找到userkey
         let userKey = await firebase.database().ref('users').once('value').then((snapshot) => {
@@ -192,19 +193,20 @@ const actions = {
     async loadUnOfficialComments({ commit, state }, { doi, rankType, username}) {
         //rankType: 'submittime', 'onlyfromCurrentUser'
         //首先每次调用此方法的时候，应该在DB收集所有doi为给入doi的comments条目
+        
         let doiKey = await firebase.database().ref('doi_repository').once('value').then((snapshot) => {
             var tempresult = null;
             snapshot.forEach((childSnapshot) => {
                 var child_doi_nr = childSnapshot.val().doi_nr;
                 var childKey = childSnapshot.key;
-                console.log(child_doi_nr)
-                console.log(doi)
                 if (child_doi_nr === doi) {
                     tempresult = childSnapshot.key;
                 }
             })
             return tempresult;
         })
+        console.log(doi)
+        console.log(doiKey)
         if(!!doiKey){
             let result = await firebase
             .database()

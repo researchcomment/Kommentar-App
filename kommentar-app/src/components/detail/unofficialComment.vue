@@ -61,10 +61,10 @@ export default {
                         */
             this.loading=true; //open the loading 
             var result = await this.$store.dispatch("commitwork/loadUnOfficialComments", 
-            {doi : this.doi, rankType : 'submittime', username : this.username}).catch(err => {
+            {doi : this.doi, rankType : 'submittime',username:this.$store.state.account.username}).catch(err => {
                 console.log(err);
             })
-            console.log(result)
+            console.log('finished')
             this.commentList = result;
             this.loading=false; //close the loading 
         }
@@ -84,7 +84,7 @@ export default {
 .ucomment li{
     margin-bottom: 1vh;
 }
-.ucomment .ant-comment-inner{
+/* .ucomment .ant-comment-inner{
     padding: 0;
 }
 .ucomment .ant-comment-inner .ant-comment-avatar img{
@@ -101,5 +101,5 @@ export default {
 }
 .ucomment .ant-comment-content-detail p{
     margin-bottom: 0;
-}
+} */
 </style>
