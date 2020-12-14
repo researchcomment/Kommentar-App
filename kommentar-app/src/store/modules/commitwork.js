@@ -29,28 +29,50 @@ const url = "http://api.crossref.org/works/";
 const getters = {}
 
 function settime(item) {
+    let date = null;
+    let year = null;
+    let month = null;
+    let day = null;
     if (item.timestamp) {
-        return new Date(item.timestamp);
+        date = new Date(item.timestamp)
+        year = date.getFullYear();
+        month = date.getMonth();
+        day = date.getDate();
+        return year + "-" + month + "-" + day;
     }
     if (item["date-time"]) {
-        return new Date(item["date-time"]);
+        date = new Date(item["date-time"]);
+        year = date.getFullYear();
+        month = date.getMonth();
+        day = date.getDate();
+        return year + "-" + month + "-" + day;
+        //return new Date(item["date-time"]);
+        //return item["date-time"];
     }
     if (item["date-parts"]) {
         let datet = item["date-parts"][0];
         if (datet) {
-            return datet[0] ? datet[1] ? datet[2] ? new Date(datet[0], datet[1], datet[2]) :
-                new Date(datet[0], datet[1]) : new Date(datet[0],0) : null
-                //注：new Date() 只传年份，会自动转换为毫秒数
+            //return datet[0] ? datet[1] ? datet[2] ? new Date(datet[0], datet[1], datet[2]) :
+            //new Date(datet[0], datet[1]) : new Date(new Date().setFullYear(datet[0])) : null
+            //注：new Date() 只传年份，会自动转换为毫秒数
+            return datet[0] ? datet[1] ? datet[2] ? datet[0] + "-" + datet[1] + "-" + datet[2] :
+                datet[0] + "-" + datet[1] : datet[0] : null
         }
         //return new Date(datet[0], datet[1], datet[2]);
     }
     return null;
 }
 
+function check_type(book_type, comparator) {
+    var arr = book_type.split("-");
+    return arr.indexOf(comparator) > -1;
+}
+
 function cons_returnValue(item_ref) {
     //actural reference of result list from crossref
     //construct info which needed to be return  
     item_ref.domain = item_ref["content-domain"].domain ? item_ref["content-domain"].domain[0] : null;
+    console.log(item_ref);
     let returnValue = {};
     returnValue.title = item_ref.title ? item_ref.title[0] : null;
     returnValue.type = item_ref.type;
@@ -67,44 +89,63 @@ function cons_returnValue(item_ref) {
         returnValue["deposited"] = settime(item_ref["deposited"]);
     }
 
-    switch (returnValue.type) {
-        case "dissertation":
-            returnValue.institution = item_ref.institution;
-            break;
-        case "book":
-
-            break;
+    if (check_type(returnValue.type, "dissertation")) {
+        returnValue.institution = item_ref.institution;
+    } else if (check_type(returnValue.type, "book")) {
 
     }
-    // if (returnValue.type=="dissertation")
-    // {
-    //     returnValue.institution=item_ref.institution;
-    // }
 
     returnValue.abstract = item_ref.abstract;
+    console.log(returnValue);
     return returnValue;
 }
 
 //async function return promise
 async function get_detail(doi) {
     var search_url = url + doi;
+    console.log(search_url);
     return axios.get(search_url).then(res => {
         //get reference : res -> data -> message
         let ref = res.data.message;
         let returnValue = null;
         if (ref) {
             //save current 100 results in items as a list
-            //console.log("response endding：" + new Date());
+            console.log("response endding：" + new Date());
             returnValue = cons_returnValue(ref);
         }
-        /*
+
         console.log("results construction endding：" + new Date());
         console.log(returnValue);
-        */
         return returnValue;
     }).catch(err => {
         console.log(err);
     });
+}
+async function getDoi_key(doi) {
+    //每次打details页面的时候在数据库中寻找对应doi的键并定义当前状态的doi_key,方法sendFromEditorToDatabase进行调用
+    //这个定义doi_key的位置需要优化，注意异步操作
+    const currentDoi = doi;
+    firebase.database().ref('doi_repository').once('value').then((snapshot) => {
+            //遍历所有doi_key(works),查看doi_key目录下的doi_nr是否已经存在，如果存在返回所属的doi_key，否侧返回null
+            snapshot.forEach((childSnapshot) => {
+                //doi_key
+                const doiKey = childSnapshot.key;
+                //doi_nr
+                const childDoi = childSnapshot.doi_nr;
+
+                if (childDoi === currentDoi) {
+                    //doi_nr已经存在
+                    return doiKey
+                }
+            })
+        })
+        .catch((error) => {
+            console.log(error)
+        })
+    const init_doi_key_item = firebase.database().ref('doi_repository').push({
+        doi_nr: doi
+    }).key
+    return init_doi_key_item;
 }
 
 const actions = {
@@ -117,7 +158,6 @@ const actions = {
     //create new Entry in realtime-DB for Editor-Input 
     async sendFromEditorToDatabase({ commit, state }, { doi, username, content }) {
         /*
-        version 1
         //set content with doi username to database
         const userKey = firebase.auth().currentUser.uid;
         var aData = new Date();//utc
@@ -151,53 +191,29 @@ const actions = {
         */
 
         //version 2
-        //找到userkey
-        let userKey = await firebase.database().ref('users').once('value').then((snapshot) => {
-            var result = null;
-            snapshot.forEach((childSnapshot) => {
-                if(username === childSnapshot.val().username){
-                    result = childSnapshot.key;
-                }
-            })
-            return result
-        })
-        var aData = new Date();//utc
+        //set content with doi username to database
+        const userKey = firebase.auth().currentUser.uid;
+        var aData = new Date(); //utc
         //uhrzeit, die Zeit von verschiedenen Regionen anzupassen.
         const value = aData.getFullYear() + "-" + (aData.getMonth() + 1) + "-" + aData.getDate();
         const newComent = {
-            //doi is optional
-            doi_nr: doi,
-            usr: username,
-            details: content,
-            createDate: value,
-            type: 'unofficial'
-        }
-        //在doi资料库中生成一个评论的key,并把key加入用户数据的comments项中
-        //此处只能使用firebase自动配置的key，doi形式不适合作为key
-        firebase.database().ref('doi_repository').once('value').then((snapshot) => {
-            //snapshot是doiKey
-            let got_Doi_Nr = snapshot.forEach((childSnapshot) => {
-                var childKey = childSnapshot.key;
-                var existed_doi_nr = childSnapshot.val().doi_nr;
-                if (existed_doi_nr === doi) {
-                    //doi对应的文章已经存在，把新的coment加入comments
-                    let comments_key = firebase.database().ref('doi_repository/' + childKey + '/comments').push(newComent).key;
-                    firebase.database().ref('users/' + userKey + '/comments/' + comments_key).set({
-                        type: 'unofficial'
-                    })
-                    return true;
-                }
-            })
-            if (!got_Doi_Nr) {
-                //doi对应的文章不存在，那么加入新的文章doi并插入新的comment到空的comments目录
-                let new_Doi_Key = firebase.database().ref('doi_repository').push().key;
-                firebase.database().ref('doi_repository/' + new_Doi_Key).set({ doi_nr: doi })
-                let comments_key = firebase.database().ref('doi_repository/' + new_Doi_Key + '/comments').push(newComent).key;
-                firebase.database().ref('users/' + userKey + '/comments/' + comments_key).set({
-                    type: 'unofficial'
-                })
+                //doi is optional
+                doi_nr: doi,
+                userId: userKey,
+                usr: username,
+                details: content,
+                createDate: value,
+                type: 'defaultType'
             }
-        })
+            //在doi资料库中生成一个评论的key,并把key加入用户数据的comments项中
+            //此处只能使用firebase自动配置的key，doi形式不适合作为key
+        let doi_key = await getDoi_key(doi);
+        console.log(doi_key)
+        if (!!!firebase.database().ref('doi_repository' + doi_key).comments) {
+            //comments是空的
+            firebase.database().ref('doi_repository/' + doi_key + '/comments').push(newComent)
+        }
+        //
         //firebase.database().ref('doi_repository/' + newDoi_key + '/comments').set(newComent)   
         /*
         firebase.database().ref('doi_repository').push(newComent)
@@ -222,86 +238,66 @@ const actions = {
     //load comments for work from realtime Database
     //测试之后发现加载offcial和unofficialComments的方法合并和拆分实现没有性能上的区别，
     //防止随后加入新的不同操作，这里暂时分开写
-    async loadUnOfficialComments({ commit, state }, { doi, rankType, username}) {
+    async loadUnOfficialComments({ commit, state }, { doi, rankType }) {
         //rankType: 'submittime', 'onlyfromCurrentUser'
         //首先每次调用此方法的时候，应该在DB收集所有doi为给入doi的comments条目
-        let doiKey = await firebase.database().ref('doi_repository').once('value').then((snapshot) => {
-            var result = null;
-            snapshot.forEach((childSnapshot) => {
-                var child_doi_nr = childSnapshot.val().doi_nr;
-                var childKey = childSnapshot.key;
-                if (child_doi_nr === doi) {
-                    result = childSnapshot.key;
-                }
-            })
-            return result;
-        })
-        let result = await firebase
-            .database()
-            .ref('doi_repository/' + doiKey + '/comments')
-            .once('value')
-            .then((snapshot) => {
-                var commentsList = []
-                var commentsList_CurrentUser = []
-                snapshot.forEach((childSnapshot) => {
-                    if (childSnapshot.val().type === 'unofficial') {
-                        var content = childSnapshot.val().details
-                        var author = childSnapshot.val().usr
-                        commentsList.push({ content: content, author: author })
-                        if (childSnapshot.val().usr === username) {
-                            commentsList_CurrentUser.push({ content: content, author: author })
-                        }
+        let resultList = await firebase.database().ref('/editor_content/').once('value').then((snapshot) => {
+            var commentsList = [];
+            var commentsCurrentUser = [];
+            snapshot.forEach(childSnapshot => {
+                var childVal = childSnapshot.val();
+                var childUsr = childVal.usr;
+                var childDoi = childVal.doi_nr;
+                var commentType = childVal.type;
+                var commentDetail = childVal.details;
+                var commentAuthor = childVal.usr;
+                if (childDoi === doi && (commentType === "defaultType")) {
+                    commentsList.push({ content: commentDetail, author: commentAuthor })
+                        //check current username and childusername, not work because login state is not snyc, this.username ist undefined
+                    if (childUsr === this.username) {
+                        commentsCurrentUser.push({ content: commentDetail, author: commentAuthor })
                     }
-                })
-                if (rankType === 'onlyfromCurrentUser') {
-                    return commentsList_CurrentUser.slice().reverse();
-                }
-                else {
-                    return commentsList.slice().reverse();
                 }
             })
-        return result
+            if (rankType === "onlyfromCurrentUser") {
+                console.log(commentsCurrentUser)
+                return commentsCurrentUser.slice().reverse()
+            } else {
+                return commentsList.slice().reverse()
+            }
+        })
+        console.log(resultList);
+        return resultList
     },
-
-    async loadOfficialComments({ commit, state }, { doi, rankType, username}) {
+    async loadOfficialComments({ commit, state }, { doi, rankType }) {
         //rankType: 'submittime', 'onlyfromCurrentUser'
         //首先每次调用此方法的时候，应该在DB收集所有doi为给入doi的comments条目
-        let doiKey = await firebase.database().ref('doi_repository').once('value').then((snapshot) => {
-            var result = null;
-            snapshot.forEach((childSnapshot) => {
-                var child_doi_nr = childSnapshot.val().doi_nr;
-                var childKey = childSnapshot.key;
-                if (child_doi_nr === doi) {
-                    result = childSnapshot.key;
-                }
-            })
-            return result;
-        })
-        let result = await firebase
-            .database()
-            .ref('doi_repository/' + doiKey + '/comments')
-            .once('value')
-            .then((snapshot) => {
-                var commentsList = []
-                var commentsList_CurrentUser = []
-                snapshot.forEach((childSnapshot) => {
-                    if (childSnapshot.val().type === 'official') {
-                        var content = childSnapshot.val().details
-                        var author = childSnapshot.val().usr
-                        commentsList.push({ content: content, author: author })
-                        if (childSnapshot.val().usr === username) {
-                            commentsList_CurrentUser.push({ content: content, author: author })
-                        }
+        let resultList = await firebase.database().ref('/editor_content/').once('value').then((snapshot) => {
+            var commentsList = [];
+            var commentsCurrentUser = [];
+            snapshot.forEach(childSnapshot => {
+                var childVal = childSnapshot.val();
+                var childUsr = childVal.usr;
+                var childDoi = childVal.doi_nr;
+                var commentType = childVal.type;
+                var commentDetail = childVal.details;
+                var commentAuthor = childVal.usr;
+                if (childDoi === doi && (commentType === "officalType")) {
+                    commentsList.push({ content: commentDetail, author: commentAuthor })
+                        //check current username and childusername, not work because login state is not snyc, this.username ist undefined
+                    if (childUsr === this.username) {
+                        commentsCurrentUser.push({ content: commentDetail, author: commentAuthor })
                     }
-                })
-                if (rankType === 'onlyfromCurrentUser') {
-                    return commentsList_CurrentUser.slice().reverse();
-                }
-                else {
-                    return commentsList.slice().reverse();
                 }
             })
-        return result
+            if (rankType === "onlyfromCurrentUser") {
+                console.log(commentsCurrentUser)
+                return commentsCurrentUser.slice().reverse()
+            } else {
+                return commentsList.slice().reverse()
+            }
+        })
+        return resultList
     }
 }
 
