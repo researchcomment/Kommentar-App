@@ -60,14 +60,14 @@ export default {
                         [
                         ]
                         */
-      this.loading = true;
+      //this.loading = true;
       var result = await this.$store.dispatch(
         "commitwork/loadOfficialComments",
         { doi: this.doi, rankType: "submittime", username: this.username }
       );
       console.log(result);
       this.commentList = result;
-      this.loading = true;
+      //this.loading = false;
     },
   },
 };

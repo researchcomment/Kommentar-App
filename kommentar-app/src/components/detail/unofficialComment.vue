@@ -61,7 +61,7 @@ export default {
                         */
             this.loading=true; //open the loading 
             var result = await this.$store.dispatch("commitwork/loadUnOfficialComments", 
-            {doi : this.doi, rankType : 'submittime'}).catch(err => {
+            {doi : this.doi, rankType : 'submittime', username : this.username}).catch(err => {
                 console.log(err);
             })
             console.log(result)
