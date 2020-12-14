@@ -174,7 +174,7 @@ const actions = {
         }
         //在doi资料库中生成一个评论的key,并把key加入用户数据的comments项中
         //此处只能使用firebase自动配置的key，doi形式不适合作为key
-        firebase.database().ref('doi_repository').once('value').then((snapshot) => {
+        return firebase.database().ref('doi_repository').once('value').then((snapshot) => {
             //snapshot是doiKey
             let got_Doi_Nr = snapshot.forEach((childSnapshot) => {
                 var childKey = childSnapshot.key;
@@ -187,6 +187,7 @@ const actions = {
                     })
                     return true;
                 }
+                return false;
             })
             if (!got_Doi_Nr) {
                 //doi对应的文章不存在，那么加入新的文章doi并插入新的comment到空的comments目录
@@ -197,7 +198,10 @@ const actions = {
                     type: 'unofficial'
                 })
             }
-        })
+        }).catch((error) => {
+            //for debug only, will be finished later
+            console.log(error.message);
+        });
         //firebase.database().ref('doi_repository/' + newDoi_key + '/comments').set(newComent)   
         /*
         firebase.database().ref('doi_repository').push(newComent)
@@ -237,8 +241,9 @@ const actions = {
             })
             return result;
         })
-      
-        let result = await firebase
+        let result=[];
+        if (doiKey)
+            result = await firebase
             .database()
             .ref('doi_repository/' + doiKey + '/comments')
             .once('value')
@@ -262,7 +267,7 @@ const actions = {
                     return commentsList.slice().reverse();
                 }
             })
-            return result
+        return result
         
     },
 
@@ -280,7 +285,9 @@ const actions = {
             })
             return result;
         })
-        let result = await firebase
+        let result=[];
+        if (doiKey)
+            result = await firebase
             .database()
             .ref('doi_repository/' + doiKey + '/comments')
             .once('value')
