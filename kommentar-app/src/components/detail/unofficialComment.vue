@@ -64,7 +64,7 @@ export default {
             {doi : this.doi, rankType : 'submittime',username:this.$store.state.account.username}).catch(err => {
                 console.log(err);
             })
-            console.log(result)
+            console.log('finished')
             this.commentList = result;
             this.loading=false; //close the loading 
         }

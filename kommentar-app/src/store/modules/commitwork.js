@@ -116,40 +116,8 @@ const actions = {
 
     //create new Entry in realtime-DB for Editor-Input 
     async sendFromEditorToDatabase({ commit, state }, { doi, username, content }) {
-        /*
-        version 1
-        //set content with doi username to database
-        const userKey = firebase.auth().currentUser.uid;
-        var aData = new Date();//utc
-        //uhrzeit, die Zeit von verschiedenen Regionen anzupassen.
-        const value = aData.getFullYear() + "-" + (aData.getMonth() + 1) + "-" + aData.getDate();
-        const entry = {
-            doi_nr: doi,
-            userId: userKey,
-            usr: username,
-            details: content,
-            createDate: value,
-            type: 'defaultType'
-        }
-        //生成一个评论的key,并把key加入用户数据的comments项中
-        const commentKey = firebase.database().ref('editor_content').push(entry)
-            .then((data) => {
-                //读取一次当前用户在DB中的信息,并且更新用户信息中的comments目录
-                firebase.database().ref('/users/' + userKey).once('value').then((snapshot) => {
-                    var oldComments = snapshot.child('comments');
-                    var newComments = JSON.parse(JSON.stringify(oldComments.val()));
-                    //这里评论的类型需要加工     
-                    newComments[data.key] = "defaultType";
-                    //这里直接更新
-                    firebase.database().ref('/users/' + userKey + '/comments').set(newComments)
-                })
-            })
-            .catch((error) => {
-                //for debug only, will be finished later
-                console.log(error.message);
-            }).key;
-        */
-
+        console.log('submit')
+        console.log(doi)
         //version 2
         //找到userkey
         let userKey = await firebase.database().ref('users').once('value').then((snapshot) => {
@@ -231,15 +199,15 @@ const actions = {
         //首先每次调用此方法的时候，应该在DB收集所有doi为给入doi的comments条目
         
         let doiKey = await firebase.database().ref('doi_repository').once('value').then((snapshot) => {
-            var result = null;
+            var tempresult = null;
             snapshot.forEach((childSnapshot) => {
                 var child_doi_nr = childSnapshot.val().doi_nr;
                 var childKey = childSnapshot.key;
                 if (child_doi_nr === doi) {
-                    result = childSnapshot.key;
+                    tempresult = childSnapshot.key;
                 }
             })
-            return result;
+            return tempresult;
         })
         let result=[];
         if (doiKey)
