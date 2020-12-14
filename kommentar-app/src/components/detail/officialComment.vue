@@ -1,6 +1,6 @@
 <template>
-    <div class="ocomment">
-        <h2 style="font-size:2.5vw;color:#76C06B">Official Comments <span style="color:#ABABAB;font-size:1.5vw">{{comnum}}</span></h2>
+    <div class="ocomment" v-loading.fullscreen.lock="loading">
+        <h2 style="font-size:2vw;color:#76C06B">Official Comments <span style="color:#ABABAB;font-size:1.5vw">{{comnum}}</span></h2>
         <ul>
             <li  v-for="item in commentList" v-bind:key="item.id" >
                 <div>
@@ -23,13 +23,14 @@ export default {
     data(){
         return {
             commentList:[
-                        {content:"234234",
-                            author:"xxxxx",},
-                        {content:"234234",
-                            author:"xxxxx",},
-                        {content:"234234",
-                            author:"xxxxx",}
+                        // {content:"a test comment",
+                        //     author:"xxxxx",},
+                        // {content:"a test comment",
+                        //     author:"xxxxx",},
+                        // {content:"a test comment",
+                        //     author:"xxxxx",}
                         ],
+            loading:false,
         }
     },
     created() {
@@ -47,14 +48,16 @@ export default {
     methods:{
         //ask data base the comments
         getComments(){
+            this.loading=true;
             this.commentList=[
-                        {content:"234234",
-                            author:"xxxxx",},
-                        {content:"234234",
-                            author:"xxxxx",},
-                        {content:"234234",
-                            author:"xxxxx",}
+                        // {content:"a test comment",
+                        //     author:"xxxxx",},
+                        // {content:"a test comment",
+                        //     author:"xxxxx",},
+                        // {content:"a test comment",
+                        //     author:"xxxxx",}
                         ];
+            this.loading=false;
         }
     }
         
@@ -71,22 +74,23 @@ export default {
 }
 .ocomment{
     margin: 3vh 10vw;
+    margin-top: 8vh;
 }
-.ocomment .ant-comment-inner{
+.ant-comment-inner{
     padding: 0;
 }
-.ocomment .ant-comment-content-author a{
+.ant-comment-content-author a{
     font-size: 3vh;
 }
-.ocomment .ant-comment-content-detail p{
+.ant-comment-content-detail p{
     font-size: 4vh;
     margin-bottom: 0;
 }
-.ocomment .ant-comment-actions{
+.ant-comment-actions{
     margin: 0;
     padding: 0;
 }
-.ocomment .ant-comment-actions span{
+.ant-comment-actions span{
     font-size: 2vh;
 }
 </style>

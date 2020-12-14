@@ -15,10 +15,10 @@
         <button @click="submit" style="margin-top:2vh">Submit</button>
 
         <!-- Test:Show the comment in html form -->
-        <p style="margin-bottom:5vh">Test: 实时渲染html格式的comment</p>
+        <!-- <p style="margin-bottom:5vh">Test: 实时渲染html格式的comment</p>
         <div v-html="content">
 	            {{content}}
-        </div>
+        </div> -->
         </div>
         
     </div>
@@ -39,7 +39,7 @@ export default {
                     toolbar:[
                             ['bold', 'italic', 'underline', 'strike'],    // toggled buttons
                             ['blockquote', 'code-block'], 
-                            [{ 'size': ['small', false, 'large', 'huge'] }], // front size
+                            // [{ 'size': ['small', false, 'large', 'huge'] }], // front size
                             [{ 'color': [] }],   // front color
                             ]
                         }} 
@@ -69,8 +69,8 @@ export default {
                 username:this.username,
                 content:this.content, //the comment is in html form 
             }
-            
-            this.$store.dispatch('commitwork/sendFromEditorToDatabase',entry)
+            this.$store.dispatch('commitwork/sendFromEditorToDatabase',entry);
+            this.$emit("submit");
         },
         onEditorFocus(){  // Focuses the editor 
             

@@ -8,10 +8,14 @@
         <searchBar ref="bar" class="search-top-bar" @gotoPage="gotoPage" ></searchBar>
     </div>
     
+    
     <!-- Filterung -->
-    <div class="filter" v-if= "!loading">
+    <div class="filter"  v-show="!loading">
       <div>find {{resultLength}} results</div>
-      <filterPopup @filter="filter"></filterPopup>
+      <filterPopup 
+        ref="filterPopup" 
+        :filterCondition="filterCondition"
+        @filter="filter"  ></filterPopup>
     </div>
   </div>
 
@@ -28,14 +32,13 @@
     <!-- change Pages -->
     <div class="pagesetter" v-if= "(!loading)&&(searchResultList.length != 0)">
       <i class="iconfont icon-zuojiantou" v-show="page>1" @click="gotoPage(page-1,false)"></i>
-      <p v-show="page-2>1" @click="gotoPage(page-2,false)">{{page-2}}</p>
-      <p v-show="page-1>1" @click="gotoPage(page-1,false)">{{page-1}}</p>
-      <p>{{page}}</p>
-      <p v-show="resultLength/10>=page+1" @click="gotoPage(page-1,false)">{{page+1}}</p>
-      <p v-show="resultLength/10>=page+2" @click="gotoPage(page-1,false)">{{page+2}}</p>
-      <i class="iconfont icon-youjiantou" v-show="(!loading)" @click="gotoPage(page+1,false)"></i>
+      <p class="otherpage" v-show="page-2>=1" @click="gotoPage(page-2,false)">{{page-2}}</p>
+      <p class="otherpage" v-show="page-1>=1" @click="gotoPage(page-1,false)">{{page-1}}</p>
+      <p class="currentpage">{{page}}</p>
+      <p class="otherpage" v-show="(resultLength/10)>=(page+1)" @click="gotoPage(page+1,false)">{{page+1}}</p>
+      <p class="otherpage" v-show="(resultLength/10)>=(page+2)" @click="gotoPage(page+2,false)">{{page+2}}</p>
+      <i class="iconfont icon-youjiantou" v-show="(!loading)&&(resultLength/10)>=(page+1)" @click="gotoPage(page+1,false)"></i>
     </div>
-   
   </div>
     <bottom></bottom>
   </div>
@@ -99,18 +102,13 @@ export default {
     },
     
   /**
-   * Re-search according to whether the filter conditions are changed
+   * Re-search according to the filter conditions
    * @param newfilter  the filter date from FilterPopup-Component
    * */
-    filter(newfilter){
-      
-      var sameFilterCondition = (newfilter.date.to.toDateString())==(this.filterCondition.date.to.toDateString());
-      sameFilterCondition = sameFilterCondition && (newfilter.date.from.toDateString())==(this.filterCondition.date.from.toDateString());
-      sameFilterCondition = sameFilterCondition && (JSON.stringify(newfilter.selectedType)==JSON.stringify(this.filterCondition.selectedType));
-      if(!sameFilterCondition){
-        this.filterCondition = newfilter;
-        this.gotoPage(1,true);
-      }
+    filter(newfilter){  
+      this.filterCondition=newfilter;
+      this.$refs.bar.keyword=this.$route.query.keyword;//do not search when the keyword is changed
+      this.gotoPage(1,true);
     },
 
 
@@ -136,8 +134,9 @@ export default {
           this.resultLength=result.length;
           this.loading=false;
         }).catch(err => {
-        console.log(err);
+          console.log(err);
       })
+      
     },
   },
   watch:{
@@ -212,19 +211,35 @@ export default {
 }
 .pagesetter{
   display: block;
-  margin-left:8%;
-  margin: 2vh;
+  TEXT-ALIGN: center;
+  margin-bottom: 2vh;
 }
 .pagesetter i{
   display: inline;
-  font-size: 120%;
-  color: #76C06B;
+  font-size: 80%;
+  color: #00243E;
   cursor: pointer;
 }
 .pagesetter p{
-  display: inline;
+  display: inline-block;
+  width: 3vh;
+  height: 3vh;
+  line-height: 3vh;
   margin: 0 3%;
   font-size: 120%;
+}
+.otherpage{
+  color: #76C06B;
+  cursor: pointer;
+}
+.otherpage:hover{
+  text-decoration: underline;
+  color:#00243E
+}
+.currentpage{
+  color: #76C06B;
+  font-weight: bold;
+  cursor: default;
 }
 .sorryimg{
   width: 40vw;

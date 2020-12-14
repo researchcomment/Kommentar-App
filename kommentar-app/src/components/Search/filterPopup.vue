@@ -45,24 +45,21 @@
                 :options= "options2">
                 </mt-checklist>
             </div>
-
+          
+          <!-- Submit Buttons -->
           <div>
             <mt-button class="comfirmbtn" style="margin-right:2vh" @click.native="confirm" size="large" type="primary">Confirm</mt-button>
             <mt-button class="comfirmbtn" @click.native="filterDialog=false" size="large" type="default">Cancel</mt-button>
-          
           </div>
-          <!-- Submit Buttons -->
+         
          </div>
             
             
         </mt-popup>
-
         <mt-datetime-picker
           ref="datepickerFrom"
           type="date"
           v-model="filterCondition.date.from"
-          year-format="{value}"
-          month-format="{value}"
           :startDate="defaultdate.from"
           :endDate="filterCondition.date.to"
         >
@@ -71,27 +68,22 @@
           ref="datepickerTo"
           type="date"
           v-model="filterCondition.date.to"
-          year-format="{value}"
-          month-format="{value}"
           :startDate="filterCondition.date.from"
           :endDate="defaultdate.to"
         >
         </mt-datetime-picker>
+       
     </div>
 </template>
 
 <script>
     export default {
+        props:["filterCondition"],
         data(){
+            
             return{
                 filterDialog:false,
-                filterCondition:{
-                    date:{
-                        from:new Date(new Date().setFullYear(2019)),
-                        to:new Date(),
-                    },
-                    selectedType:["monograph","report","book","proceedings-article","journal","dissertation"],
-                },
+                
                 defaultdate:{
                     from:new Date(new Date().setFullYear(1968)),
                     to:new Date()
@@ -118,13 +110,12 @@
             /** Submit filter data */
             confirm(){
                 this.filterDialog=false;
-                this.filterCondition.selectedType =this.selectedType1;
-                for(var i in this.selectedType2){
-                        this.filterCondition.selectedType.push(this.selectedType2[i]);
-                }
+                this.filterCondition.selectedType =this.selectedType1.concat(this.selectedType2);
+                console.log(this.filterCondition);
                 this.$emit("filter",this.filterCondition);
             },
         },
+
     }
 </script>
 

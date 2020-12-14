@@ -30,6 +30,7 @@ const actions = {
             .auth()
             .signInWithEmailAndPassword(username, password)
             .then(response => {  
+                window.localStorage.setItem("username",username); //cache account information
                 commit("setusername", username);
             })
             .catch(error => {
@@ -43,8 +44,7 @@ const actions = {
         .auth()
         .signOut()
         .then(() => {
-            sessionStorage.clear();
-            localStorage.clear(); //Delete cached account information
+            window.localStorage.removeItem('username');  //delete cached account information
             commit('setrole',null)
             commit('setusername',null)
         })
@@ -71,12 +71,6 @@ const actions = {
                     email: username, 
                 }
                 firebase.database().ref('users/' + userId).set(entry)
-
-                //初始化用户信息中的comments目录
-                var coments = {
-                    defaultKey: "defaultType"
-                }
-                firebase.database().ref('users/' + userId + '/comments').set(coments)
             })
             .catch(error => {
                 console.log('false');
