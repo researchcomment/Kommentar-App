@@ -37,7 +37,7 @@
                 src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"
             />
             
-            <p slot="content">{{content}}</p>
+            <p slot="content" v-html="content"></p>
             
             <!-- time -->
             <!-- <a-tooltip slot="datetime" :title="moment().format('YYYY-MM-DD HH:mm:ss')">

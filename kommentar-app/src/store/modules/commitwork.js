@@ -37,7 +37,12 @@ function settime(item) {
     }
     if (item["date-parts"]) {
         let datet = item["date-parts"][0];
-        return new Date(datet[0], datet[1], datet[2]);
+        if (datet) {
+            return datet[0] ? datet[1] ? datet[2] ? new Date(datet[0], datet[1], datet[2]) :
+                new Date(datet[0], datet[1]) : new Date(datet[0],0) : null
+                //注：new Date() 只传年份，会自动转换为毫秒数
+        }
+        //return new Date(datet[0], datet[1], datet[2]);
     }
     return null;
 }
@@ -46,33 +51,37 @@ function cons_returnValue(item_ref) {
     //actural reference of result list from crossref
     //construct info which needed to be return  
     item_ref.domain = item_ref["content-domain"].domain ? item_ref["content-domain"].domain[0] : null;
-    let returnValue={};
-    returnValue.title=item_ref.title ? item_ref.title[0] : null;
-    returnValue.type=item_ref.type;
-    returnValue.author=item_ref.author ? worklist.construct_author(item_ref.author) : null;
-    returnValue.publisher=item_ref.publisher;
-    returnValue.ISBN=item_ref.ISBN ? item_ref.ISBN[0] : null;
-    if (item_ref["published-print"]){
-        returnValue["published-print"]=settime(item_ref["published-print"]);
-    } else if (item_ref["published-online"]){
-        returnValue["published-online"]=settime(item_ref["published-online"]);
+    let returnValue = {};
+    returnValue.title = item_ref.title ? item_ref.title[0] : null;
+    returnValue.type = item_ref.type;
+    returnValue.author = item_ref.author ? worklist.construct_author(item_ref.author) : null;
+    returnValue.publisher = item_ref.publisher;
+    returnValue.ISBN = item_ref.ISBN ? item_ref.ISBN[0] : null;
+    if (item_ref["published-print"]) {
+        returnValue["published-print"] = settime(item_ref["published-print"]);
+    } else if (item_ref["published-online"]) {
+        returnValue["published-online"] = settime(item_ref["published-online"]);
+    } else if (item_ref["created"]) {
+        returnValue["created"] = settime(item_ref["created"]);
+    } else if (item_ref["deposited"]) {
+        returnValue["deposited"] = settime(item_ref["deposited"]);
     }
-    else if (item_ref["created"])
-    {
-        returnValue["created"]=settime(item_ref["created"]);
+
+    switch (returnValue.type) {
+        case "dissertation":
+            returnValue.institution = item_ref.institution;
+            break;
+        case "book":
+
+            break;
+
     }
-    else if (item_ref["deposited"])
-    {
-        returnValue["deposited"]=settime(item_ref["deposited"]);
-    }
-   
-    if (returnValue.type=="dissertation")
-    {
-        returnValue.institution=item_ref.institution;
-        
-    }
-    
-    returnValue.abstract=item_ref.abstract;
+    // if (returnValue.type=="dissertation")
+    // {
+    //     returnValue.institution=item_ref.institution;
+    // }
+
+    returnValue.abstract = item_ref.abstract;
     return returnValue;
 }
 
