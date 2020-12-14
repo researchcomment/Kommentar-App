@@ -63,14 +63,14 @@ const actions = {
                 console.log('true')
                 commit("setusername", username);
                 
-                //初始化DB中的用户信息
-                var userId = firebase.auth().currentUser.uid;
+                //初始化DB中的用户信息                
                 var entry = {
                     username: username,
                     role: 'user',
                     email: username, 
                 }
-                firebase.database().ref('users/' + userId).set(entry)
+               
+                firebase.database().ref('users').push(entry)
             })
             .catch(error => {
                 console.log('false');

@@ -88,18 +88,19 @@ function cons_returnValue(item_ref) {
 //async function return promise
 async function get_detail(doi) {
     var search_url = url + doi;
-    console.log(search_url);
     return axios.get(search_url).then(res => {
         //get reference : res -> data -> message
         let ref = res.data.message;
         let returnValue = null;
         if (ref) {
             //save current 100 results in items as a list
-            console.log("response endding：" + new Date());
+            //console.log("response endding：" + new Date());
             returnValue = cons_returnValue(ref);
         }
-
+        /*
         console.log("results construction endding：" + new Date());
+        console.log(returnValue);
+        */
         return returnValue;
     }).catch(err => {
         console.log(err);
@@ -150,15 +151,22 @@ const actions = {
         */
 
         //version 2
-        //set content with doi username to database
-        const userKey = firebase.auth().currentUser.uid;
-        var aData = new Date(); //utc
+        //找到userkey
+        let userKey = await firebase.database().ref('users').once('value').then((snapshot) => {
+            var result = null;
+            snapshot.forEach((childSnapshot) => {
+                if(username === childSnapshot.val().username){
+                    result = childSnapshot.key;
+                }
+            })
+            return result
+        })
+        var aData = new Date();//utc
         //uhrzeit, die Zeit von verschiedenen Regionen anzupassen.
         const value = aData.getFullYear() + "-" + (aData.getMonth() + 1) + "-" + aData.getDate();
         const newComent = {
             //doi is optional
             doi_nr: doi,
-            userId: userKey,
             usr: username,
             details: content,
             createDate: value,
@@ -214,7 +222,7 @@ const actions = {
     //load comments for work from realtime Database
     //测试之后发现加载offcial和unofficialComments的方法合并和拆分实现没有性能上的区别，
     //防止随后加入新的不同操作，这里暂时分开写
-    async loadUnOfficialComments({ commit, state }, { doi, rankType }) {
+    async loadUnOfficialComments({ commit, state }, { doi, rankType, username}) {
         //rankType: 'submittime', 'onlyfromCurrentUser'
         //首先每次调用此方法的时候，应该在DB收集所有doi为给入doi的comments条目
         let doiKey = await firebase.database().ref('doi_repository').once('value').then((snapshot) => {
@@ -240,14 +248,12 @@ const actions = {
                         var content = childSnapshot.val().details
                         var author = childSnapshot.val().usr
                         commentsList.push({ content: content, author: author })
-                        if (firebase.auth().currentUser)
-                        if (childSnapshot.val().userId === firebase.auth().currentUser.uid) {
+                        if (childSnapshot.val().usr === username) {
                             commentsList_CurrentUser.push({ content: content, author: author })
                         }
                     }
                 })
                 if (rankType === 'onlyfromCurrentUser') {
-                    console.log(commentsList_CurrentUser.slice().reverse())
                     return commentsList_CurrentUser.slice().reverse();
                 }
                 else {
@@ -257,7 +263,7 @@ const actions = {
         return result
     },
 
-    async loadOfficialComments({ commit, state }, { doi, rankType }) {
+    async loadOfficialComments({ commit, state }, { doi, rankType, username}) {
         //rankType: 'submittime', 'onlyfromCurrentUser'
         //首先每次调用此方法的时候，应该在DB收集所有doi为给入doi的comments条目
         let doiKey = await firebase.database().ref('doi_repository').once('value').then((snapshot) => {
@@ -283,14 +289,12 @@ const actions = {
                         var content = childSnapshot.val().details
                         var author = childSnapshot.val().usr
                         commentsList.push({ content: content, author: author })
-                        if (firebase.auth().currentUser) 
-                        if (childSnapshot.val().userId === firebase.auth().currentUser.uid) {
+                        if (childSnapshot.val().usr === username) {
                             commentsList_CurrentUser.push({ content: content, author: author })
                         }
                     }
                 })
                 if (rankType === 'onlyfromCurrentUser') {
-                    console.log(commentsList_CurrentUser.slice().reverse())
                     return commentsList_CurrentUser.slice().reverse();
                 }
                 else {
