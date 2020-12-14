@@ -25,5 +25,6 @@ export default {
 }
 .bottom p{
     margin-right: 2vh;
+    margin-bottom: 0;
 }
 </style>

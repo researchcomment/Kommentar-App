@@ -28,15 +28,15 @@
       </li>
       
     </ul>
-    <div v-if="(searchResultList.length == 0) && (!loading)"><img class="sorryimg" src="../../public/static/sorry.png" alt=""></div>
+    <div v-if="(searchResultList.length == 0) && (!loading)"><img class="sorryimg" src="../pics/sorry.png" alt=""></div>
     <!-- change Pages -->
     <div class="pagesetter" v-if= "(!loading)&&(searchResultList.length != 0)">
       <i class="iconfont icon-zuojiantou" v-show="page>1" @click="gotoPage(page-1,false)"></i>
-      <p v-show="page-2>=1" @click="gotoPage(page-2,false)">{{page-2}}</p>
-      <p v-show="page-1>=1" @click="gotoPage(page-1,false)">{{page-1}}</p>
-      <p>{{page}}</p>
-      <p v-show="(resultLength/10)>=(page+1)" @click="gotoPage(page+1,false)">{{page+1}}</p>
-      <p v-show="(resultLength/10)>=(page+2)" @click="gotoPage(page+2,false)">{{page+2}}</p>
+      <p class="otherpage" v-show="page-2>=1" @click="gotoPage(page-2,false)">{{page-2}}</p>
+      <p class="otherpage" v-show="page-1>=1" @click="gotoPage(page-1,false)">{{page-1}}</p>
+      <p class="currentpage">{{page}}</p>
+      <p class="otherpage" v-show="(resultLength/10)>=(page+1)" @click="gotoPage(page+1,false)">{{page+1}}</p>
+      <p class="otherpage" v-show="(resultLength/10)>=(page+2)" @click="gotoPage(page+2,false)">{{page+2}}</p>
       <i class="iconfont icon-youjiantou" v-show="(!loading)&&(resultLength/10)>=(page+1)" @click="gotoPage(page+1,false)"></i>
     </div>
   </div>
@@ -211,19 +211,35 @@ export default {
 }
 .pagesetter{
   display: block;
-  margin-left:8%;
-  margin: 2vh;
+  TEXT-ALIGN: center;
+  margin-bottom: 2vh;
 }
 .pagesetter i{
   display: inline;
-  font-size: 120%;
-  color: #76C06B;
+  font-size: 80%;
+  color: #00243E;
   cursor: pointer;
 }
 .pagesetter p{
-  display: inline;
+  display: inline-block;
+  width: 3vh;
+  height: 3vh;
+  line-height: 3vh;
   margin: 0 3%;
   font-size: 120%;
+}
+.otherpage{
+  color: #76C06B;
+  cursor: pointer;
+}
+.otherpage:hover{
+  text-decoration: underline;
+  color:#00243E
+}
+.currentpage{
+  color: #76C06B;
+  font-weight: bold;
+  cursor: default;
 }
 .sorryimg{
   width: 40vw;
