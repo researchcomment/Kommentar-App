@@ -1,19 +1,4 @@
 <template>
-<<<<<<< HEAD
-    <div class="ocomment" v-loading.fullscreen.lock="loading">
-        <h2 style="font-size:2vw;color:#76C06B">Official Comments <span style="color:#ABABAB;font-size:1.5vw">{{comnum}}</span></h2>
-        <ul>
-            <li  v-for="item in commentList" v-bind:key="item.id" >
-                <div>
-                    <comment :comment="item" />
-                </div>
-            </li>
-        </ul>
-    </div>
-    
-    
-    
-=======
   <div class="ocomment" v-loading.fullscreen.lock="loading">
     <h2 style="font-size: 2.5vw; color: #76c06b">
       Official Comments
@@ -27,7 +12,6 @@
       </li>
     </ul>
   </div>
->>>>>>> origin/ycdev/realtime_Db
 </template>
 
 <script>
@@ -83,7 +67,7 @@ export default {
       );
       console.log(result);
       this.commentList = result;
-      this.loading = true;
+      this.loading = false;
     },
   },
 };
@@ -97,7 +81,6 @@ export default {
 .ocomment li {
   margin-bottom: 5vh;
 }
-<<<<<<< HEAD
 .ocomment{
     margin: 3vh 10vw;
     margin-top: 8vh;
@@ -118,26 +101,5 @@ export default {
 }
 .ant-comment-actions span{
     font-size: 2vh;
-=======
-.ocomment {
-  margin: 3vh 10vw;
-}
-.ocomment .ant-comment-inner {
-  padding: 0;
-}
-.ocomment .ant-comment-content-author a {
-  font-size: 3vh;
-}
-.ocomment .ant-comment-content-detail p {
-  font-size: 4vh;
-  margin-bottom: 0;
-}
-.ocomment .ant-comment-actions {
-  margin: 0;
-  padding: 0;
-}
-.ocomment .ant-comment-actions span {
-  font-size: 2vh;
->>>>>>> origin/ycdev/realtime_Db
 }
 </style>
