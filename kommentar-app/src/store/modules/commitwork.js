@@ -219,7 +219,7 @@ const actions = {
             })
             return tempresult;
         })
-        result=[];
+        let result=[];
         if(doiKey){
             result = await firebase
             .database()
@@ -265,7 +265,7 @@ const actions = {
             })
             return result;
         })
-        result=[];
+        let result=[];
         if(doiKey){
             result = await firebase
             .database()
