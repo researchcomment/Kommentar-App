@@ -2,7 +2,7 @@ import firebase from 'firebase/app';
 
 const state = () => ({
     username: null,
-    role: null,
+    role: null, //['default', 'Researcher', 'Reviewer','Moderator','Admin']  from JJY
     error: null
 })
 
@@ -29,7 +29,8 @@ const actions = {
         return firebase
             .auth()
             .signInWithEmailAndPassword(username, password)
-            .then(response => {
+            .then(response => {  
+                window.localStorage.setItem("username",username); //cache account information
                 commit("setusername", username);
             })
             .catch(error => {
@@ -43,6 +44,7 @@ const actions = {
         .auth()
         .signOut()
         .then(() => {
+            window.localStorage.removeItem('username');  //delete cached account information
             commit('setrole',null)
             commit('setusername',null)
         })
@@ -60,15 +62,15 @@ const actions = {
             .then(response => {
                 console.log('true')
                 commit("setusername", username);
-
-                //初始化DB中的用户信息
-                var userId = firebase.auth().currentUser.uid;
+                
+                //初始化DB中的用户信息                
                 var entry = {
                     username: username,
                     role: 'user',
                     email: username, 
                 }
-                firebase.database().ref('users/' + userId).set(entry)
+               
+                firebase.database().ref('users').push(entry)
             })
             .catch(error => {
                 console.log('false');

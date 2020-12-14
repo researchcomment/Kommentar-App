@@ -28,47 +28,70 @@ const url = "http://api.crossref.org/works/";
 
 const getters = {}
 
-function settimestramp(item) {
+function settime(item) {
     if (item.timestamp) {
-        return item.timestamp;
+        return new Date(item.timestamp);
     }
     if (item["date-time"]) {
-        return new Date(item["date-time"].getTime());
+        return new Date(item["date-time"]);
     }
     if (item["date-parts"]) {
-        let datet = item["date-parts"];
-        return new Date(datet[0], datet[1], datet[2]).getTime();
+        let datet = item["date-parts"][0];
+        return new Date(datet[0], datet[1], datet[2]);
     }
     return null;
 }
+
 function cons_returnValue(item_ref) {
     //actural reference of result list from crossref
     //construct info which needed to be return  
-    item_ref.title = item_ref.title ? item_ref.title[0] : null;
-    item_ref.author = item_ref.author ? worklist.construct_author(item_ref.author) : null;
     item_ref.domain = item_ref["content-domain"].domain ? item_ref["content-domain"].domain[0] : null;
-    item_ref["published-print"] = item_ref["published-print"] ? settimestramp(item_ref["published-print"]) : null;
-    item_ref["deposited"] = item_ref["deposited"] ? settimestramp(item_ref["deposited"]) : null;
-    item_ref["created"] = item_ref["created"] ? settimestramp(item_ref["created"]) : null;
-    return item_ref;
+    let returnValue={};
+    returnValue.title=item_ref.title ? item_ref.title[0] : null;
+    returnValue.type=item_ref.type;
+    returnValue.author=item_ref.author ? worklist.construct_author(item_ref.author) : null;
+    returnValue.publisher=item_ref.publisher;
+    returnValue.ISBN=item_ref.ISBN ? item_ref.ISBN[0] : null;
+    if (item_ref["published-print"]){
+        returnValue["published-print"]=settime(item_ref["published-print"]);
+    } else if (item_ref["published-online"]){
+        returnValue["published-online"]=settime(item_ref["published-online"]);
+    }
+    else if (item_ref["created"])
+    {
+        returnValue["created"]=settime(item_ref["created"]);
+    }
+    else if (item_ref["deposited"])
+    {
+        returnValue["deposited"]=settime(item_ref["deposited"]);
+    }
+   
+    if (returnValue.type=="dissertation")
+    {
+        returnValue.institution=item_ref.institution;
+        
+    }
+    
+    returnValue.abstract=item_ref.abstract;
+    return returnValue;
 }
 
 //async function return promise
 async function get_detail(doi) {
     var search_url = url + doi;
-    console.log(search_url);
     return axios.get(search_url).then(res => {
         //get reference : res -> data -> message
         let ref = res.data.message;
         let returnValue = null;
         if (ref) {
             //save current 100 results in items as a list
-            console.log("response endding：" + new Date());
+            //console.log("response endding：" + new Date());
             returnValue = cons_returnValue(ref);
         }
-
+        /*
         console.log("results construction endding：" + new Date());
         console.log(returnValue);
+        */
         return returnValue;
     }).catch(err => {
         console.log(err);
@@ -119,15 +142,22 @@ const actions = {
         */
 
         //version 2
-        //set content with doi username to database
-        const userKey = firebase.auth().currentUser.uid;
+        //找到userkey
+        let userKey = await firebase.database().ref('users').once('value').then((snapshot) => {
+            var result = null;
+            snapshot.forEach((childSnapshot) => {
+                if(username === childSnapshot.val().username){
+                    result = childSnapshot.key;
+                }
+            })
+            return result
+        })
         var aData = new Date();//utc
         //uhrzeit, die Zeit von verschiedenen Regionen anzupassen.
         const value = aData.getFullYear() + "-" + (aData.getMonth() + 1) + "-" + aData.getDate();
         const newComent = {
             //doi is optional
             doi_nr: doi,
-            userId: userKey,
             usr: username,
             details: content,
             createDate: value,
@@ -183,7 +213,7 @@ const actions = {
     //load comments for work from realtime Database
     //测试之后发现加载offcial和unofficialComments的方法合并和拆分实现没有性能上的区别，
     //防止随后加入新的不同操作，这里暂时分开写
-    async loadUnOfficialComments({ commit, state }, { doi, rankType }) {
+    async loadUnOfficialComments({ commit, state }, { doi, rankType, username}) {
         //rankType: 'submittime', 'onlyfromCurrentUser'
         //首先每次调用此方法的时候，应该在DB收集所有doi为给入doi的comments条目
         let doiKey = await firebase.database().ref('doi_repository').once('value').then((snapshot) => {
@@ -209,13 +239,12 @@ const actions = {
                         var content = childSnapshot.val().details
                         var author = childSnapshot.val().usr
                         commentsList.push({ content: content, author: author })
-                        if (childSnapshot.val().userId === firebase.auth().currentUser.uid) {
+                        if (childSnapshot.val().usr === username) {
                             commentsList_CurrentUser.push({ content: content, author: author })
                         }
                     }
                 })
                 if (rankType === 'onlyfromCurrentUser') {
-                    console.log(commentsList_CurrentUser.slice().reverse())
                     return commentsList_CurrentUser.slice().reverse();
                 }
                 else {
@@ -225,7 +254,7 @@ const actions = {
         return result
     },
 
-    async loadOfficialComments({ commit, state }, { doi, rankType }) {
+    async loadOfficialComments({ commit, state }, { doi, rankType, username}) {
         //rankType: 'submittime', 'onlyfromCurrentUser'
         //首先每次调用此方法的时候，应该在DB收集所有doi为给入doi的comments条目
         let doiKey = await firebase.database().ref('doi_repository').once('value').then((snapshot) => {
@@ -251,13 +280,12 @@ const actions = {
                         var content = childSnapshot.val().details
                         var author = childSnapshot.val().usr
                         commentsList.push({ content: content, author: author })
-                        if (childSnapshot.val().userId === firebase.auth().currentUser.uid) {
+                        if (childSnapshot.val().usr === username) {
                             commentsList_CurrentUser.push({ content: content, author: author })
                         }
                     }
                 })
                 if (rankType === 'onlyfromCurrentUser') {
-                    console.log(commentsList_CurrentUser.slice().reverse())
                     return commentsList_CurrentUser.slice().reverse();
                 }
                 else {

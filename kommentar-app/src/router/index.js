@@ -1,13 +1,15 @@
 import Vue from 'vue'
-import VueRouter from 'vue-router'
+import Router from 'vue-router'
 import Home from '../views/Home.vue'
 import Search from  '../views/Search.vue'
 import Detail from  '../views/Detail.vue'
-Vue.use(VueRouter)
+import Admin from  '../views/Admin.vue'
+import store from '@/store'
+Vue.use(Router)
 
 
 
-export default new VueRouter({
+const router = new Router({
   mode: 'history',
   base: process.env.BASE_URL,
   routes: [
@@ -31,6 +33,11 @@ export default new VueRouter({
       component: Detail
     },
     {
+      path: '/Admin',
+      name: 'admin',
+      component: Admin
+    },
+    {
       path: '*',
       name: 'other',
       // route level code-splitting
@@ -42,3 +49,14 @@ export default new VueRouter({
     
   ]
 })
+
+router.beforeEach((to, from, next) => {
+  const username = window.localStorage.getItem('username')
+  // update the login status for new Router
+  store.commit("account/setusername",username); 
+  
+  next()
+
+})
+
+export default router

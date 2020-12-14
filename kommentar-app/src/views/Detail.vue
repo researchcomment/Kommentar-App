@@ -49,6 +49,7 @@ import firebase from 'firebase/app';
         },
         beforeRouteUpdate(to, from, next) {
             next();
+
             this.getDetailfromDB();
     
         },

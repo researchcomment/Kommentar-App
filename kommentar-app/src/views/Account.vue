@@ -2,7 +2,7 @@
   <div class="bar">
     <div class="homepage" @click="goHome"><i class="iconfont icon-zhuye"></i>Home Page</div>
     <div class="account">
-      <accounticon class="icon"  v-show="username"></accounticon>
+      <accounticon class="icon"  v-show="username" :username="username"></accounticon>
       <div class="buttons">
         <login class="log" v-show="!username"></login>
         <register class="reg" v-show="!username"></register>
@@ -30,25 +30,36 @@ export default {
     username: function () {
       return this.$store.state.account.username;
     },
+
   },
   methods:{
     goHome(){
       this.$router.push('/')
     },
   },
+  mounted(){
+
+  },
   watch:{
     //Monitor login/logout status and prompt success message
     username(newName,oldName){
       if((!oldName)&&newName){
-        this.$message.success("Login successfully. Welcome!");
+        this.$message({         
+          type: 'success',
+          message: "Login successfully. Welcome!",
+          duration: 1000
+        });
       }
       if((!newName)&&oldName){
-        this.$message.success("Logout successfully. Goodbye!");
+        this.$message({
+          type: 'success',
+          message: "Logout successfully. Goodbye!",
+          duration: 1000
+        });
       }
-    }
-
+    },
   }
-};
+}
 </script>
 
 <style>

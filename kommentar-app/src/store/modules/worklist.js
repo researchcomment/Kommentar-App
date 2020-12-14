@@ -9,10 +9,9 @@ const getters = {}
 
 var items = [];
 var cache = 100;
+var cachebegin,cacheend;
 var result_length = 0;
-var last_offset = -1;
-var last_keyword = "";
-var last_date = new Date().setFullYear(2019);
+
 
 
 //parameter is a referrence of a list of authors
@@ -21,17 +20,15 @@ function construct_author(author_ref) {
     var length = author_ref.length;
     let author = [];
     for (let i = 0; i < length; i++) {
-        author.push(
-            !author_ref[i].given ? author_ref[i].family : author_ref[i].given + " " + author_ref[i].family
-        )
+        author.push(!author_ref[i].given ? author_ref[i].family : author_ref[i].given + " " + author_ref[i].family)
     }
     author = author.join(" ; ");
     return author;
 }
 //construct results from response
 function cons_returnValue(returnValue, from, to) {
-    let length= to<=items.length? to:items.length;
-    
+    let length = to <= items.length ? to : items.length;
+
     for (var i = from; i < length; i++) {
         //actural reference of result list from crossref
         var item_ref = items[i];
@@ -46,15 +43,18 @@ function cons_returnValue(returnValue, from, to) {
         });
     }
     return returnValue;
-    
+
 }
 
 //async function return promise
-async function get_worklist(keyword, rows, offset, date) {
-    if (offset % cache == 0) {
-        last_offset = offset;
-        last_keyword = keyword;
-        last_date = date;
+//flag=true : send new request, get results from response; 
+//falg=false : do not send request, get result from cache
+async function get_worklist(keyword, rows, offset, date, type) {
+    
+    if ((offset<cachebegin) || ((offset+rows)>cacheend)) {
+        
+        cachebegin=(~~(offset/cache))*cache;
+        cacheend=(~~(offset/cache)+1)*cache;
         //convert keyword in this format list : keyword1+keyword2+...
         keyword = keyword.split(" ").join("+");
         let datefrom = date.from.getFullYear() + "-" +
@@ -66,8 +66,9 @@ async function get_worklist(keyword, rows, offset, date) {
         /*var search_url = url + keyword + "&filter=from-update-date:" + datefrom +
             ",until-update-date:" + dateto +
             "&rows=" + cache + "&select=DOI,title,author" + "&offset=" + offset;*/
-        var search_url = url + "filter=from-update-date:" + datefrom +
-            ",until-update-date:" + dateto + "&select=DOI,title,author" + "&query=" + keyword + "&rows=" + cache + "&offset=" + offset;
+        var filter_type = type.map(x => "type:" + x).join(',');
+        var search_url = url + "select=DOI,title,author&query=" + keyword + "&filter=from-update-date:" + datefrom +
+            ",until-update-date:"  + dateto +","+ filter_type + "&rows=" + cache + "&offset=" + cachebegin;
         console.log(search_url);
         let returnValue = {
             list: [],
@@ -103,7 +104,7 @@ async function get_worklist(keyword, rows, offset, date) {
 //type=[""]
 //flag=true/false true:new search false:page change
 const actions = {
-    async search({ commit, state }, { keyword, from, to, date, type,flag }) {
+    async search({ commit, state }, { keyword, from, to, date, type, flag }) {
         //set the information to the state,filter it into title author and doi(may changed from google firebase side)
         //commit('setlist',list)
         //give the first 10 information(Todo), can reuse changepage
@@ -113,8 +114,14 @@ const actions = {
             pagefrom = from;
         if (to)
             pageto = to;
+        if (!type)
+            type=["monograph","report","book","proceedings-article","journal","dissertation"];
         //wait inorder to know the setlest and setset will not earlier then them
-        let returnValue = await get_worklist(keyword, pageto - pagefrom, pagefrom, date);
+        if (flag) {
+            cachebegin=0;
+            cacheend=0;
+        }
+        let returnValue = await get_worklist(keyword, pageto - pagefrom, pagefrom, date, type);
         commit('setlist', returnValue.list);
         return returnValue;
     }

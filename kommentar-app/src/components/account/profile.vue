@@ -13,6 +13,12 @@
             Role : {{role}}
           </div>
         </li>
+        <li v-show="isAdmin" @click="openAdmin">
+          <span class="iconfont icon-biaoqiankuozhan_guanli-159"></span>
+          <div class="texts">
+            Admin
+          </div>
+        </li>
         <li>
           <span class="iconfont icon-youxiang"></span>
           <div class="texts">
@@ -34,17 +40,25 @@
 
 <script>
 export default {
+  props:["username"],
   data(){
     return{
 
     }
   },
   computed:{
-    username: function(){
-      return this.$store.state.account.username;
-    },
     role:function(){
       return this.$store.state.account.role;
+    },
+    isAdmin(){
+      return true; //!for test
+      if(this.username){
+          //check whether the logged user is Admin
+          return (this.role.indexOf("Admin"))>-1;
+      }
+      else{
+          return false;
+      }
     }
   },
   methods:{
@@ -54,6 +68,9 @@ export default {
     logout(){
       this.$store.dispatch('account/logout');
       this.$emit('logout');
+    },
+    openAdmin(){
+      this.$router.push('/Admin');
     }
   }
 
