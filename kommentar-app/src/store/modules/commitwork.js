@@ -32,20 +32,17 @@ function settime(item) {
     let date = null;
     let year = null;
     let month = null;
-    let day = null;
     if (item.timestamp) {
         date = new Date(item.timestamp)
         year = date.getFullYear();
         month = date.getMonth();
-        day = date.getDate();
-        return year + "-" + month + "-" + day;
+        return year + "-" + month;
     }
     if (item["date-time"]) {
         date = new Date(item["date-time"]);
         year = date.getFullYear();
         month = date.getMonth();
-        day = date.getDate();
-        return year + "-" + month + "-" + day;
+        return year + "-" + month;
         //return new Date(item["date-time"]);
         //return item["date-time"];
     }
@@ -55,8 +52,7 @@ function settime(item) {
             //return datet[0] ? datet[1] ? datet[2] ? new Date(datet[0], datet[1], datet[2]) :
             //new Date(datet[0], datet[1]) : new Date(new Date().setFullYear(datet[0])) : null
             //注：new Date() 只传年份，会自动转换为毫秒数
-            return datet[0] ? datet[1] ? datet[2] ? datet[0] + "-" + datet[1] + "-" + datet[2] :
-                datet[0] + "-" + datet[1] : datet[0] : null
+            return datet[0] ? datet[1] ? datet[0] + "-" + datet[1] : datet[0] : null;
         }
         //return new Date(datet[0], datet[1], datet[2]);
     }
