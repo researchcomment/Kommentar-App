@@ -5,33 +5,39 @@
           <i @click="filterDialog=true" class="iconfont icon-filter" size="small"></i>
         </div>
 
+        <!-- Filter Option -->
         <mt-popup
           v-model="filterDialog"
           closeOnClickModal="false"
-          class="filterpopup"
-        >
+          class="filterpopup">
+          <!-- date Picker -->
           <div style="margin:3vh">
-            <div style="">
-              <div >
-              <!-- date Picker -->
+
+            <!-- From -->
+            <div>
+
               <div class="fromto">
                 From
               </div>
+
               <mt-button @click.native="open('datepickerFrom')" size="normal" style="cursor:pointer">
                 {{filterCondition.date.from.getFullYear()}}-{{filterCondition.date.from.getMonth()+1}}
               </mt-button>
+
             </div>
-            <div >
+
+            <!-- TO -->
+            <div>
+
                 <div class="fromto">
-                To
-              </div>
-              <mt-button @click.native="open('datepickerTo')" size="normal" style="cursor:pointer">
-                {{filterCondition.date.to.getFullYear()}}-{{filterCondition.date.to.getMonth()+1}}
-              </mt-button>
+                  To
+                </div>
+
+                <mt-button @click.native="open('datepickerTo')" size="normal" style="cursor:pointer">
+                  {{filterCondition.date.to.getFullYear()}}-{{filterCondition.date.to.getMonth()+1}}
+                </mt-button>
+
             </div>
-            </div>
-            
-            
             <!-- Type List 1 -->
             <mt-checklist
             title="Type"
@@ -49,16 +55,19 @@
                 </mt-checklist>
             </div>
           
-          <!-- Submit Buttons -->
-          <div>
-            <mt-button class="comfirmbtn" style="margin-right:2vh" @click.native="confirm" size="large" type="primary">Confirm</mt-button>
-            <mt-button class="comfirmbtn" @click.native="filterDialog=false" size="large" type="default">Cancel</mt-button>
+            <!-- Submit Buttons -->
+            <div>
+              <mt-button class="comfirmbtn" style="margin-right:2vh" @click.native="confirm" size="large" type="primary">Confirm</mt-button>
+              <mt-button class="comfirmbtn" @click.native="filterDialog=false" size="large" type="default">Cancel</mt-button>
+            </div>
           </div>
+            
+            
+            
          
-         </div>
-            
-            
+                
         </mt-popup>
+
         <mt-datetime-picker
           ref="datepickerFrom"
           type="date"
@@ -75,18 +84,17 @@
           :endDate="defaultdate.to"
         >
         </mt-datetime-picker>
-       
     </div>
 </template>
 
 <script>
     export default {
-        props:["filterCondition"],
+        props:["oldFilterCondition"],
         data(){
             
             return{
                 filterDialog:false,
-                
+                filterCondition:this.oldFilterCondition,
                 defaultdate:{
                     from:new Date(new Date().setFullYear(1968)),
                     to:new Date()
@@ -102,21 +110,41 @@
             }
         },
         methods:{
-            /** open the date picker*/
+
+            /**
+             * open the date picker
+             * 
+             * @param  picker  - ref of datapicker
+             */
             open(picker) {
-                this.$refs[picker].open();
-                var pickerSlot = document.getElementsByClassName('picker-slot');
-                pickerSlot[2].style.display = 'none'
-                pickerSlot[5].style.display = 'none'
+              // show the date picker
+              this.$refs[picker].open();
+
+              // Hide date
+              var pickerSlot = document.getElementsByClassName('picker-slot');
+              pickerSlot[2].style.display = 'none';
+              pickerSlot[5].style.display = 'none';
+
             },
             
-            /** Submit filter data */
+            /**
+             * Submit filter data
+             */
             confirm(){
-                this.filterDialog=false;
-                this.filterCondition.selectedType =this.selectedType1.concat(this.selectedType2);
-                console.log(this.filterCondition);
-                this.$emit("filter",this.filterCondition);
+              // close the filter Popup-Window
+              this.filterDialog=false;    
+
+              // build the two selected Type list together
+              this.filterCondition.selectedType =this.selectedType1.concat(this.selectedType2);
+              
+              //! FOR TEST 
+              //console.log(this.filterCondition);
+
+              // send changed filter Condition to Parent component and require for new search
+              this.$emit("filter",this.filterCondition);
+
             },
+
         },
 
     }

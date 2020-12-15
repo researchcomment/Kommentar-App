@@ -7,8 +7,8 @@
             placeholder="Search..." 
             class="input-search"
             @keydown.enter.native="doSearch"
-            clearable
-        > 
+            clearable> 
+
             <i slot="prefix" class="el-input__icon el-icon-search"  @click="doSearch"></i>
         </el-input>
 
@@ -18,14 +18,21 @@
 
 <script>
     export default {
+
         data() {
             return {
                 keyword:this.$route.query.keyword,
             }
         },
+
         methods:{
-            /**do a search request and refresh the search page */
-            doSearch() {   
+
+            /**
+             * do a search request and refresh the search page
+             */
+            doSearch() { 
+                
+                // the keyword should not be empty
                 if (!this.keyword) {
                     this.$message.warning("Search cannot be empty");
                     return;
@@ -37,13 +44,17 @@
                          
             },
         },
+
         directives: {
+
             focus: {
                 inserted: function (el) {
                     el.focus()
                 }
-            }
+            },
+
         },
+        
     }
 </script>
 

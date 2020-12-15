@@ -29,20 +29,24 @@
         </template>
     
         <!-- the detail of this comment -->
+            
+            <!-- Author -->
             <a slot="author">{{author}}</a>
 
-            <!-- user pictures -->
+            <!-- Author picture -->
             <a-avatar
                 slot="avatar"
                 src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"
             />
             
+            <!-- Comment -->
             <p slot="content" v-html="content"></p>
             
             <!-- time -->
             <!-- <a-tooltip slot="datetime" :title="moment().format('YYYY-MM-DD HH:mm:ss')">
                 <span>{{ moment().fromNow() }}</span>
             </a-tooltip> -->
+
     </a-comment>
 </template>
 
@@ -55,7 +59,9 @@ import 'ant-design-vue/dist/antd.css'
 Vue.use(Antd)
 
     export default {
+
         props:["comment",],
+
         data() {
             return {
                 author:this.comment.author,
@@ -66,11 +72,16 @@ Vue.use(Antd)
                 moment,
             };
         },
+
         methods: {
+            
+            // When the user clicks the like button
             like() {
                 this.likes += 1;
                 this.action = 'liked';
             },
+
+            // When the user clicks the dislike button
             dislike() {
                 this.dislikes += 1;
                 this.action = 'disliked';

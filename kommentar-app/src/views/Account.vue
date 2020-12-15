@@ -13,36 +13,56 @@
 </template>
 
 <script>
+
 import accounticon from "@/components/account/accounticon";
 import login from "@/components/login/login";
 import register from "@/components/login/register";
 import { Toast } from 'mint-ui';
+
 export default {
+
   components: {
     accounticon,
     login,
     register,
   },
+
   data() {
     return {};
   },
+
   computed: {
+    
     username: function () {
       return this.$store.state.account.username;
     },
 
   },
+
   methods:{
+
     goHome(){
       this.$router.push('/')
     },
+
+
   },
+
   mounted(){
 
   },
+  
   watch:{
-    //Monitor login/logout status and prompt success message
+    
+    /**
+     * Monitor login/logout status and prompt success message
+     * 
+     * @param newName  - the current user name
+     * @param oldName
+     */
     username(newName,oldName){
+
+      // Login Action
       if((!oldName)&&newName){
         this.$message({         
           type: 'success',
@@ -50,6 +70,8 @@ export default {
           duration: 1000
         });
       }
+
+      // Logout Action
       if((!newName)&&oldName){
         this.$message({
           type: 'success',
@@ -57,6 +79,7 @@ export default {
           duration: 1000
         });
       }
+
     },
   }
 }

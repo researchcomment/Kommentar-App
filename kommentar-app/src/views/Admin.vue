@@ -1,5 +1,6 @@
 <template>
     <div>
+        <!-- Titel -->
         <h3 style="margin-top:5vh;margin-left:10vh;font-size:5vh">User Management</h3>
         <input type="text" style="margin-left:10vh">
         <button style="margin-left:3vh" @click="aftersearch=true">search</button>
@@ -15,15 +16,19 @@
             <mt-button class="combtn" type="danger" @click.native="updateRole">Confirm</mt-button>
         </div>
 
-        <!-- user List -->
+        <!-- Button -->
+        <mt-button class="combtn" type="danger" @click.native="updateRole">Confirm</mt-button>
         
        
     </div>
 </template>
 
 <script>
+
     export default {
+
         name: "admin",
+
         data(){
             return{
                 userList:[
@@ -39,21 +44,29 @@
             }
         },
         computed:{
+
+            /**
+             * @returns true, if the current user is Admin
+             */
             isAdmin(){
-                return true; //!for test
+                return true; //! FOR TEST
 
                 var login = this.$store.state.account.username;
+
                 if(login){
-                    //check whether the logged user is Admin
-                    return (this.$store.state.account.role.indexOf("Admin"))>-1;
+                    return (this.$store.state.account.role.indexOf("Admin"))>-1; // check whether the logged user is Admin
                 }
                 else{
-                    return false;
-                }  
+                    return false; // not logged => not Admin
+                }
+
             }
+
         },
+
         beforeRouteEnter (to, from, next) {
-            //check whether the user is authenticated,
+            
+            // check whether the user is authenticated,
              next(vm => {
                 if(!vm.isAdmin){
                     alert("illegal access error");
@@ -61,16 +74,23 @@
                 }
                 else next()
             })  
+
         },
         mounted(){
             this.getUserList();
         },
         methods:{
+            
             /**
              * ! 涉及后端交互
              * Request the userList from background
              */
             getUserList(){
+
+                // get userList from DB
+                // TODO:this.$store.....getUserList();
+
+                //! FOR TEST
                 this.userList = [
                     {   username:"test1",
                         role:["default"],
@@ -79,6 +99,7 @@
                         role:['default', 'Researcher', 'Reviewer'],
                     }
                 ];
+
             },
 
             /**
@@ -86,13 +107,18 @@
              * Request the background to change the role of users
              */
             updateRole(){
+               
+               // Submit an update request for each changed user
                 for(var index of this.changedUserList){
                     var user = this.userList[index];
-                    //this.$store.....updateRole(user.username,user.role);
+
+                    // TODO:this.$store.....updateRole(user.username,user.role);
+
                 }
+
             },
 
-            /**add index to the Set
+            /** add index of the changed user to the Set
              * @param index  the index of the changed user in this.userList
              */
             addChangedUserList(index){

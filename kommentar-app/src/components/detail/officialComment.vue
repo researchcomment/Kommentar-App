@@ -1,9 +1,13 @@
 <template>
   <div class="ocomment" v-loading.fullscreen.lock="loading">
+
+    <!-- Title -->
     <h2 style="font-size: 2.5vw; color: #76c06b">
       Official Comments
       <span style="color: #ababab; font-size: 1.5vw">{{ comnum }}</span>
     </h2>
+
+    <!-- List of official Comments -->
     <ul>
       <li v-for="item in commentList" v-bind:key="item.id">
         <div>
@@ -11,15 +15,20 @@
         </div>
       </li>
     </ul>
+
   </div>
 </template>
 
 <script>
 import comment from "./comment";
+
 export default {
+  props:["doi","username"],
+
   components: {
     comment,
   },
+
   data() {
     return {
       commentList: [
@@ -46,29 +55,35 @@ export default {
     },
   },
   methods: {
-    //ask data base the comments
-    async getComments() {
-      /*
-            this.commentList=[
-                        {content:"234234",
-                            author:"xxxxx",},
-                        {content:"234234",
-                            author:"xxxxx",},
-                        {content:"234234",
-                            author:"xxxxx",}
-                        ]，
-                        [
-                        ]
-                        */
+
+
+    /**
+     * Request comment content from the backend
+     */
+    async getComments() {    
+      
+      // open the loading-animation 
       this.loading = true;
+      
+      // send request
       var result = await this.$store.dispatch(
-        "commitwork/loadOfficialComments",
-        { doi: this.doi, rankType: "submittime", username:this.$store.state.account.username }
-      );
-      console.log(result);
+                                              "commitwork/loadOfficialComments",
+                                              {doi: this.doi, 
+                                               rankType: "submittime", 
+                                               username: this.$store.state.account.username }
+                                              );
+
+      // !FOR TEST 
+      // console.log(result);
+
       this.commentList = result;
+
+      // close the loading-animation 
       this.loading = false;
+
     },
+
+
   },
 };
 </script>
