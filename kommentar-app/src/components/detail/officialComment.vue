@@ -1,76 +1,85 @@
 <template>
-    <div class="ocomment" v-loading.fullscreen.lock="loading">
-        <h2 style="font-size:2vw;color:#76C06B">Official Comments <span style="color:#ABABAB;font-size:1.5vw">{{comnum}}</span></h2>
-        <ul>
-            <li  v-for="item in commentList" v-bind:key="item.id" >
-                <div>
-                    <comment :comment="item" />
-                </div>
-            </li>
-        </ul>
-    </div>
-    
-    
-    
+  <div class="ocomment" v-loading.fullscreen.lock="loading">
+    <h2 style="font-size: 2.5vw; color: #76c06b">
+      Official Comments
+      <span style="color: #ababab; font-size: 1.5vw">{{ comnum }}</span>
+    </h2>
+    <ul>
+      <li v-for="item in commentList" v-bind:key="item.id">
+        <div>
+          <comment :comment="item" />
+        </div>
+      </li>
+    </ul>
+  </div>
 </template>
 
 <script>
-import comment from "./comment"
+import comment from "./comment";
 export default {
-    components:{
-        comment,
+  components: {
+    comment,
+  },
+  data() {
+    return {
+      commentList: [
+        // {content:"a test comment",
+        //     author:"xxxxx",},
+        // {content:"a test comment",
+        //     author:"xxxxx",},
+        // {content:"a test comment",
+        //     author:"xxxxx",}
+      ],
+      loading: false,
+    };
+  },
+  created() {
+    this.getComments();
+  },
+  beforeRouteUpdate(to, from, next) {
+    next();
+    this.getComments();
+  },
+  computed: {
+    comnum: function () {
+      return this.commentList.length;
     },
-    data(){
-        return {
-            commentList:[
-                        // {content:"a test comment",
-                        //     author:"xxxxx",},
-                        // {content:"a test comment",
-                        //     author:"xxxxx",},
-                        // {content:"a test comment",
-                        //     author:"xxxxx",}
-                        ],
-            loading:false,
-        }
-    },
-    created() {
-     this.getComments();
-    },
-    beforeRouteUpdate(to, from, next) {
-        next();
-        this.getComments();
-    },
-    computed:{
-        comnum: function(){
-            return this.commentList.length
-        }
-    },
-    methods:{
-        //ask data base the comments
-        getComments(){
-            this.loading=true;
+  },
+  methods: {
+    //ask data base the comments
+    async getComments() {
+      /*
             this.commentList=[
-                        // {content:"a test comment",
-                        //     author:"xxxxx",},
-                        // {content:"a test comment",
-                        //     author:"xxxxx",},
-                        // {content:"a test comment",
-                        //     author:"xxxxx",}
-                        ];
-            this.loading=false;
-        }
-    }
-        
-}
+                        {content:"234234",
+                            author:"xxxxx",},
+                        {content:"234234",
+                            author:"xxxxx",},
+                        {content:"234234",
+                            author:"xxxxx",}
+                        ]，
+                        [
+                        ]
+                        */
+      this.loading = true;
+      var result = await this.$store.dispatch(
+        "commitwork/loadOfficialComments",
+        { doi: this.doi, rankType: "submittime", username:this.$store.state.account.username }
+      );
+      console.log(result);
+      this.commentList = result;
+      this.loading = false;
+    },
+  },
+};
 </script>
 
 <style>
-.ocomment ul{
-    list-style-type: none;
-    padding: 1vw;
+.ocomment ul {
+  list-style-type: none;
+  padding: 1vw;
 }
-.ocomment li{
-    margin-bottom: 5vh;
+.ocomment li {
+  margin-bottom: 5vh;
 }
 .ocomment{
     margin: 3vh 10vw;
