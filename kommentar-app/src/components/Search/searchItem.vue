@@ -1,42 +1,66 @@
 <template>
     <!-- Basic Information of this Book -->
     <div class="allbox">
-        <div class="box-card"
-        :href="book.url"
-        >
-        <a @click="searchOutside">DOI :{{book.doi}}</a>
 
-        <div>
-            <h3 @click="seeDetail()">{{book.title}}</h3>
-        </div>
+        <div class="box-card" :href="book.url">
+
+            <!-- external link -->
+            <a @click="searchOutside">DOI :{{book.doi}}</a>
+            
+            <!-- Titel -->
+            <div>
+                <h3 @click="seeDetail()">{{book.title}}</h3>
+            </div>
         
-        <p>Author: {{book.author}}</p>
+            <!-- Author -->
+            <p>Author: {{book.author}}</p>
             
         </div>
     </div>
 </template>
 
 <script>
+
     export default {
         props:["book"],
+
         data(){
             return{
                 
             }
         },
+
         methods:{
-            //open a new window which shows the details of this book
+
+            /**
+             * open a new window which shows the details of this book
+             */
             seeDetail(){
+
+                // build router address
                 let routeData = this.$router.resolve({
                     path: '/detail', 
                     query:{doi:this.book.doi},   
                 });
+
+                //open a new window
                 window.open(routeData.href, "_blank");
+
             },
+
+            /**
+             * open a new window which pointes to an external link
+             */
             searchOutside(){
+
+                // build external link
                 var url="https://dx.doi.org/"+ this.book.doi;
+
+                //open a new window
                 window.open(url, "_blank");
-            }
+
+            },
+            
         }
     }
 </script>
