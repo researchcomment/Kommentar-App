@@ -24,7 +24,7 @@ const state = () => ({
     }
 })
 
-const url = "http://api.crossref.org/works/";
+const url = "https://api.crossref.org/works/";
 
 const getters = {}
 

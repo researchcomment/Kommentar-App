@@ -4,7 +4,7 @@ const state = () => ({
     length: 0
 
 })
-const url = "http://api.crossref.org/works?";
+const url = "https://api.crossref.org/works?";
 const getters = {}
 
 var items = [];
