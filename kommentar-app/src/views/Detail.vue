@@ -6,7 +6,9 @@
         <officialComment :doi="doi" :username="username"></officialComment>
         <unofficialComment :doi="doi" :username="username"></unofficialComment>
         <commentEditor :doi="doi" :username="username" @submit="refresh"></commentEditor>
+        </div>
     </div>
+    <div>
     <bottom></bottom>
     </div>
 </div>
@@ -57,7 +59,7 @@ import firebase from 'firebase/app';
                 //get Details: book information and commentars from backends
             },
             refresh(){
-                this.$router.go(0);
+                window.location.reload();
             }
         }
         
@@ -65,9 +67,5 @@ import firebase from 'firebase/app';
 </script>
 
 <style>
-.bot{
-    margin: auto 0;
-    width: 100%;
-}
 
 </style>
