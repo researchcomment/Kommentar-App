@@ -1,21 +1,23 @@
 <template>
     <div>
         <h3 style="margin-top:5vh;margin-left:10vh;font-size:5vh">User Management</h3>
-        <div>
+        <input type="text" style="margin-left:10vh">
+        <button style="margin-left:3vh" @click="aftersearch=true">search</button>
+        <div v-if="aftersearch">
             <div  v-for="(user, index) in userList" v-bind:key="index" class="userlists">
                 <p>Username:{{user.username}}</p>
                 <mt-checklist
                     v-model="user.role"
                     :options="['default', 'Researcher', 'Reviewer','Moderator','Admin']"
                     @change="addChangedUserList(index)">
-                </mt-checklist>  
-                
-        </div>
+                </mt-checklist>
+            </div>
+            <mt-button class="combtn" type="danger" @click.native="updateRole">Confirm</mt-button>
         </div>
 
         <!-- user List -->
         
-       <mt-button class="combtn" type="danger" @click.native="updateRole">Confirm</mt-button>
+       
     </div>
 </template>
 
@@ -33,6 +35,7 @@
                     }
                 ],
                 changedUserList:new Set(),
+                aftersearch: false,
             }
         },
         computed:{
