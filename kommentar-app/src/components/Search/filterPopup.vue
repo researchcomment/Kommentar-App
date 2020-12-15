@@ -11,7 +11,8 @@
           class="filterpopup"
         >
           <div style="margin:3vh">
-            <div>
+            <div style="">
+              <div >
               <!-- date Picker -->
               <div class="fromto">
                 From
@@ -20,7 +21,7 @@
                 {{filterCondition.date.from.getFullYear()}}-{{filterCondition.date.from.getMonth()+1}}
               </mt-button>
             </div>
-            <div>
+            <div >
                 <div class="fromto">
                 To
               </div>
@@ -28,6 +29,8 @@
                 {{filterCondition.date.to.getFullYear()}}-{{filterCondition.date.to.getMonth()+1}}
               </mt-button>
             </div>
+            </div>
+            
             
             <!-- Type List 1 -->
             <mt-checklist
@@ -163,6 +166,12 @@
 .mint-popup .mint-checklist .mint-cell .mint-cell-wrapper .mint-cell-title .mint-checklist-label .mint-checkbox-core{
   width:2vh;
   height: 2vh;
+}
+.mint-popup .mint-checklist .mint-cell .mint-cell-wrapper .mint-cell-title .mint-checklist-label .mint-checkbox-core:after{
+  width:0.5vh;
+  height: 1vh;
+  top:0.25vh;
+  left:0.5vh
 }
 .mint-popup .mint-checklist .mint-cell .mint-cell-wrapper .mint-cell-title .mint-checklist-label .mint-checkbox-label{
   word-break: break-all;

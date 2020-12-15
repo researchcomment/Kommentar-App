@@ -84,7 +84,24 @@ export default {
 .ucomment li{
     margin-bottom: 1vh;
 }
-/* .ucomment .ant-comment-inner{
+.ant-comment-inner{
+    padding: 0;
+}
+.ant-comment-content-author .ant-comment-content-author-name a{
+    font-size: 2.5vh;
+}
+.ant-comment-content-detail p{
+    font-size: 3vh;
+    margin-bottom: 0;
+}
+.ant-comment-actions{
+    margin: 0;
+    padding: 0;
+}
+.ant-comment-actions span{
+    font-size: 2vh;
+}
+.ucomment .ant-comment-inner{
     padding: 0;
 }
 .ucomment .ant-comment-inner .ant-comment-avatar img{
@@ -101,5 +118,6 @@ export default {
 }
 .ucomment .ant-comment-content-detail p{
     margin-bottom: 0;
-} */
+}
+
 </style>
