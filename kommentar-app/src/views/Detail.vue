@@ -59,7 +59,7 @@ import firebase from 'firebase/app';
                 //get Details: book information and commentars from backends
             },
             refresh(){
-                this.$router.go(0);
+                window.location.reload();
             }
         }
         

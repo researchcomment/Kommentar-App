@@ -66,11 +66,16 @@ export default {
             }
             var entry={
                 doi:this.doi,
-                username:this.username,
+                username:this.$store.state.account.username,
                 content:this.content, //the comment is in html form 
             }
-            this.$store.dispatch('commitwork/sendFromEditorToDatabase',entry);
-            this.$emit("submit");
+            let result=1;
+            this.$store.dispatch('commitwork/sendFromEditorToDatabase',entry).then(() => {
+                this.$emit("submit");
+            }).catch(err => {
+                console.log(err);
+            })
+            
         },
         onEditorFocus(){  // Focuses the editor 
             

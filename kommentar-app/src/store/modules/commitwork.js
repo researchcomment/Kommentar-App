@@ -29,28 +29,46 @@ const url = "http://api.crossref.org/works/";
 const getters = {}
 
 function settime(item) {
+    let date = null;
+    let year = null;
+    let month = null;
     if (item.timestamp) {
-        return new Date(item.timestamp);
+        date = new Date(item.timestamp)
+        year = date.getFullYear();
+        month = date.getMonth();
+        return year + "-" + month;
     }
     if (item["date-time"]) {
-        return new Date(item["date-time"]);
+        date = new Date(item["date-time"]);
+        year = date.getFullYear();
+        month = date.getMonth();
+        return year + "-" + month;
+        //return new Date(item["date-time"]);
+        //return item["date-time"];
     }
     if (item["date-parts"]) {
         let datet = item["date-parts"][0];
         if (datet) {
-            return datet[0] ? datet[1] ? datet[2] ? new Date(datet[0], datet[1], datet[2]) :
-                new Date(datet[0], datet[1]) : new Date(datet[0],0) : null
-                //注：new Date() 只传年份，会自动转换为毫秒数
+            //return datet[0] ? datet[1] ? datet[2] ? new Date(datet[0], datet[1], datet[2]) :
+            //new Date(datet[0], datet[1]) : new Date(new Date().setFullYear(datet[0])) : null
+            //注：new Date() 只传年份，会自动转换为毫秒数
+            return datet[0] ? datet[1] ? datet[0] + "-" + datet[1] : datet[0] : null;
         }
         //return new Date(datet[0], datet[1], datet[2]);
     }
     return null;
 }
 
+function check_type(book_type, comparator) {
+    var arr = book_type.split("-");
+    return arr.indexOf(comparator) > -1;
+}
+
 function cons_returnValue(item_ref) {
     //actural reference of result list from crossref
     //construct info which needed to be return  
     item_ref.domain = item_ref["content-domain"].domain ? item_ref["content-domain"].domain[0] : null;
+    console.log(item_ref);
     let returnValue = {};
     returnValue.title = item_ref.title ? item_ref.title[0] : null;
     returnValue.type = item_ref.type;
@@ -67,21 +85,14 @@ function cons_returnValue(item_ref) {
         returnValue["deposited"] = settime(item_ref["deposited"]);
     }
 
-    switch (returnValue.type) {
-        case "dissertation":
-            returnValue.institution = item_ref.institution;
-            break;
-        case "book":
-
-            break;
+    if (check_type(returnValue.type, "dissertation")) {
+        returnValue.institution = item_ref.institution;
+    } else if (check_type(returnValue.type, "book")) {
 
     }
-    // if (returnValue.type=="dissertation")
-    // {
-    //     returnValue.institution=item_ref.institution;
-    // }
 
     returnValue.abstract = item_ref.abstract;
+    console.log(returnValue);
     return returnValue;
 }
 
@@ -100,12 +111,12 @@ async function get_detail(doi) {
         }
 
         console.log("results construction endding：" + new Date());
+        console.log(returnValue);
         return returnValue;
     }).catch(err => {
         console.log(err);
     });
 }
-
 const actions = {
     async askfordetail({ commit, state, rootState }, { doi, username }) {
         //give the first 5 commit of each part, can reuse changepage
@@ -115,50 +126,25 @@ const actions = {
 
     //create new Entry in realtime-DB for Editor-Input 
     async sendFromEditorToDatabase({ commit, state }, { doi, username, content }) {
-        /*
-        version 1
-        //set content with doi username to database
-        const userKey = firebase.auth().currentUser.uid;
-        var aData = new Date();//utc
-        //uhrzeit, die Zeit von verschiedenen Regionen anzupassen.
-        const value = aData.getFullYear() + "-" + (aData.getMonth() + 1) + "-" + aData.getDate();
-        const entry = {
-            doi_nr: doi,
-            userId: userKey,
-            usr: username,
-            details: content,
-            createDate: value,
-            type: 'defaultType'
-        }
-        //生成一个评论的key,并把key加入用户数据的comments项中
-        const commentKey = firebase.database().ref('editor_content').push(entry)
-            .then((data) => {
-                //读取一次当前用户在DB中的信息,并且更新用户信息中的comments目录
-                firebase.database().ref('/users/' + userKey).once('value').then((snapshot) => {
-                    var oldComments = snapshot.child('comments');
-                    var newComments = JSON.parse(JSON.stringify(oldComments.val()));
-                    //这里评论的类型需要加工     
-                    newComments[data.key] = "defaultType";
-                    //这里直接更新
-                    firebase.database().ref('/users/' + userKey + '/comments').set(newComments)
-                })
-            })
-            .catch((error) => {
-                //for debug only, will be finished later
-                console.log(error.message);
-            }).key;
-        */
-
+        console.log('submit')
+        console.log(doi)
         //version 2
-        //set content with doi username to database
-        const userKey = firebase.auth().currentUser.uid;
-        var aData = new Date(); //utc
+        //找到userkey
+        let userKey = await firebase.database().ref('users').once('value').then((snapshot) => {
+            var result = null;
+            snapshot.forEach((childSnapshot) => {
+                if(username === childSnapshot.val().username){
+                    result = childSnapshot.key;
+                }
+            })
+            return result
+        })
+        var aData = new Date();//utc
         //uhrzeit, die Zeit von verschiedenen Regionen anzupassen.
         const value = aData.getFullYear() + "-" + (aData.getMonth() + 1) + "-" + aData.getDate();
         const newComent = {
             //doi is optional
             doi_nr: doi,
-            userId: userKey,
             usr: username,
             details: content,
             createDate: value,
@@ -166,7 +152,7 @@ const actions = {
         }
         //在doi资料库中生成一个评论的key,并把key加入用户数据的comments项中
         //此处只能使用firebase自动配置的key，doi形式不适合作为key
-        firebase.database().ref('doi_repository').once('value').then((snapshot) => {
+        return firebase.database().ref('doi_repository').once('value').then((snapshot) => {
             //snapshot是doiKey
             let got_Doi_Nr = snapshot.forEach((childSnapshot) => {
                 var childKey = childSnapshot.key;
@@ -179,6 +165,7 @@ const actions = {
                     })
                     return true;
                 }
+                return false;
             })
             if (!got_Doi_Nr) {
                 //doi对应的文章不存在，那么加入新的文章doi并插入新的comment到空的comments目录
@@ -189,7 +176,10 @@ const actions = {
                     type: 'unofficial'
                 })
             }
-        })
+        }).catch((error) => {
+            //for debug only, will be finished later
+            console.log(error.message);
+        });
         //firebase.database().ref('doi_repository/' + newDoi_key + '/comments').set(newComent)   
         /*
         firebase.database().ref('doi_repository').push(newComent)
@@ -214,21 +204,24 @@ const actions = {
     //load comments for work from realtime Database
     //测试之后发现加载offcial和unofficialComments的方法合并和拆分实现没有性能上的区别，
     //防止随后加入新的不同操作，这里暂时分开写
-    async loadUnOfficialComments({ commit, state }, { doi, rankType }) {
+    async loadUnOfficialComments({ commit, state }, { doi, rankType, username}) {
         //rankType: 'submittime', 'onlyfromCurrentUser'
         //首先每次调用此方法的时候，应该在DB收集所有doi为给入doi的comments条目
+        
         let doiKey = await firebase.database().ref('doi_repository').once('value').then((snapshot) => {
-            var result = null;
+            var tempresult = null;
             snapshot.forEach((childSnapshot) => {
                 var child_doi_nr = childSnapshot.val().doi_nr;
                 var childKey = childSnapshot.key;
                 if (child_doi_nr === doi) {
-                    result = childSnapshot.key;
+                    tempresult = childSnapshot.key;
                 }
             })
-            return result;
+            return tempresult;
         })
-        let result = await firebase
+        let result=[];
+        if(doiKey){
+            result = await firebase
             .database()
             .ref('doi_repository/' + doiKey + '/comments')
             .once('value')
@@ -240,24 +233,25 @@ const actions = {
                         var content = childSnapshot.val().details
                         var author = childSnapshot.val().usr
                         commentsList.push({ content: content, author: author })
-                        if (firebase.auth().currentUser)
-                        if (childSnapshot.val().userId === firebase.auth().currentUser.uid) {
+                        if (childSnapshot.val().usr === username) {
                             commentsList_CurrentUser.push({ content: content, author: author })
                         }
                     }
                 })
                 if (rankType === 'onlyfromCurrentUser') {
-                    console.log(commentsList_CurrentUser.slice().reverse())
                     return commentsList_CurrentUser.slice().reverse();
                 }
                 else {
                     return commentsList.slice().reverse();
                 }
             })
+        }
         return result
+        
+        
     },
 
-    async loadOfficialComments({ commit, state }, { doi, rankType }) {
+    async loadOfficialComments({ commit, state }, { doi, rankType, username}) {
         //rankType: 'submittime', 'onlyfromCurrentUser'
         //首先每次调用此方法的时候，应该在DB收集所有doi为给入doi的comments条目
         let doiKey = await firebase.database().ref('doi_repository').once('value').then((snapshot) => {
@@ -271,7 +265,9 @@ const actions = {
             })
             return result;
         })
-        let result = await firebase
+        let result=[];
+        if(doiKey){
+            result = await firebase
             .database()
             .ref('doi_repository/' + doiKey + '/comments')
             .once('value')
@@ -283,20 +279,19 @@ const actions = {
                         var content = childSnapshot.val().details
                         var author = childSnapshot.val().usr
                         commentsList.push({ content: content, author: author })
-                        if (firebase.auth().currentUser) 
-                        if (childSnapshot.val().userId === firebase.auth().currentUser.uid) {
+                        if (childSnapshot.val().usr === username) {
                             commentsList_CurrentUser.push({ content: content, author: author })
                         }
                     }
                 })
                 if (rankType === 'onlyfromCurrentUser') {
-                    console.log(commentsList_CurrentUser.slice().reverse())
                     return commentsList_CurrentUser.slice().reverse();
                 }
                 else {
                     return commentsList.slice().reverse();
                 }
             })
+        }
         return result
     }
 }

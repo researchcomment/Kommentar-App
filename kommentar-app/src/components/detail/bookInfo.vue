@@ -12,12 +12,6 @@
                 {{detail.title}}
             </h2> 
             <div>
-                <div v-for="(item, key) in detail" :key="key">
-                <p v-if=" key=='type'" style="font-size:1.8vw">
-                    {{key}}: {{item}}
-                </p>
-                
-                </div>
                 <div v-for="(item, key) in detail" v-bind:key="key">
                 <p v-if="(key!='title')&&(item)&&(key!='type')&&(key!='abstract')" style="font-size:1.8vw">
                     {{key}}: {{item}}
