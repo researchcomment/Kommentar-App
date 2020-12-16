@@ -24,8 +24,6 @@ jobs:
     steps:
       - name: cd to dir
         uses: cd kommentar-app
-      - name: Checkout Repo
-        uses: actions/checkout@master
       - name: Install Dependencies
         run: npm install
       - name: Build
