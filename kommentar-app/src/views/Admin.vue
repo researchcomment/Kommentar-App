@@ -117,6 +117,7 @@
                     var user = this.userList[index];
 
                     // TODO:this.$store.....updateRole(user.username,user.role);
+                    // user.username,user.role 直接这样写填进去就行
 
                 }
 

@@ -8,7 +8,7 @@
                 <a-icon type="like" :theme="action === 'liked' ? 'filled' : 'outlined'" @click="like"/>
                 </a-tooltip>
                 <span style="padding-left: '8px';cursor: 'auto'">
-                    {{ likes }}
+                    {{ comment.likes }}
                 </span>
             </span>
 
@@ -22,33 +22,44 @@
                 />
                 </a-tooltip>
                 <span style="padding-left: '8px';cursor: 'auto'">
-                {{ dislikes }}
+                {{ comment.dislikes }}
                 </span>
             </span>
-            <!-- <span key="comment-basic-reply-to">Reply to</span> -->
+            <span key="comment-basic-reply-to">Reply to</span>
+
+            <!-- Editing Options for Author -->
+            <div v-if = "isAuthor">
+                
+                <a-button type="dashed" :disabled="inReview" @click="askForReview">Review</a-button>
+
+                <a-button type="dashed"  v-if="(isResearcher) && (!comment.PermanentID)"  :disabled="inRequest" @click="askForPID">Ask For PermanentID</a-button>
+
+                <a-button type="danger" @click="deleteComment">
+                    Delete  <a-icon type="close" />
+                </a-button>
+            </div>
+
         </template>
     
         <!-- the detail of this comment -->
             
             <!-- Author -->
-            <a slot="author">{{author}}</a>
+            <a slot="author">{{comment.author}}</a>
 
-            <!-- Author picture -->
-            <!-- <a-avatar
-                slot="avatar"
-                src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"
-            /> -->
-            
+            <!-- Author picture -->  
             <a-avatar slot="avatar" style="color: #f56a00; backgroundColor: #fde3cf">
                 <p class="avatarp">{{authorfirst}}</p>
             </a-avatar>
+
             <!-- Comment -->
-            <p slot="content" v-html="content"></p>
+            <p slot="content" v-html="comment.content"></p>
             
             <!-- time -->
-            <!-- <a-tooltip slot="datetime" :title="moment().format('YYYY-MM-DD HH:mm:ss')">
-                <span>{{ moment().fromNow() }}</span>
-            </a-tooltip> -->
+            <a-tooltip slot="datetime" >
+                <span>{{ comment.time.toLocaleString( )}}</span>
+            </a-tooltip>
+
+            
 
     </a-comment>
 </template>
@@ -63,32 +74,139 @@ Vue.use(Antd)
 
     export default {
 
-        props:["comment",],
+        props:["commentFromParent", "username"],
 
         data() {
             return {
-                author:this.comment.author,
-                content:this.comment.content,
-                likes: 0,
-                dislikes: 0,
                 action: null,
-                moment,
-                authorfirst:this.comment.author[0],
+                alreadySendLikes:false,    // Can't repeat likes 
+               
+               // comment:this.commentFromParent, 
+               //! Sample Comment
+                comment: {
+                    doi:" ",    // not used hier
+
+                    ID:"MAKAVIVZSVSDFSDF",    // UID for comment 
+                    PermanentID:"",    // '' or 'ASDASDAS'
+                    commentType:"unofficial",    // "official", "unofficial"
+                    status:[],    // ["in Review", "ask for PID",...] 
+                    
+                    author:this.commentFromParent.author,
+                    authorRole:["default","Researcher"],    // ["default", "Researcher",....]
+                    content:this.commentFromParent.content,    // the comment is in html form 
+
+                    time: new Date(),
+                    likes: 0,
+                    dislikes: 0,
+                },          
             };
         },
 
-        methods: {
+        computed:{
             
-            // When the user clicks the like button
-            like() {
-                this.likes += 1;
-                this.action = 'liked';
+            /**
+             * @returns {String} a part of the author name
+             */
+            authorfirst(){
+                return this.comment.author[0];
             },
 
-            // When the user clicks the dislike button
+            isResearcher(){
+                return this.comment.authorRole.indexOf("Researcher") > -1 ;
+            },
+
+            isAuthor(){
+                return this.comment.author == this.username;
+            },
+
+            /**
+             * @returns {boolean}, true, if the user has already submitted a review request
+             */
+            inReview(){
+
+                // Duplicate application is prohibited
+                // in Reviewing => disable the Button
+                return this.comment.status.indexOf("in Review") > -1 ;
+
+            },
+
+            /**
+             * @returns {boolean}, true, if the user has already submitted a request for PID
+             */
+            inRequest(){
+                
+                // Duplicate application is prohibited
+                // already requested => disable the Button
+                return this.comment.status.indexOf("ask for PID") > -1 ;
+                
+            },
+
+        },
+
+        methods: {
+            /**
+             * ! 涉及后端交互
+             * send review Request to firebase
+             */
+            askForReview(){
+
+                // JJY : 暂时前端应该已经拦截了role不对的 已经在review的 应该不会发生重复提交申请的问题
+                //TODO this.$store.dispatch("review",this.comment.ID);
+                
+                this.comment.status.push("in Review");
+
+            },
+
+            /**
+             * ! 涉及后端交互
+             * ask firebase for PermanentID
+             */
+            askForPID(){
+                
+                // JJY : 暂时前端应该已经拦截了role不对的 已经有PID的 已经申请PID的
+                //TODO this.$store.dispatch("askForPID",this.comment.ID);
+
+                this.comment.status.push("ask for PID");
+            },
+
+            /**
+             * ! 涉及后端交互
+             * send delete Request to firebase
+             */
+            deleteComment(){
+                //TODO this.$store.dispatch("delete",this.comment.ID);
+                this.$emit("refresh");
+            },
+           
+            /**
+             * ! 涉及后端交互
+             * When the user clicks the like button, send like request to firebase
+             */
+            like() {
+                if(!this.alreadySendLikes){
+                    this.action = 'liked';
+                    this.alreadySendLikes =true;    // Can't repeat likes
+                    this.comment.likes += 1;
+                       
+                    //TODO this.$store.dispatch("like",this.comment.ID);
+                                              
+                }
+                
+            },
+
+             /**
+             * ! 涉及后端交互
+             * When the user clicks the like button, send dislike request to firebase
+             */
             dislike() {
-                this.dislikes += 1;
-                this.action = 'disliked';
+                if(!this.alreadySendLikes){
+                    this.action = 'disliked';
+                    this.alreadySendLikes =true;    // Can't repeat dislikes
+                    this.comment.dislikes += 1;   
+                    
+                    //TODO this.$store.dispatch("dislike",this.comment.ID);
+
+                }
             },
         },
 };

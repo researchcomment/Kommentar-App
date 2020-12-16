@@ -10,7 +10,7 @@
         <ul>
             <li v-for="item in commentList" v-bind:key="item.id" class="ucommitli">
                 <div>
-                    <comment :comment="item" />
+                    <comment :commentFromParent="item"  :username="username" @refresh="getComments"/>
                 </div>
             </li>
         </ul>
