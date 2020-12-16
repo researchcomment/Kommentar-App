@@ -24,6 +24,8 @@ jobs:
     steps:
       - name: Checkout Repo
         uses: actions/checkout@main
+      - name: cd
+        run: cd kommentar-app
       - name: cd to dir
         run: dir
       - name: Install Dependencies
