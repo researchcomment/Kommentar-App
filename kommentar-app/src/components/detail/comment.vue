@@ -1,7 +1,6 @@
 <template>
-    <a-comment>
-        <template slot="actions">
-
+    <a-comment v-if="comment.active || isAdmin">
+        <template slot="actions" >
             <!-- the number of likes -->
             <span key="comment-basic-like">
                 <a-tooltip title="Like">
@@ -34,10 +33,17 @@
 
                 <a-button type="dashed"  v-if="(isResearcher) && (!comment.PermanentID)"  :disabled="inRequest" @click="askForPID">Ask For PermanentID</a-button>
 
-                <a-button type="danger" @click="deleteComment">
-                    Delete  <a-icon type="close" />
-                </a-button>
+                <a-icon type="delete" theme="twoTone" two-tone-color="#eb2f96"  @click="deleteComment" />
+         
             </div>
+
+            <!-- Editing Options for Admin : hide/unhide the comment -->
+            <div v-if = "isAdmin">
+                <a-icon type="eye-invisible" v-if="comment.active" @click="setVisiblity"/>
+                <a-icon type="eye" v-if="!comment.active" @click="setVisiblity"/>
+            </div>
+            
+
 
         </template>
     
@@ -81,8 +87,8 @@ Vue.use(Antd)
                 action: null,
                 alreadySendLikes:false,    // Can't repeat likes 
                
-               // comment:this.commentFromParent, 
-               //! Sample Comment
+               // comment:this.commentFromParent, 改完取消这行注释
+               //! Sample Comment FOR TEST 改完注释调
                 comment: {
                     doi:" ",    // not used hier
 
@@ -90,7 +96,8 @@ Vue.use(Antd)
                     PermanentID:"",    // '' or 'ASDASDAS'
                     commentType:"unofficial",    // "official", "unofficial"
                     status:[],    // ["in Review", "ask for PID",...] 
-                    
+                    active:true,    // the Admin can hide the comments
+
                     author:this.commentFromParent.author,
                     authorRole:["default","Researcher"],    // ["default", "Researcher",....]
                     content:this.commentFromParent.content,    // the comment is in html form 
@@ -98,7 +105,8 @@ Vue.use(Antd)
                     time: new Date(),
                     likes: 0,
                     dislikes: 0,
-                },          
+                },   
+
             };
         },
 
@@ -117,6 +125,23 @@ Vue.use(Antd)
 
             isAuthor(){
                 return this.comment.author == this.username;
+            },
+
+            /**
+             * @returns true, if the current user is Admin
+             */
+            isAdmin(){
+                return true; //! FOR TEST
+
+                var login = this.$store.state.account.username;
+
+                if(login){
+                    return (this.$store.state.account.role.indexOf("Admin"))>-1; // check whether the logged user is Admin
+                }
+                else{
+                    return false; // not logged => not Admin
+                }
+
             },
 
             /**
@@ -208,6 +233,17 @@ Vue.use(Antd)
 
                 }
             },
+
+            /**
+             * ! 涉及后端交互
+             * The Admin ask firebase to hide/unhide the comment
+             */
+            setVisiblity(){
+                this.comment.active = !this.comment.active;
+
+                //TODO this.$store.dispatch("setVisiblity",this.comment.ID);
+
+            }
         },
 };
 </script>
