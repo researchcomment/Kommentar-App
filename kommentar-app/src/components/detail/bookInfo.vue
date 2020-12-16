@@ -15,14 +15,13 @@
             <h2 style="font-size:3vw">
                 {{detail.title}}
             </h2>
-
+            
             <!-- Detail  -->
             <div>
-                <div v-for="(item, key) in detail" v-bind:key="key">
-                <p v-if="key=='type'" style="font-size:1.8vw">
-                    {{key}}: {{item}}
+             
+                <p style="font-size:1.8vw">
+                    type: {{detail.type}}
                 </p>
-                </div>
                 <div v-for="(item, key) in detail" v-bind:key="key">
                 <p v-if="(key!='title')&&(item)&&(key!='type')&&(key!='abstract')" style="font-size:1.8vw">
                     {{key}}: {{item}}
