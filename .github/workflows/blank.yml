@@ -35,5 +35,6 @@ jobs:
         run: npm run build
       - name: Deploy to Firebase
         working-directory: ./kommentar-app
-        run: firebase deploy --only hosting
+        run: deploy --token "${{ secrets.FirebaseDeploy }}" --only hosting
+   
      
