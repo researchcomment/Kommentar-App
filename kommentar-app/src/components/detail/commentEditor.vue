@@ -1,31 +1,31 @@
 <template>
     <div class="comeditor">
+
         <h3 style="font-size:1.8vw;color:#000">We need your opinion!</h3>
+        
+        <!-- No comment allowed when not logged in -->
         <div class="notlog" v-show="!username">Please login</div>
+        
+        <!-- Comment Editor -->
         <div v-show="username">
+
             <quill-editor
             v-model="content"
             ref="quillEditor" 
-            :options="editorOption"
-            @focus="onEditorFocus()"
-            @blur="onEditorBlur()"
-            
-        >
-        </quill-editor>
-        <button @click="submit" style="margin-top:2vh">Submit</button>
+            :options="editorOption">
+            </quill-editor>
 
-        <!-- Test:Show the comment in html form -->
-        <!-- <p style="margin-bottom:5vh">Test: 实时渲染html格式的comment</p>
-        <div v-html="content">
-	            {{content}}
-        </div> -->
+            <button @click="submit" style="margin-top:2vh">Submit</button>
+
         </div>
         
     </div>
 </template>
+
 <script>
 import moment from 'moment';
 import { MessageBox } from 'mint-ui';
+
 export default {
     props:["doi","username"],
     data() {
@@ -33,7 +33,8 @@ export default {
             rateValue: null,
             rateStyle: {fontSize: "35px"},
             content: null, 
-            editorOption: {
+            
+            editorOption: {    // style for quill-editor
                 placeholder: "Please write down your comment....",
                 modules:{
                     toolbar:[
@@ -49,26 +50,54 @@ export default {
     computed: {
         editor() {
             return this.$refs.quillEditor.quill;
-        }
-        /*,
+        },
+
+        /*! FOR TEST
         username: function () {
                 //console.log(firebase.auth().currentUser.uid)
                 return this.$store.state.account.username;
         },
         */
+
     },
     methods: {
-        //upload the comment to backend 
+        
+        /**
+         * TODO JJY has changed form of entry
+         *  Send the request to the backend to store the comment
+         *  It will be called when the submit button is clicked
+         */
         submit(){
+
+            // Ensure that the user is logged in
             if(!this.username){
                 MessageBox.alert("Please login", "Notice");
                 return;
             }
+
+            // build request data
             var entry={
+                // doi:this.doi,
+                // username:this.$store.state.account.username,
+                // content:this.content,    // the comment is in html form 
+
+                //TODO JJY has changed form of entry
                 doi:this.doi,
-                username:this.$store.state.account.username,
-                content:this.content, //the comment is in html form 
+                ID:"",    // UID for comment 
+                PermanentID:"",    // '' or 'ASDASDAS'
+                commentType:"unofficial",    // "official", "unofficial"
+                status:[],    // ["in Review", "ask for PID",...] 
+                active:true,    // the Admin can hide the comments
+                author:this.$store.state.account.username,
+                authorRole:this.$store.state.account.role,    // ["default", "Researcher",....]
+                content:this.content,    // the comment is in html form 
+
+                time: new Date(),
+                likes: 0,
+                dislikes: 0,
             }
+
+            // Send request to backend
             let result=1;
             this.$store.dispatch('commitwork/sendFromEditorToDatabase',entry).then(() => {
                 this.$emit("submit");
@@ -77,11 +106,9 @@ export default {
             })
             
         },
-        onEditorFocus(){  // Focuses the editor 
-            
-        },
-        onEditorBlur(){// Removes focus from the editor.
-        },
+        
+
+
     },
    
 };
