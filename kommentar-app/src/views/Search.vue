@@ -250,11 +250,11 @@ export default {
   width: 3vh;
   height: 3vh;
   line-height: 3vh;
-  margin: 0 3%;
+  margin: 0 1%;
   font-size: 120%;
 }
 .otherpage{
-  color: #76C06B;
+  color: #00243E;
   cursor: pointer;
 }
 .otherpage:hover{
@@ -262,7 +262,7 @@ export default {
   color:#00243E
 }
 .currentpage{
-  color: #76C06B;
+  color: #00243E;
   font-weight: bold;
   cursor: default;
 }

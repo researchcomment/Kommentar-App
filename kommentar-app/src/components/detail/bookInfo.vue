@@ -4,10 +4,10 @@
 
             <!-- Book Cover -->
             <div v-for="(item, key) in detail" :key="key">
-                <img src="../../pics/book.jpg" align="right"  v-if="item == 'book-chapter'" class="workimg">
+                <img src="../../pics/book.jpg" align="right"  v-if="item == 'book'" class="workimg">
                 <img src="../../pics/journal-article.jpg" align="right"  v-if="item == 'journal'" class="workimg">
-                <img src="../../pics/proceeding.jpg" align="right"  v-if="item == 'proceedings'" class="workimg">
-                <img src="../../pics/dissertations.jpg" align="right"  v-if="item == 'dissertations'" class="workimg">
+                <img src="../../pics/proceeding.jpg" align="right"  v-if="item == 'proceedings-article'" class="workimg">
+                <img src="../../pics/dissertations.jpg" align="right"  v-if="item == 'dissertation'" class="workimg">
                 <img src="../../pics/components.jpg" align="right"  v-if="item == 'component'" class="workimg">  
             </div>
 
@@ -18,6 +18,11 @@
 
             <!-- Detail  -->
             <div>
+                <div v-for="(item, key) in detail" v-bind:key="key">
+                <p v-if="key=='type'" style="font-size:1.8vw">
+                    {{key}}: {{item}}
+                </p>
+                </div>
                 <div v-for="(item, key) in detail" v-bind:key="key">
                 <p v-if="(key!='title')&&(item)&&(key!='type')&&(key!='abstract')" style="font-size:1.8vw">
                     {{key}}: {{item}}
