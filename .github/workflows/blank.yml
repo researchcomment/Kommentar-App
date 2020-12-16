@@ -33,8 +33,11 @@ jobs:
       - name: Build
         working-directory: ./kommentar-app
         run: npm run build
+      - name: use tool
+        working-directory: ./kommentar-app
+        run: npm install firebase-tools
       - name: Deploy to Firebase
         working-directory: ./kommentar-app
-        run: deploy --token "${{ secrets.FirebaseDeploy }}" --only hosting
+        run: firebase deploy --token "${{ secrets.FirebaseDeploy }}" --only hosting
    
      
