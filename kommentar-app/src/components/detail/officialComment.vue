@@ -11,7 +11,7 @@
     <ul>
       <li v-for="item in commentList" v-bind:key="item.id" class="ocommentli">
         <div>
-          <comment :comment="item" />
+          <comment :comment="item" :username="username" @refresh="getComments"/>
         </div>
       </li>
     </ul>
