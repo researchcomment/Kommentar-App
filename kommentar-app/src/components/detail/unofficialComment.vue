@@ -8,7 +8,7 @@
         
         <!-- List of official Comments -->
         <ul>
-            <li v-for="item in commentList" v-bind:key="item.id">
+            <li v-for="item in commentList" v-bind:key="item.id" class="ucommitli">
                 <div>
                     <comment :comment="item" />
                 </div>
@@ -102,22 +102,26 @@ export default {
 <style>
 .ucomment ul{
     list-style-type: none;
-    padding: 1vh;
+    padding: 1vw;
 }
 .ucomment{
     margin: 2vh 10vw;
 }
-.ucomment li{
-    margin-bottom: 1vh;
+.ucomment .ucommitli{
+    margin-bottom: 4vh;
+    width: 70vw;
 }
 .ant-comment-inner{
     padding: 0;
 }
+.ant-comment-inner .ant-comment-content{
+    border-bottom: 1px solid #EBEEF3;
+}
 .ant-comment-content-author .ant-comment-content-author-name a{
-    font-size: 2.5vh;
+    font-size: 1.5vw;
 }
 .ant-comment-content-detail p{
-    font-size: 3vh;
+    font-size: 1.5vw;
     margin-bottom: 0;
 }
 .ant-comment-actions{
@@ -125,25 +129,36 @@ export default {
     padding: 0;
 }
 .ant-comment-actions span{
-    font-size: 2vh;
+    font-size: 2vw;
 }
 .ucomment .ant-comment-inner{
     padding: 0;
 }
 .ucomment .ant-comment-inner .ant-comment-avatar img{
-    width: 3vh;
-    height: 3vh;
+    width: 4.5vw;
+    height: 4.5vw;
     margin: 0;
 }
-.ucomment .ant-comment-inner .ant-comment-avatar {
-    margin: 0;
+.ucomment .ant-comment-inner .ant-comment-avatar .ant-avatar{
+    width: 4.5vw;
+    height: 4.5vw;
+}
+.ucomment .ant-comment-inner .ant-comment-avatar{
+    margin-right: 3vw;
 }
 .ucomment .ant-comment-actions{
-    margin: 0;
+    margin-bottom: 4vh;
     padding: 0;
 }
+.ucomment .ant-comment .ant-comment-actions span span{
+    font-size: 1.2vw;
+}
+.ucomment .ant-comment-actions i swg{
+    width: 1.2vw;
+    height: 1.2vw;
+}
 .ucomment .ant-comment-content-detail p{
-    margin-bottom: 0;
+    margin-bottom: 1vh;
 }
 
 </style>
