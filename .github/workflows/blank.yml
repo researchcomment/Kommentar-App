@@ -23,7 +23,7 @@ jobs:
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       - name: cd to dir
-        uses: cd ../kommentar-app
+        run: cd kommentar-app
       - name: Install Dependencies
         run: npm install
       - name: Build
