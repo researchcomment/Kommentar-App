@@ -33,15 +33,12 @@ jobs:
       - name: Build
         working-directory: ./kommentar-app
         run: npm run build
-      - name: use tool
-        working-directory: ./kommentar-app
-        run: npm install firebase-tools
       - name: Deploy to Firebase
         uses: w9jds/firebase-action@master
         with:
           args: deploy --only hosting
         env:
-          FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
+          FIREBASE_TOKEN: ${{ secrets.FirebaseDeploy  }}
           PROJECT_PATH: ./kommentar-app
    
      
