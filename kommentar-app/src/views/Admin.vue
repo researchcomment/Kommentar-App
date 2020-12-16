@@ -1,10 +1,11 @@
 <template>
     <div>
+        <div>
         <!-- Titel -->
         <h3 style="margin-top:5vh;margin-left:10vh;font-size:5vh">User Management</h3>
         
         <!-- Filter -->
-        <input type="text" style="margin-left:10vh" v-model="searchText">
+        <input type="text" class="usersearch" v-model="searchText">
        
 
         <!-- User List -->
@@ -21,17 +22,22 @@
         </div>
        
         <!-- Button -->
-        <mt-button class="combtn" type="danger" @click.native="updateRole">Confirm</mt-button>
+        <button class="combtn" type="danger" @click.native="updateRole">Confirm</button>
         
     </div>
+    <bottom></bottom>
+    </div>
+    
 </template>
 
 <script>
-
+    import bottom from '@/components/footer/bottom';
     export default {
 
         name: "admin",
-
+        components:{
+            bottom
+        },
         data(){
             return{
                 searchText:"",
@@ -144,6 +150,11 @@
 </script>
 
 <style>
+/* searchinput style */
+.usersearch{
+    margin-left:10vh;
+}
+/* userlist style */
 .userlists{
     margin: 10vh;
     border: 1px solid rgba(0,0,0,.125);
@@ -161,5 +172,6 @@
 .combtn{
     display: block;
     margin-left: 10vh;
+    margin-bottom: 5vh;
 }
 </style>

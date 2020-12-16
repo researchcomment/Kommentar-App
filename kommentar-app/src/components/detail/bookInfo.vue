@@ -3,7 +3,7 @@
         <div v-loading.fullscreen.lock="loading">
 
             <!-- Book Cover -->
-            <div v-for="(item, key) in detail" :key="key">
+            <div v-for="(item, index) in detail" v-bind:key="index">
                 <img src="../../pics/book.jpg" align="right"  v-if="item == 'book'" class="workimg">
                 <img src="../../pics/journal-article.jpg" align="right"  v-if="item == 'journal'" class="workimg">
                 <img src="../../pics/proceeding.jpg" align="right"  v-if="item == 'proceedings-article'" class="workimg">
@@ -18,20 +18,21 @@
 
             <!-- Detail  -->
             <div>
-                <div v-for="(item, key) in detail" v-bind:key="key">
-                <p v-if="key=='type'" style="font-size:1.8vw">
-                    {{key}}: {{item}}
-                </p>
+                <div v-for="(item, index) in detail" v-bind:key="index">
+
+                    <!-- list type at first -->
+                    <p v-if="index=='type'" style="font-size:1.8vw">
+                    {{index}}: {{item}}
+                    </p>
+
+                    <p v-if="(index!='title')&&(item)&&(index!='type')&&(index!='abstract')" style="font-size:1.8vw">
+                    {{index}}: {{item}}
+                    </p>
                 </div>
-                <div v-for="(item, key) in detail" v-bind:key="key">
-                <p v-if="(key!='title')&&(item)&&(key!='type')&&(key!='abstract')" style="font-size:1.8vw">
-                    {{key}}: {{item}}
-                </p>
-                </div>
+
                 <div v-if="detail.abstract" v-html="detail.abstract">
                 </div>
             </div>
-
         </div>
     </div>
 </template>
