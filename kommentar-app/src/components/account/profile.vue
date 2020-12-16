@@ -10,7 +10,7 @@
         <li>
           <span class="iconfont icon-jiaose"></span>
           <div class="texts">
-            Role : {{role}}
+            Role: {{role}}
           </div>
         </li>
         <li v-show="isAdmin" @click="openAdmin">
