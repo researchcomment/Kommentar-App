@@ -1,14 +1,13 @@
 <template>
-    <a-comment>
-        <template slot="actions">
-
+    <a-comment v-if="comment.active || isAdmin">
+        <template slot="actions" >
             <!-- the number of likes -->
             <span key="comment-basic-like">
                 <a-tooltip title="Like">
                 <a-icon type="like" :theme="action === 'liked' ? 'filled' : 'outlined'" @click="like"/>
                 </a-tooltip>
                 <span style="padding-left: '8px';cursor: 'auto'">
-                    {{ likes }}
+                    {{ comment.likes }}
                 </span>
             </span>
 
@@ -22,33 +21,51 @@
                 />
                 </a-tooltip>
                 <span style="padding-left: '8px';cursor: 'auto'">
-                {{ dislikes }}
+                {{ comment.dislikes }}
                 </span>
             </span>
-            <!-- <span key="comment-basic-reply-to">Reply to</span> -->
+            <span key="comment-basic-reply-to">Reply to</span>
+
+            <!-- Editing Options for Author -->
+            <div v-if = "isAuthor">
+                
+                <a-button type="dashed" :disabled="inReview" @click="askForReview">Review</a-button>
+
+                <a-button type="dashed"  v-if="(isResearcher) && (!comment.PermanentID)"  :disabled="inRequest" @click="askForPID">Ask For PermanentID</a-button>
+
+                <a-icon type="delete" theme="twoTone" two-tone-color="#eb2f96"  @click="deleteComment" />
+         
+            </div>
+
+            <!-- Editing Options for Admin : hide/unhide the comment -->
+            <div v-if = "isAdmin">
+                <a-icon type="eye-invisible" v-if="comment.active" @click="setVisiblity"/>
+                <a-icon type="eye" v-if="!comment.active" @click="setVisiblity"/>
+            </div>
+            
+
+
         </template>
     
         <!-- the detail of this comment -->
             
             <!-- Author -->
-            <a slot="author">{{author}}</a>
+            <a slot="author">{{comment.author}}</a>
 
-            <!-- Author picture -->
-            <!-- <a-avatar
-                slot="avatar"
-                src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"
-            /> -->
-            
+            <!-- Author picture -->  
             <a-avatar slot="avatar" style="color: #f56a00; backgroundColor: #fde3cf">
                 <p class="avatarp">{{authorfirst}}</p>
             </a-avatar>
+
             <!-- Comment -->
-            <p slot="content" v-html="content"></p>
+            <p slot="content" v-html="comment.content"></p>
             
             <!-- time -->
-            <!-- <a-tooltip slot="datetime" :title="moment().format('YYYY-MM-DD HH:mm:ss')">
-                <span>{{ moment().fromNow() }}</span>
-            </a-tooltip> -->
+            <a-tooltip slot="datetime" >
+                <span>{{ comment.time.toLocaleString( )}}</span>
+            </a-tooltip>
+
+            
 
     </a-comment>
 </template>
@@ -63,33 +80,170 @@ Vue.use(Antd)
 
     export default {
 
-        props:["comment",],
+        props:["commentFromParent", "username"],
 
         data() {
             return {
-                author:this.comment.author,
-                content:this.comment.content,
-                likes: 0,
-                dislikes: 0,
                 action: null,
-                moment,
-                authorfirst:this.comment.author[0],
+                alreadySendLikes:false,    // Can't repeat likes 
+               
+               // comment:this.commentFromParent, 改完取消这行注释
+               //! Sample Comment FOR TEST 改完注释调
+                comment: {
+                    doi:" ",    // not used hier
+
+                    ID:"MAKAVIVZSVSDFSDF",    // UID for comment 
+                    PermanentID:"",    // '' or 'ASDASDAS'
+                    commentType:"unofficial",    // "official", "unofficial"
+                    status:[],    // ["in Review", "ask for PID",...] 
+                    active:true,    // the Admin can hide the comments
+
+                    author:this.commentFromParent.author,
+                    authorRole:["default","Researcher"],    // ["default", "Researcher",....]
+                    content:this.commentFromParent.content,    // the comment is in html form 
+
+                    time: new Date(),
+                    likes: 0,
+                    dislikes: 0,
+                },   
+
             };
         },
 
-        methods: {
+        computed:{
             
-            // When the user clicks the like button
-            like() {
-                this.likes += 1;
-                this.action = 'liked';
+            /**
+             * @returns {String} a part of the author name
+             */
+            authorfirst(){
+                return this.comment.author[0];
             },
 
-            // When the user clicks the dislike button
-            dislike() {
-                this.dislikes += 1;
-                this.action = 'disliked';
+            isResearcher(){
+                return this.comment.authorRole.indexOf("Researcher") > -1 ;
             },
+
+            isAuthor(){
+                return this.comment.author == this.username;
+            },
+
+            /**
+             * @returns true, if the current user is Admin
+             */
+            isAdmin(){
+                return true; //! FOR TEST
+
+                var login = this.$store.state.account.username;
+
+                if(login){
+                    return (this.$store.state.account.role.indexOf("Admin"))>-1; // check whether the logged user is Admin
+                }
+                else{
+                    return false; // not logged => not Admin
+                }
+
+            },
+
+            /**
+             * @returns {boolean}, true, if the user has already submitted a review request
+             */
+            inReview(){
+
+                // Duplicate application is prohibited
+                // in Reviewing => disable the Button
+                return this.comment.status.indexOf("in Review") > -1 ;
+
+            },
+
+            /**
+             * @returns {boolean}, true, if the user has already submitted a request for PID
+             */
+            inRequest(){
+                
+                // Duplicate application is prohibited
+                // already requested => disable the Button
+                return this.comment.status.indexOf("ask for PID") > -1 ;
+                
+            },
+
+        },
+
+        methods: {
+            /**
+             * ! 涉及后端交互
+             * send review Request to firebase
+             */
+            askForReview(){
+
+                // JJY : 暂时前端应该已经拦截了role不对的 已经在review的 应该不会发生重复提交申请的问题
+                //TODO this.$store.dispatch("review",this.comment.ID);
+                
+                this.comment.status.push("in Review");
+
+            },
+
+            /**
+             * ! 涉及后端交互
+             * ask firebase for PermanentID
+             */
+            askForPID(){
+                
+                // JJY : 暂时前端应该已经拦截了role不对的 已经有PID的 已经申请PID的
+                //TODO this.$store.dispatch("askForPID",this.comment.ID);
+
+                this.comment.status.push("ask for PID");
+            },
+
+            /**
+             * ! 涉及后端交互
+             * send delete Request to firebase
+             */
+            deleteComment(){
+                //TODO this.$store.dispatch("delete",this.comment.ID);
+                this.$emit("refresh");
+            },
+           
+            /**
+             * ! 涉及后端交互
+             * When the user clicks the like button, send like request to firebase
+             */
+            like() {
+                if(!this.alreadySendLikes){
+                    this.action = 'liked';
+                    this.alreadySendLikes =true;    // Can't repeat likes
+                    this.comment.likes += 1;
+                       
+                    //TODO this.$store.dispatch("like",this.comment.ID);
+                                              
+                }
+                
+            },
+
+             /**
+             * ! 涉及后端交互
+             * When the user clicks the like button, send dislike request to firebase
+             */
+            dislike() {
+                if(!this.alreadySendLikes){
+                    this.action = 'disliked';
+                    this.alreadySendLikes =true;    // Can't repeat dislikes
+                    this.comment.dislikes += 1;   
+                    
+                    //TODO this.$store.dispatch("dislike",this.comment.ID);
+
+                }
+            },
+
+            /**
+             * ! 涉及后端交互
+             * The Admin ask firebase to hide/unhide the comment
+             */
+            setVisiblity(){
+                this.comment.active = !this.comment.active;
+
+                //TODO this.$store.dispatch("setVisiblity",this.comment.ID);
+
+            }
         },
 };
 </script>
