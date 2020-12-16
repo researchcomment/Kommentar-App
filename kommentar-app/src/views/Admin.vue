@@ -3,6 +3,10 @@
         <!-- Titel -->
         <h3 style="margin-top:5vh;margin-left:10vh;font-size:5vh">User Management</h3>
 
+        <!-- Fliter -->
+       
+
+
         <!-- User List -->
         <div>
             <div  v-for="(user, index) in userList" v-bind:key="index" class="userlists">
@@ -30,6 +34,7 @@
 
         data(){
             return{
+                userName:"",
                 userList:[
                     {   username:"test1",
                         role:["default"],
