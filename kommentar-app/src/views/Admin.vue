@@ -2,24 +2,24 @@
     <div>
         <!-- Titel -->
         <h3 style="margin-top:5vh;margin-left:10vh;font-size:5vh">User Management</h3>
-
-        <!-- Fliter -->
+        
+        <!-- Filter -->
+        <input type="text" style="margin-left:10vh" v-model="searchText">
        
 
-
         <!-- User List -->
-        <div>
-            <div  v-for="(user, index) in userList" v-bind:key="index" class="userlists">
+        <div  v-for="(user, index) in userList" v-show="filter(user.username)" v-bind:key="index"  class="userlists">
+            <div >
                 <p>Username:{{user.username}}</p>
                 <mt-checklist
                     v-model="user.role"
                     :options="['default', 'Researcher', 'Reviewer','Moderator','Admin']"
                     @change="addChangedUserList(index)">
-                </mt-checklist>  
-                
+                </mt-checklist>
             </div>
+           
         </div>
-
+       
         <!-- Button -->
         <mt-button class="combtn" type="danger" @click.native="updateRole">Confirm</mt-button>
         
@@ -34,16 +34,17 @@
 
         data(){
             return{
-                userName:"",
+                searchText:"",
                 userList:[
                     {   username:"test1",
                         role:["default"],
                     },
-                    {   username:"test1",
+                    {   username:"abc",
                         role:['default', 'Researcher', 'Reviewer'],
                     }
                 ],
                 changedUserList:new Set(),
+                aftersearch: false,
             }
         },
         computed:{
@@ -98,7 +99,7 @@
                     {   username:"test1",
                         role:["default"],
                     },
-                    {   username:"test1",
+                    {   username:"abc",
                         role:['default', 'Researcher', 'Reviewer'],
                     }
                 ];
@@ -126,7 +127,18 @@
              */
             addChangedUserList(index){
                 this.changedUserList.add(index);
+                console.log(index)
             },
+
+            /**
+             * Filter user list
+             * 
+             * @param userName - username in the list
+             * @returns boolean   - true, if it related to search text
+             */
+            filter(userName){
+                return userName.indexOf(this.searchText) > -1 ;
+            }
         }
     }
 </script>

@@ -34,11 +34,14 @@
             <a slot="author">{{author}}</a>
 
             <!-- Author picture -->
-            <a-avatar
+            <!-- <a-avatar
                 slot="avatar"
                 src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"
-            />
+            /> -->
             
+            <a-avatar slot="avatar" style="color: #f56a00; backgroundColor: #fde3cf">
+                <p class="avatarp">{{authorfirst}}</p>
+            </a-avatar>
             <!-- Comment -->
             <p slot="content" v-html="content"></p>
             
@@ -70,6 +73,7 @@ Vue.use(Antd)
                 dislikes: 0,
                 action: null,
                 moment,
+                authorfirst:this.comment.author[0],
             };
         },
 
@@ -90,6 +94,9 @@ Vue.use(Antd)
 };
 </script>
 
-<style lang="scss" scoped>
-
+<style>
+.avatarp{
+    font-size: 2.5vw;
+    line-height: 4.4vw;
+}
 </style>

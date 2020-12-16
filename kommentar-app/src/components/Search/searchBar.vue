@@ -78,7 +78,7 @@
 }
 .el-input i{
     cursor: pointer;
-    line-height: 200%;
+    line-height: 4.9vh;
 }
 
 

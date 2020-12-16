@@ -10,7 +10,6 @@
           v-model="filterDialog"
           closeOnClickModal="false"
           class="filterpopup">
-
           <!-- date Picker -->
           <div style="margin:3vh">
 
@@ -39,7 +38,6 @@
                 </mt-button>
 
             </div>
-            
             <!-- Type List 1 -->
             <mt-checklist
             title="Type"
@@ -62,8 +60,11 @@
               <mt-button class="comfirmbtn" style="margin-right:2vh" @click.native="confirm" size="large" type="primary">Confirm</mt-button>
               <mt-button class="comfirmbtn" @click.native="filterDialog=false" size="large" type="default">Cancel</mt-button>
             </div>
-         
           </div>
+            
+            
+            
+         
                 
         </mt-popup>
 
@@ -83,7 +84,6 @@
           :endDate="defaultdate.to"
         >
         </mt-datetime-picker>
-       
     </div>
 </template>
 
@@ -194,6 +194,12 @@
 .mint-popup .mint-checklist .mint-cell .mint-cell-wrapper .mint-cell-title .mint-checklist-label .mint-checkbox-core{
   width:2vh;
   height: 2vh;
+}
+.mint-popup .mint-checklist .mint-cell .mint-cell-wrapper .mint-cell-title .mint-checklist-label .mint-checkbox-core:after{
+  width:0.5vh;
+  height: 1vh;
+  top:0.25vh;
+  left:0.5vh
 }
 .mint-popup .mint-checklist .mint-cell .mint-cell-wrapper .mint-cell-title .mint-checklist-label .mint-checkbox-label{
   word-break: break-all;
