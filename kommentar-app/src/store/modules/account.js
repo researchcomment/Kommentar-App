@@ -37,7 +37,6 @@ const actions = {
                 ).catch(err => {
                     console.log(err);
                 }) 
-                console.log(result);
                 return result;
                 
             })
@@ -59,7 +58,9 @@ const actions = {
                 console.log( childSnapshot.val().username);
                 if(username === childSnapshot.val().username){
                     result = childSnapshot.val().username;
-                    commit("setrole", childSnapshot.val().role);
+                    let role=childSnapshot.val().role;
+                    console.log(role);
+                    commit("setrole", role);
                     return result;
                 }
             })
