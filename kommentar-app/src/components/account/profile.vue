@@ -13,12 +13,22 @@
             Role: {{role}}
           </div>
         </li>
+
         <li v-show="isAdmin" @click="openAdmin">
           <span class="iconfont icon-biaoqiankuozhan_guanli-159"></span>
           <div class="texts">
             Admin
           </div>
         </li>
+
+        <!-- Reviewer -->
+        <li v-show="isReviewer" @click="openReviewer">
+          <span class="iconfont icon-biaoqiankuozhan_guanli-159"></span>
+          <div class="texts">
+            Reviewer
+          </div>
+        </li>
+
         <li>
           <span class="iconfont icon-youxiang"></span>
           <div class="texts">
@@ -47,13 +57,12 @@ export default {
     }
   },
   computed:{
-    
+
     role(){
       return this.$store.state.account.role;
     },
 
     isAdmin(){
-      
       if(this.role){
           //check whether the logged user is Admin
           return (this.role.indexOf("Admin"))>-1;
@@ -61,8 +70,18 @@ export default {
       else{
           return false;
       }
+    },
 
-    }
+    isReviewer(){
+      if(this.role){
+          //check whether the logged user is Admin
+          return (this.role.indexOf("Reviewer"))>-1;
+      }
+      else{
+          return false;
+      }
+    },
+
   },
   methods:{
     close(){
@@ -74,6 +93,9 @@ export default {
     },
     openAdmin(){
       this.$router.push('/Admin');
+    },
+    openReviewer(){
+      this.$router.push('/Review');
     }
   }
 

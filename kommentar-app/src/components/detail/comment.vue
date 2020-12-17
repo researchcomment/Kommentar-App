@@ -24,7 +24,7 @@
                 {{ comment.dislikes }}
                 </span>
             </span>
-            <span key="comment-basic-reply-to">Reply to</span>
+
 
             <!-- Editing Options for Author -->
             <div v-if = "isAuthor">

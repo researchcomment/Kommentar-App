@@ -4,6 +4,7 @@ import Home from '../views/Home.vue'
 import Search from  '../views/Search.vue'
 import Detail from  '../views/Detail.vue'
 import Admin from  '../views/Admin.vue'
+import Reviewer from  '../views/Reviewer.vue'
 import store from '@/store'
 Vue.use(Router)
 
@@ -36,6 +37,11 @@ const router = new Router({
       path: '/Admin',
       name: 'admin',
       component: Admin
+    },
+    {
+      path: '/Review',
+      name: 'reviewer',
+      component: Reviewer
     },
     {
       path: '*',
