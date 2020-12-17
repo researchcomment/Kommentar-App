@@ -87,9 +87,9 @@ Vue.use(Antd)
                 action: null,
                 alreadySendLikes:false,    // Can't repeat likes 
                
-               //comment:this.commentFromParent, 改完取消这行注释
+               comment:this.commentFromParent, 
                //! Sample Comment FOR TEST 改完注释调
-                comment: {
+               /* comment: {
                     UID:"MAKAVIVZSVSDFSDF",    // UID for comment 
                     PermanentID:"",    // '' or 'ASDASDAS'
                     type:"unofficial",    // "official", "unofficial"
@@ -101,7 +101,7 @@ Vue.use(Antd)
                     likes: 0,
                     dislikes: 0,
                 },   
-
+                */
             };
         },
 
@@ -115,7 +115,7 @@ Vue.use(Antd)
             },
 
             isResearcher(){
-                return this.comment.authorRole.indexOf("Researcher") > -1 ;
+                return (this.$store.state.account.role.indexOf("Reacher"))>-1;
             },
 
             isAuthor(){

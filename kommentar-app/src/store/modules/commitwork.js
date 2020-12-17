@@ -14,6 +14,7 @@ const state = () => ({
     affiliation: null,
     doi: null,
     */
+
     commit_private: {
         data: [],
         length: 0
@@ -133,7 +134,7 @@ const actions = {
         let userKey = await firebase.database().ref('users').once('value').then((snapshot) => {
             var result = null;
             snapshot.forEach((childSnapshot) => {
-                if(username === childSnapshot.val().username){
+                if(author === childSnapshot.val().username){
                     result = childSnapshot.key;
                 }
             })
@@ -147,7 +148,7 @@ const actions = {
             doi_nr: doi,
             PermanentID:"",
             type: 'unofficial',
-            status:[],    // ["in Review", "ask for PID",...] 
+            status:[""],    // ["in Review", "ask for PID",...] 
             active:true,    // the Admin can hide the comments
             author:author,
             content: content,
@@ -284,12 +285,11 @@ const actions = {
                 var commentsList_CurrentUser = []
                 snapshot.forEach((childSnapshot) => {
                     if (childSnapshot.val().type === 'official') {
-                        var content = childSnapshot.val().details
-                        var author = childSnapshot.val().usr
-                        var time = childSnapshot.val().createDate
-                        commentsList.push({ content: content, author: author ,time:time})
+                        var value=childSnapshot.val();
+                        value.UID=childSnapshot.key;
+                        commentsList.push(value)
                         if (childSnapshot.val().usr === username) {
-                            commentsList_CurrentUser.push({ content: content, author: author,time:time })
+                            commentsList_CurrentUser.push(value)
                         }
                     }
                 })
