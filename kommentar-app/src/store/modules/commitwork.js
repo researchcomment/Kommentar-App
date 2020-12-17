@@ -158,36 +158,18 @@ const actions = {
 
            
         }
+        let doiKey=doi.replace(".","'");
         //在doi资料库中生成一个评论的key,并把key加入用户数据的comments项中
         //此处只能使用firebase自动配置的key，doi形式不适合作为key
-        return firebase.database().ref('doi_repository').once('value').then((snapshot) => {
-            //snapshot是doiKey
-            let got_Doi_Nr = snapshot.forEach((childSnapshot) => {
-                var childKey = childSnapshot.key;
-                var existed_doi_nr = childSnapshot.val().doi_nr;
-                if (existed_doi_nr === doi) {
-                    //doi对应的文章已经存在，把新的coment加入comments
-                    let comments_key = firebase.database().ref('doi_repository/' + childKey + '/comments').push(newComent).key;
-                    firebase.database().ref('users/' + userKey + '/comments/' + comments_key).set({
-                        type: 'unofficial'
-                    })
-                    return true;
-                }
-                return false;
-            })
-            if (!got_Doi_Nr) {
-                //doi对应的文章不存在，那么加入新的文章doi并插入新的comment到空的comments目录
-                let new_Doi_Key = firebase.database().ref('doi_repository').push().key;
-                firebase.database().ref('doi_repository/' + new_Doi_Key).set({ doi_nr: doi })
-                let comments_key = firebase.database().ref('doi_repository/' + new_Doi_Key + '/comments').push(newComent).key;
-                firebase.database().ref('users/' + userKey + '/comments/' + comments_key).set({
+        
+                let comments_key = firebase.database().ref('doi_repository/' + doiKey + '/comments').push(newComent).key;
+                return firebase.database().ref('users/' + userKey + '/comments/' + comments_key).set({
                     type: 'unofficial'
-                })
-            }
-        }).catch((error) => {
-            //for debug only, will be finished later
-            console.log(error.message);
-        });
+                }).catch((error) => {
+                    //for debug only, will be finished later
+                    console.log(error.message);
+                });
+           
         //firebase.database().ref('doi_repository/' + newDoi_key + '/comments').set(newComent)   
         /*
         firebase.database().ref('doi_repository').push(newComent)
@@ -215,7 +197,7 @@ const actions = {
     async loadUnOfficialComments({ commit, state }, { doi, rankType, username}) {
         //rankType: 'submittime', 'onlyfromCurrentUser'
         //首先每次调用此方法的时候，应该在DB收集所有doi为给入doi的comments条目
-        
+        /*
         let doiKey = await firebase.database().ref('doi_repository').once('value').then((snapshot) => {
             var tempresult = null;
             snapshot.forEach((childSnapshot) => {
@@ -227,9 +209,13 @@ const actions = {
             })
             return tempresult;
         })
-        let result=[];
+        
+       
         if(doiKey){
-            result = await firebase
+        */
+        let result=[];  
+        let doiKey=doi.replace(".","'");
+        result = await firebase
             .database()
             .ref('doi_repository/' + doiKey + '/comments')
             .once('value')
@@ -252,9 +238,12 @@ const actions = {
                 else {
                     return commentsList.slice().reverse();
                 }
-            })
-        }
-        return result
+            }).catch((error) => {
+                //for debug only, will be finished later
+                console.log(error.message);
+            });
+        
+        return result;
         
         
     },
@@ -262,6 +251,7 @@ const actions = {
     async loadOfficialComments({ commit, state }, { doi, rankType, username}) {
         //rankType: 'submittime', 'onlyfromCurrentUser'
         //首先每次调用此方法的时候，应该在DB收集所有doi为给入doi的comments条目
+        /*
         let doiKey = await firebase.database().ref('doi_repository').once('value').then((snapshot) => {
             var result = null;
             snapshot.forEach((childSnapshot) => {
@@ -273,8 +263,11 @@ const actions = {
             })
             return result;
         })
+        */
+      
+       let doiKey=doi.replace(".","'");
+       console.log("d")
         let result=[];
-        if(doiKey){
             result = await firebase
             .database()
             .ref('doi_repository/' + doiKey + '/comments')
@@ -299,8 +292,8 @@ const actions = {
                     return commentsList.slice().reverse();
                 }
             })
-        }
-        return result
+        
+        return result;
     }
 }
 
