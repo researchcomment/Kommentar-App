@@ -87,7 +87,7 @@ Vue.use(Antd)
                 action: null,
                 alreadySendLikes:false,    // Can't repeat likes 
                
-               comment:this.commentFromParent, 
+                comment:this.commentFromParent, 
                //! Sample Comment FOR TEST 改完注释调
                /* comment: {
                     UID:"MAKAVIVZSVSDFSDF",    // UID for comment 
@@ -126,7 +126,6 @@ Vue.use(Antd)
              * @returns true, if the current user is Moderator
              */
             isModerator(){
-                return true; //! FOR TEST
 
                 var login = this.$store.state.account.username;
 

@@ -55,11 +55,10 @@ router.beforeEach(
   const username = window.localStorage.getItem('username');
   // update the login status for new Router
   store.dispatch('account/relogin',{username}).then(
-    (result)=>{return result}
+    (result)=>{next();}
   ).catch(err => {
       console.log(err);
   }) 
-  next();
 
 })
 
