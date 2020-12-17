@@ -55,11 +55,9 @@ const actions = {
         return firebase.database().ref('users').once('value').then((snapshot) => {
             var result = null;
             snapshot.forEach((childSnapshot) => {
-                console.log( childSnapshot.val().username);
                 if(username === childSnapshot.val().username){
                     result = childSnapshot.val().username;
                     let role=childSnapshot.val().role;
-                    console.log(role);
                     commit("setrole", role);
                     return result;
                 }
