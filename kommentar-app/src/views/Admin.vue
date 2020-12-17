@@ -47,13 +47,14 @@
                 aftersearch: false,
             }
         },
+
         computed:{
 
             /**
              * @returns true, if the current user is Admin
              */
             isAdmin(){
-                return true; //! FOR TEST
+                //return true; //! FOR TEST
 
                 var login = this.$store.state.account.username;
 

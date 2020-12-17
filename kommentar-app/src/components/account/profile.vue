@@ -47,18 +47,21 @@ export default {
     }
   },
   computed:{
-    role:function(){
+    
+    role(){
       return this.$store.state.account.role;
     },
+
     isAdmin(){
-      return true; //!for test
-      if(this.username){
+      
+      if(this.role){
           //check whether the logged user is Admin
           return (this.role.indexOf("Admin"))>-1;
       }
       else{
           return false;
       }
+
     }
   },
   methods:{
