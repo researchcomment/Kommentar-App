@@ -125,7 +125,7 @@ const actions = {
     },
 
     //create new Entry in realtime-DB for Editor-Input 
-    async sendFromEditorToDatabase({ commit, state }, { doi, username, content }) {
+    async sendFromEditorToDatabase({ commit, state }, { doi, author, content }) {
         console.log('submit')
         console.log(doi)
         //version 2
@@ -145,10 +145,17 @@ const actions = {
         const newComent = {
             //doi is optional
             doi_nr: doi,
-            usr: username,
-            details: content,
+            PermanentID:"",
+            type: 'unofficial',
+            status:[],    // ["in Review", "ask for PID",...] 
+            active:true,    // the Admin can hide the comments
+            author:author,
+            content: content,
+            likes: 0,
+            dislikes: 0,
             createDate: value,
-            type: 'unofficial'
+
+           
         }
         //在doi资料库中生成一个评论的key,并把key加入用户数据的comments项中
         //此处只能使用firebase自动配置的key，doi形式不适合作为key
@@ -231,11 +238,11 @@ const actions = {
                 var commentsList_CurrentUser = []
                 snapshot.forEach((childSnapshot) => {
                     if (childSnapshot.val().type === 'unofficial') {
-                        var content = childSnapshot.val().details
-                        var author = childSnapshot.val().usr
-                        commentsList.push({ content: content, author: author })
+                        var value=childSnapshot.val();
+                        value.UID=childSnapshot.key;
+                        commentsList.push(value)
                         if (childSnapshot.val().usr === username) {
-                            commentsList_CurrentUser.push({ content: content, author: author })
+                            commentsList_CurrentUser.push(value)
                         }
                     }
                 })
@@ -279,9 +286,10 @@ const actions = {
                     if (childSnapshot.val().type === 'official') {
                         var content = childSnapshot.val().details
                         var author = childSnapshot.val().usr
-                        commentsList.push({ content: content, author: author })
+                        var time = childSnapshot.val().createDate
+                        commentsList.push({ content: content, author: author ,time:time})
                         if (childSnapshot.val().usr === username) {
-                            commentsList_CurrentUser.push({ content: content, author: author })
+                            commentsList_CurrentUser.push({ content: content, author: author,time:time })
                         }
                     }
                 })

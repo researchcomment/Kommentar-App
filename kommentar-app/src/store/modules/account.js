@@ -2,7 +2,7 @@ import firebase from 'firebase/app';
 
 const state = () => ({
     username: null,
-    role: null, //['default', 'Researcher', 'Reviewer','Moderator','Admin']  from JJY
+    role: null, //list:['default', 'Researcher', 'Reviewer','Moderator','Admin']  from JJY
     error: null
 })
 
@@ -60,6 +60,7 @@ const actions = {
                 if(username === childSnapshot.val().username){
                     result = childSnapshot.val().username;
                     commit("setrole", childSnapshot.val().role);
+                    return result;
                 }
             })
             return result; 
@@ -99,7 +100,7 @@ const actions = {
                 //初始化DB中的用户信息                
                 var entry = {
                     username: username,
-                    role: 'default',
+                    role: ['default'],
                     email: username, 
                 }
                

@@ -83,18 +83,11 @@ export default {
 
                 //TODO JJY has changed form of entry
                 doi:this.doi,
-                ID:"",    // UID for comment 
-                PermanentID:"",    // '' or 'ASDASDAS'
-                commentType:"unofficial",    // "official", "unofficial"
-                status:[],    // ["in Review", "ask for PID",...] 
-                active:true,    // the Admin can hide the comments
+
                 author:this.$store.state.account.username,
-                authorRole:this.$store.state.account.role,    // ["default", "Researcher",....]
+                 
                 content:this.content,    // the comment is in html form 
 
-                time: new Date(),
-                likes: 0,
-                dislikes: 0,
             }
 
             // Send request to backend
