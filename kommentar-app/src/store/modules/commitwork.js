@@ -210,6 +210,7 @@ const actions = {
         
         let doiKey = await firebase.database().ref('doi_repository').once('value').then((snapshot) => {
             var tempresult = null;
+            console.log(doi);
             snapshot.forEach((childSnapshot) => {
                 var child_doi_nr = childSnapshot.val().doi_nr;
                 var childKey = childSnapshot.key;

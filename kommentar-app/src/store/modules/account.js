@@ -22,22 +22,55 @@ const getters = {
 
 
 const actions = {
-    login({ commit, state }, { username, password }) {
+    async login({ commit, state,dispatch }, { username, password }) {
 
         //when everything ok, update inform//get information from google firebase backend
         //when username does not compare to the password, return false and reason
         return firebase
             .auth()
             .signInWithEmailAndPassword(username, password)
-            .then(response => {  
-                window.localStorage.setItem("username",username); //cache account information
-                commit("setusername", username);
+            .then(async function (response) {  
+                //cache account information
+                window.localStorage.setItem('username', username);
+                result=await dispatch('relogin',{username}).then(
+                    (result)=>{return result}
+                ).catch(err => {
+                    console.log(err);
+                }) 
+                console.log(result);
+                return result;
+                
             })
             .catch(error => {
                 commit("setError", error.message);
             });
     },
+    async relogin({ commit, state }, { username }) {
 
+        //when everything ok, update inform//get information from google firebase backend
+        //when username does not compare to the password, return false and reason
+         //cache account information
+        commit("setusername", username);
+
+        
+        return firebase.database().ref('users').once('value').then((snapshot) => {
+            var result = null;
+            snapshot.forEach((childSnapshot) => {
+                console.log( childSnapshot.val().username);
+                if(username === childSnapshot.val().username){
+                    result = childSnapshot.val().username;
+                    commit("setrole", childSnapshot.val().role);
+                }
+            })
+            return result; 
+        }).catch(err => {
+                console.log(err);
+        })
+            
+
+        
+    },
+    
     logout ({ commit}) {
         //logout action in firebase, return a promise
         firebase
@@ -56,7 +89,7 @@ const actions = {
     regist({ commit, state }, { username, password }) {
         //get information from google firebase backend
         //when username does not compare to the password, return false and reason
-        firebase
+        return firebase
             .auth()
             .createUserWithEmailAndPassword(username, password)
             .then(response => {
@@ -66,7 +99,7 @@ const actions = {
                 //初始化DB中的用户信息                
                 var entry = {
                     username: username,
-                    role: 'user',
+                    role: 'default',
                     email: username, 
                 }
                
