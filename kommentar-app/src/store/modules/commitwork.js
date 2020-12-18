@@ -148,27 +148,23 @@ const actions = {
             likes: 0,
             dislikes: 0,
             createDate: value,
-
-           
         }
         let doiKey=doi.replaceAll(".","'");
         //在doi资料库中生成一个评论的key,并把key加入用户数据的comments项中
-        //此处只能使用firebase自动配置的key，doi形式不适合作为key
+        //replace . as ' to use in key, it too slow to check all the database to find out the current doi
         
-                let comments_key = firebase.database().ref('doi_repository/' + doiKey + '/comments').push(newComent).key;
-                return firebase.database().ref('users/' + userKey + '/comments/' + comments_key).set({
-                    type: 'unofficial'
-                }).catch((error) => {
-                    //for debug only, will be finished later
-                    console.log(error.message);
-                });
+        let comments_key = firebase.database().ref('doi_repository/' + doiKey + '/comments').push(newComent).key;
+        return firebase.database().ref('users/' + userKey + '/comments/' + comments_key).set({
+            type: 'unofficial'
+        }).catch((error) => {
+            //for debug only, will be finished later
+            console.log(error.message);
+        });
            
     },
 
     //load comments for work from realtime Database
-    //测试之后发现加载offcial和unofficialComments的方法合并和拆分实现没有性能上的区别，
-    //防止随后加入新的不同操作，这里暂时分开写
-    async loadUnOfficialComments({ commit, state }, { doi, rankType, username}) {
+    async loadComments({ commit, state }, { doi, rankType, username,type}) {
         //rankType: 'submittime', 'onlyfromCurrentUser'
         let result=[];  
         let doiKey=doi.replaceAll(".","'");
@@ -180,7 +176,7 @@ const actions = {
                 var commentsList = []
                 var commentsList_CurrentUser = []
                 snapshot.forEach((childSnapshot) => {
-                    if (childSnapshot.val().type === 'unofficial') {
+                    if (childSnapshot.val().type === type) {
                         var value=childSnapshot.val();
                         value.UID=childSnapshot.key;
                         commentsList.push(value)
@@ -205,38 +201,7 @@ const actions = {
         
     },
 
-    async loadOfficialComments({ commit, state }, { doi, rankType, username}) {
-        //rankType: 'submittime', 'onlyfromCurrentUser'
-      
-       let doiKey=doi.replaceAll(".","'");
-        let result=[];
-            result = await firebase
-            .database()
-            .ref('doi_repository/' + doiKey + '/comments')
-            .once('value')
-            .then((snapshot) => {
-                var commentsList = []
-                var commentsList_CurrentUser = []
-                snapshot.forEach((childSnapshot) => {
-                    if (childSnapshot.val().type === 'official') {
-                        var value=childSnapshot.val();
-                        value.UID=childSnapshot.key;
-                        commentsList.push(value)
-                        if (childSnapshot.val().usr === username) {
-                            commentsList_CurrentUser.push(value)
-                        }
-                    }
-                })
-                if (rankType === 'onlyfromCurrentUser') {
-                    return commentsList_CurrentUser.slice().reverse();
-                }
-                else {
-                    return commentsList.slice().reverse();
-                }
-            })
-        
-        return result;
-    }
+   
 }
 
 const mutations = {

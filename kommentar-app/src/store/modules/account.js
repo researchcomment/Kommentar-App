@@ -39,7 +39,6 @@ const actions = {
             .auth()
             .signInWithEmailAndPassword(username, password)
             .then(async function ({user}) {  
-                console.log(user)
                 //cache account information
                 result=await firebase.database().ref('users/'+user.uid+'/role').once('value').then((role) => {
                     commit("setrole", role.val()); 
@@ -64,7 +63,6 @@ const actions = {
    
     async relogin({ commit, state,dispatch }, { }){
         let user=firebase.auth().currentUser;
-        console.log(user);
         if (user){
             commit ('setusername',user.email);
             return firebase.database().ref('users/'+user.uid+'/role').once('value').then((role) => {

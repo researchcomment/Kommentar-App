@@ -75,10 +75,11 @@ export default {
             this.loading=true;
 
             // send request
-            var result = await this.$store.dispatch("commitwork/loadUnOfficialComments", 
+            var result = await this.$store.dispatch("commitwork/loadComments", 
                                                     {doi: this.doi, 
                                                      rankType: 'submittime',
-                                                     username: this.$store.state.account.username})
+                                                     username: this.$store.state.account.username,
+                                                     type:"unofficial"})
                                             .catch(err => {
                                                             console.log(err);
                                                          });
