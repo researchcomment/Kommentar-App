@@ -3,7 +3,7 @@
         <!-- List of Comments -->
         <a-list item-layout="vertical" size="large" :pagination="pagination" :data-source="commentList">
                  
-            <a-list-item v-if="(comment.status.length > 0)" slot="renderItem" slot-scope="comment" >
+            <a-list-item v-if="(comment.status.length > 0)" slot="renderItem" slot-scope="comment,index" >
                 
                 <!-- About Author -->
                 <a-list-item-meta>
@@ -26,7 +26,8 @@
                     </a-descriptions-item>
 
                     <a-descriptions-item label="Request">
-                        <p v-for="item in comment.status" v-bind:key="item">{{item}}</p>
+                        <a-tag v-if="comment.status.indexOf('Review')>-1" color="cyan" @click="visibleFeedback=true">Review</a-tag>
+                        <a-tag v-if="comment.status.indexOf('PID')>-1" color="purple" @click="visiblePID=true">PID</a-tag>
                     </a-descriptions-item>
 
                     <a-descriptions-item label="Content">
@@ -35,40 +36,53 @@
 
                 </a-descriptions>
 
-
+               
                 <!-- Review Options -->
-                <a-collapse v-model="activeKey">
-                    <a-collapse-panel key="1" header="Send Review">
-                    
-                        <!-- Feedback -->
-                        <div v-if="comment.status.indexOf('Review')>-1">
-                            <p>Give Feedback</p>
+                <!-- Feedback -->
+                <a-modal
+                    title="Feedback"
+                    :visible="visibleFeedback"
+                    @ok="replyReview(comment)"
+                    @cancel="handleCancel(comment)"
+                    >
+                    <b>Original Content</b>
+                    <p v-html="comment.content"></p>
 
-                            <quill-editor
-                            v-model="comment.replyContentReview"
-                            :options="editorOptionReview">
-                            </quill-editor>
-
-                            <a-button type="primary" @click="replyReview(comment)">Send</a-button>
-                        </div>
-
-                        <!-- Reply for Permanent ID -->
-                        <div v-if="comment.status.indexOf('PID')>-1">
-                            <p>Give PermanentID</p>
-
-                            <quill-editor
-                            v-model="comment.replyContentPID"
-                            :options="editorOptionPID">
-                            </quill-editor>
-
-                            <a-button type="primary" icon="check-circle" @click="replyPID(true,comment)">Agree</a-button>
-                            <a-button type="primary" icon="close-circle" @click="replyPID(false,comment)">Refuse</a-button>
-                            
-                        </div>
-                        
-                    </a-collapse-panel>
-                </a-collapse>
+                    <!-- Input -->
+                    <quill-editor
+                        v-model="comment.replyContentReview"
+                        :options="editorOptionReview">
+                    </quill-editor>
+                </a-modal>
                 
+                <!-- Reply for Permanent ID -->
+                <a-modal
+                    title="Permanent ID"
+                    :visible="visiblePID"
+                    @ok="replyPID(comment)"
+                    @cancel="handleCancel(comment)"
+                    >
+
+                    <b>Original Content</b>
+                    <p v-html="comment.content"></p>
+
+                    <!-- agree or not -->
+                    <a-radio-group v-model="comment.agreePID" default-value="agree">
+                        <a-radio-button value="agree">
+                            Agree <a-icon type="check-square" theme="twoTone" two-tone-color="#52c41a"/>
+                        </a-radio-button>
+                        <a-radio-button value="refuse">
+                            Refuse <a-icon type="close-square" theme="twoTone" two-tone-color="#eb2f96" />
+                        </a-radio-button>
+                    </a-radio-group>
+
+                    <!-- Input -->
+                    <quill-editor
+                        v-model="comment.replyContentPID"
+                        :options="editorOptionPID">
+                    </quill-editor>
+                   
+                </a-modal>
 
             </a-list-item>
         </a-list>
@@ -89,8 +103,9 @@
                     },
                     pageSize: 6,
                 },
-                activeKey: ['1'],
 
+                visibleFeedback:false,
+                visiblePID:false,
                 editorOptionPID: {    // style for quill-editor by PID
                     placeholder: "Write your Reason......   \n(Must fill in, if the request is rejected)",
                     modules:{
@@ -193,8 +208,9 @@
              * @param agree {boolean}  - true, if the Reviewer is agree
              * @param comment
              */
-            replyPID(agree,comment){
+            replyPID(comment){
                 var reason = comment.replyContentPID;
+                var agree = comment.agreePID=="agree";
 
                 if(agree){
                     //TODO this.$store.dispatch("replyPID",this.comment.UID,agree,reason);
@@ -220,6 +236,7 @@
                 if (index > -1) {
                     comment.status.splice(index, 1);
                 }
+                this.visiblePID = false;
                 this.$notification.open({
                     message: 'Success',
                     description:
@@ -247,6 +264,7 @@
                 else{
                     //TODO this.$store.dispatch("replyReview",this.comment.UID,feedback);
 
+                    this.visibleFeedback = false;
                     this.$notification.open({
                         message: 'Success',
                         description:
@@ -277,6 +295,18 @@
                 //open a new window
                 window.open(routeData.href, "_blank");
 
+            },
+
+            /**
+             * reset the comment by Cancel
+             * @param comment
+             */
+            handleCancel(comment){
+                comment.replyContentReview = "";
+                comment.replyContentPID ="",
+                comment.agreePID = true;
+                this.visibleFeedback =false;
+                this.visiblePID =false;
             },
 
         }
