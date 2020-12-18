@@ -6,6 +6,7 @@ import Detail from  '../views/Detail.vue'
 import Admin from  '../views/Admin.vue'
 import Reviewer from  '../views/Reviewer.vue'
 import store from '@/store'
+import firebase from "firebase/app";
 Vue.use(Router)
 
 
@@ -56,15 +57,25 @@ const router = new Router({
   ]
 })
 
+
 router.beforeEach(
-  async function (to, from, next) {
+  (to, from, next)=> {
+ 
+  console.log( firebase.auth().currentUser);
+  firebase.auth().onAuthStateChanged((user) => {
+		if (user) {
+			store.dispatch('account/relogin',{}).then(
+      ()=>{next();}
+      ).catch(err => {
+        console.log(err);
+      })
+		} else{
+			next()
+		}
+  	});
 
   // update the login status for new Router
-  store.dispatch('account/relogin',{}).then(
-    ()=>{next();}
-  ).catch(err => {
-      console.log(err);
-  }) 
+  
 
 })
 

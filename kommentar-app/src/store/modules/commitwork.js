@@ -1,4 +1,4 @@
-import firebase from 'firebase/app';
+import firebase from "firebase/app";
 import axios from 'axios';
 import worklist from './worklist';
 
@@ -69,7 +69,7 @@ function cons_returnValue(item_ref) {
     //actural reference of result list from crossref
     //construct info which needed to be return  
     item_ref.domain = item_ref["content-domain"].domain ? item_ref["content-domain"].domain[0] : null;
-    console.log(item_ref);
+  
     let returnValue = {};
     returnValue.title = item_ref.title ? item_ref.title[0] : null;
     returnValue.type = item_ref.type;
@@ -93,7 +93,7 @@ function cons_returnValue(item_ref) {
     }
 
     returnValue.abstract = item_ref.abstract;
-    console.log(returnValue);
+   
     return returnValue;
 }
 
@@ -132,6 +132,7 @@ const actions = {
         //version 2
         //找到userkey
         let userKey = firebase.auth().currentUser.uid;
+        console.log(userKey)
         var aData = new Date();//utc
         //uhrzeit, die Zeit von verschiedenen Regionen anzupassen.
         const value = aData.getFullYear() + "-" + (aData.getMonth() + 1) + "-" + aData.getDate();
@@ -150,7 +151,7 @@ const actions = {
 
            
         }
-        let doiKey=doi.replace(".","'");
+        let doiKey=doi.replaceAll(".","'");
         //在doi资料库中生成一个评论的key,并把key加入用户数据的comments项中
         //此处只能使用firebase自动配置的key，doi形式不适合作为key
         
@@ -170,7 +171,7 @@ const actions = {
     async loadUnOfficialComments({ commit, state }, { doi, rankType, username}) {
         //rankType: 'submittime', 'onlyfromCurrentUser'
         let result=[];  
-        let doiKey=doi.replace(".","'");
+        let doiKey=doi.replaceAll(".","'");
         result = await firebase
             .database()
             .ref('doi_repository/' + doiKey + '/comments')
@@ -207,7 +208,7 @@ const actions = {
     async loadOfficialComments({ commit, state }, { doi, rankType, username}) {
         //rankType: 'submittime', 'onlyfromCurrentUser'
       
-       let doiKey=doi.replace(".","'");
+       let doiKey=doi.replaceAll(".","'");
         let result=[];
             result = await firebase
             .database()

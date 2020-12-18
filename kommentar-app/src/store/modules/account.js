@@ -1,4 +1,6 @@
-import firebase from 'firebase/app';
+import firebase from "firebase/app";
+
+// Import needed firebase modules
 
 const state = () => ({
     username: null,
@@ -24,7 +26,7 @@ const getters = {
 const actions = {
     async login({ commit, state,dispatch }, { username, password }) {
 
-        //when everything ok, update inform//get information from google firebase backend
+        //when everything ok, update inform//get information from google this.$this.$firebase backend
         //when username does not compare to the password, return false and reason
         return firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL)
         .then(function() {
@@ -74,7 +76,7 @@ const actions = {
         return;
     },
     logout ({ commit}) {
-        //logout action in firebase, return a promise
+        //logout action in this.$firebase, return a promise
         firebase
         .auth()
         .signOut()
@@ -89,7 +91,7 @@ const actions = {
     },
 
     regist({ commit, state }, { username, password }) {
-        //get information from google firebase backend
+        //get information from google this.$firebase backend
         //when username does not compare to the password, return false and reason
         return firebase
             .auth()
