@@ -58,10 +58,10 @@ const router = new Router({
 
 router.beforeEach(
   async function (to, from, next) {
-  const username = window.localStorage.getItem('username');
+
   // update the login status for new Router
-  store.dispatch('account/relogin',{username}).then(
-    (result)=>{next();}
+  store.dispatch('account/relogin',{}).then(
+    ()=>{next();}
   ).catch(err => {
       console.log(err);
   }) 

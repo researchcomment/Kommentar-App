@@ -131,15 +131,7 @@ const actions = {
         console.log(doi)
         //version 2
         //找到userkey
-        let userKey = await firebase.database().ref('users').once('value').then((snapshot) => {
-            var result = null;
-            snapshot.forEach((childSnapshot) => {
-                if(author === childSnapshot.val().username){
-                    result = childSnapshot.key;
-                }
-            })
-            return result
-        })
+        let userKey = firebase.auth().currentUser.uid;
         var aData = new Date();//utc
         //uhrzeit, die Zeit von verschiedenen Regionen anzupassen.
         const value = aData.getFullYear() + "-" + (aData.getMonth() + 1) + "-" + aData.getDate();
@@ -170,25 +162,6 @@ const actions = {
                     console.log(error.message);
                 });
            
-        //firebase.database().ref('doi_repository/' + newDoi_key + '/comments').set(newComent)   
-        /*
-        firebase.database().ref('doi_repository').push(newComent)
-            .then((data) => {
-                //读取一次当前用户在DB中的信息,并且更新用户信息中的comments目录
-                firebase.database().ref('/users/' + userKey).once('value').then((snapshot) => {
-                    var oldComments = snapshot.child('comments');
-                    var newComments = JSON.parse(JSON.stringify(oldComments.val()));
-                    //这里评论的类型需要加工     
-                    newComments[data.key] = "defaultType";
-                    //这里直接更新
-                    firebase.database().ref('/users/' + userKey + '/comments').set(newComments)
-                })
-            })
-            .catch((error) => {
-                //for debug only, will be finished later
-                console.log(error.message);
-            }).key;
-        */
     },
 
     //load comments for work from realtime Database
@@ -196,23 +169,6 @@ const actions = {
     //防止随后加入新的不同操作，这里暂时分开写
     async loadUnOfficialComments({ commit, state }, { doi, rankType, username}) {
         //rankType: 'submittime', 'onlyfromCurrentUser'
-        //首先每次调用此方法的时候，应该在DB收集所有doi为给入doi的comments条目
-        /*
-        let doiKey = await firebase.database().ref('doi_repository').once('value').then((snapshot) => {
-            var tempresult = null;
-            snapshot.forEach((childSnapshot) => {
-                var child_doi_nr = childSnapshot.val().doi_nr;
-                var childKey = childSnapshot.key;
-                if (child_doi_nr === doi) {
-                    tempresult = childSnapshot.key;
-                }
-            })
-            return tempresult;
-        })
-        
-       
-        if(doiKey){
-        */
         let result=[];  
         let doiKey=doi.replace(".","'");
         result = await firebase
@@ -250,23 +206,8 @@ const actions = {
 
     async loadOfficialComments({ commit, state }, { doi, rankType, username}) {
         //rankType: 'submittime', 'onlyfromCurrentUser'
-        //首先每次调用此方法的时候，应该在DB收集所有doi为给入doi的comments条目
-        /*
-        let doiKey = await firebase.database().ref('doi_repository').once('value').then((snapshot) => {
-            var result = null;
-            snapshot.forEach((childSnapshot) => {
-                var child_doi_nr = childSnapshot.val().doi_nr;
-                var childKey = childSnapshot.key;
-                if (child_doi_nr === doi) {
-                    result = childSnapshot.key;
-                }
-            })
-            return result;
-        })
-        */
       
        let doiKey=doi.replace(".","'");
-       console.log("d")
         let result=[];
             result = await firebase
             .database()

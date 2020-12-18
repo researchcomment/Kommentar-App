@@ -68,7 +68,8 @@ async function get_worklist(keyword, rows, offset, date, type) {
             "&rows=" + cache + "&select=DOI,title,author" + "&offset=" + offset;*/
         var filter_type = type.map(x => "type:" + x).join(',');
         var search_url = url + "select=DOI,title,author&query=" + keyword + "&filter=from-update-date:" + datefrom +
-            ",until-update-date:"  + dateto +","+ filter_type + "&rows=" + cache + "&offset=" + cachebegin;
+            ",until-update-date:"  + dateto +","+ filter_type + "&rows=" + cache + "&offset=" + cachebegin
+            +"&mailto=projectbs2020.commit@gmail.com"
         console.log(search_url);
         let returnValue = {
             list: [],
@@ -108,6 +109,7 @@ const actions = {
         //set the information to the state,filter it into title author and doi(may changed from google firebase side)
         //commit('setlist',list)
         //give the first 10 information(Todo), can reuse changepage
+        
         let pagefrom = 0;
         let pageto = 10;
         if (from)

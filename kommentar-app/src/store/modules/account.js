@@ -26,58 +26,60 @@ const actions = {
 
         //when everything ok, update inform//get information from google firebase backend
         //when username does not compare to the password, return false and reason
-        return firebase
+        return firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL)
+        .then(function() {
+            // Existing and future Auth states are now persisted in the current
+            // session only. Closing the window would clear any existing state even
+            // if a user forgets to sign out.
+            // ...
+            // New sign-in will be persisted with session persistence.
+            return firebase
             .auth()
             .signInWithEmailAndPassword(username, password)
-            .then(async function (response) {  
+            .then(async function ({user}) {  
+                console.log(user)
                 //cache account information
-                window.localStorage.setItem('username', username);
-                result=await dispatch('relogin',{username}).then(
-                    (result)=>{return result}
-                ).catch(err => {
+                result=await firebase.database().ref('users/'+user.uid+'/role').once('value').then((role) => {
+                    commit("setrole", role.val()); 
+                    commit("setusername", username);
+                }).catch(err => {
                     console.log(err);
-                }) 
-                return result;
-                
+                });
+                console.log(result)
+                return result;  
             })
             .catch(error => {
                 commit("setError", error.message);
             });
-    },
-    async relogin({ commit, state }, { username }) {
-
-        //when everything ok, update inform//get information from google firebase backend
-        //when username does not compare to the password, return false and reason
-         //cache account information
-        commit("setusername", username);
-
-        
-        return firebase.database().ref('users').once('value').then((snapshot) => {
-            var result = null;
-            snapshot.forEach((childSnapshot) => {
-                if(username === childSnapshot.val().username){
-                    result = childSnapshot.val().username;
-                    let role=childSnapshot.val().role;
-                    commit("setrole", role);
-                    return result;
-                }
-            })
-            return result; 
-        }).catch(err => {
-                console.log(err);
         })
-            
-
-        
+        .catch(function(error) {
+            // Handle Errors here.
+            var errorCode = error.code;
+            var errorMessage = error.message;
+        });
+       
     },
-    
+   
+    async relogin({ commit, state,dispatch }, { }){
+        let user=firebase.auth().currentUser;
+        console.log(user);
+        if (user){
+            commit ('setusername',user.email);
+            return firebase.database().ref('users/'+user.uid+'/role').once('value').then((role) => {
+                commit("setrole", role.val()); 
+            }).catch(err => {
+                console.log(err);
+            });
+        }
+        return;
+    },
     logout ({ commit}) {
         //logout action in firebase, return a promise
         firebase
         .auth()
         .signOut()
         .then(() => {
-            window.localStorage.removeItem('username');  //delete cached account information
+           
             commit('setrole',null)
             commit('setusername',null)
         })
@@ -92,20 +94,20 @@ const actions = {
         return firebase
             .auth()
             .createUserWithEmailAndPassword(username, password)
-            .then(response => {
-                console.log('true')
-                commit("setusername", username);
+            .then(({user}) => {
                 
-                //初始化DB中的用户信息                
+                commit("setusername", username);
+                commit("setrole", ['default'])      
                 var entry = {
                     username: username,
                     role: ['default'],
                     email: username, 
                 }
-               
-                firebase.database().ref('users').push(entry)
+                
+                firebase.database().ref('users/'+user.uid).set(entry);
+
             })
-            .catch(error => {
+            .catch((error) => {
                 console.log('false');
                 commit("setError", error.message);
             });
