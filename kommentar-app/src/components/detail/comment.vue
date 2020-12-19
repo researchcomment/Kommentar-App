@@ -88,12 +88,16 @@ Vue.use(Antd)
                 alreadySendLikes:false,    // Can't repeat likes 
                
                 comment:this.commentFromParent, 
-               //! Sample Comment FOR TEST 改完注释调
+               
+               //! Sample Comment FOR TEST 
                /* comment: {
                     UID:"MAKAVIVZSVSDFSDF",    // UID for comment 
                     PermanentID:"",    // '' or 'ASDASDAS'
                     type:"unofficial",    // "official", "unofficial"
-                    status:[],    // ["in Review", "ask for PID",...] 
+                    status:{
+                        "Review":true,
+                        "PID":false
+                    },  
                     active:true,    // the Admin can hide the comments
                     author:this.commentFromParent.author,
                     content:this.commentFromParent.content,    // the comment is in html form 
@@ -115,7 +119,11 @@ Vue.use(Antd)
             },
 
             isResearcher(){
-                return (this.$store.state.account.role.indexOf("Reacher"))>-1;
+                var login = this.$store.state.account.role;
+                if(login){
+                    return (this.$store.state.account.role.indexOf("Reaseacher"))>-1;
+                }
+                return false;
             },
 
             isAuthor(){
@@ -127,7 +135,7 @@ Vue.use(Antd)
              */
             isModerator(){
 
-                var login = this.$store.state.account.username;
+                var login = this.$store.state.account.role;
 
                 if(login){
                     return (this.$store.state.account.role.indexOf("Moderator"))>-1; // check whether the logged user is Moderator
@@ -145,7 +153,7 @@ Vue.use(Antd)
 
                 // Duplicate application is prohibited
                 // in Reviewing => disable the Button
-                return this.comment.status.indexOf("in Review") > -1 ;
+                return this.comment.status["Review"] ;
 
             },
 
@@ -156,7 +164,7 @@ Vue.use(Antd)
                 
                 // Duplicate application is prohibited
                 // already requested => disable the Button
-                return this.comment.status.indexOf("ask for PID") > -1 ;
+                return this.comment.status["PID"];
                 
             },
 
@@ -164,41 +172,62 @@ Vue.use(Antd)
 
         methods: {
             /**
-             * ! 涉及后端交互
              * send review Request to firebase
              */
             askForReview(){
 
-                // JJY : 暂时前端应该已经拦截了role不对的 已经在review的 应该不会发生重复提交申请的问题
-                //TODO this.$store.dispatch("review",this.comment.UID);
+                var request = {
+                    uid:this.comment.UID,
+                    doi:this.comment.doi_nr,
+                    requestType:"Review",
+                }
+    
+                var result = this.$store.dispatch("askFromUser/askForRequest",request)
+                                                .catch(err => {
+                                                            console.log(err);
+                                                         });
                 
-                this.comment.status.push("in Review");
+                this.comment.status.push("Review");
 
             },
 
             /**
-             * ! 涉及后端交互
              * ask firebase for PermanentID
              */
             askForPID(){
                 
-                // JJY : 暂时前端应该已经拦截了role不对的 已经有PID的 已经申请PID的
-                //TODO this.$store.dispatch("askForPID",this.comment.UID);
+                var request = {
+                    uid:this.comment.UID,
+                    doi:this.comment.doi_nr,
+                    requestType:"PID",
+                }
+                
+                var result = this.$store.dispatch("askFromUser/askForRequest",request)
+                                                .catch(err => {
+                                                            alert.log(err);
+                                                         });
 
-                this.comment.status.push("ask for PID");
+                this.comment.status.push("PID");
             },
 
             /**
-             * ! 涉及后端交互
              * send delete Request to firebase
              */
             deleteComment(){
-                //TODO this.$store.dispatch("delete",this.comment.UID);
+
+                var request = {
+                    uid:this.comment.UID,
+                    doi:this.comment.doi_nr,
+                }
+            
+                var result = this.$store.dispatch("askFromUser/delete",request)
+                                                .catch(err => {
+                                                            alert.log(err);
+                                                         });
                 this.$emit("refresh");
             },
            
             /**
-             * ! 涉及后端交互
              * When the user clicks the like button, send like request to firebase
              */
             like() {
@@ -207,14 +236,22 @@ Vue.use(Antd)
                     this.alreadySendLikes =true;    // Can't repeat likes
                     this.comment.likes += 1;
                        
-                    //TODO this.$store.dispatch("like",this.comment.UID);
+                    var request = {
+                        uid:this.comment.UID,
+                        doi:this.comment.doi_nr,
+                        attribute:"likes",
+                    };
+
+                    var result =this.$store.dispatch("askFromUser/setAttribute",request)
+                                .catch(err => {
+                                            alert.log(err);
+                                            });
                                               
                 }
                 
             },
 
              /**
-             * ! 涉及后端交互
              * When the user clicks the like button, send dislike request to firebase
              */
             dislike() {
@@ -223,19 +260,37 @@ Vue.use(Antd)
                     this.alreadySendLikes =true;    // Can't repeat dislikes
                     this.comment.dislikes += 1;   
                     
-                    //TODO this.$store.dispatch("dislike",this.comment.UID);
+                    var request = {
+                        uid:this.comment.UID,
+                        doi:this.comment.doi_nr,
+                        attribute:"dislikes",
+                    };
+
+                    var result = this.$store.dispatch("askFromUser/setAttribute",request)
+                                .catch(err => {
+                                            alert.log(err);
+                                            });
 
                 }
             },
 
             /**
-             * ! 涉及后端交互
              * The Admin ask firebase to hide/unhide the comment
              */
             setVisiblity(){
                 this.comment.active = !this.comment.active;
-
-                //TODO this.$store.dispatch("setVisiblity",this.comment.UID);
+                
+                var request = {
+                        uid:this.comment.UID,
+                        doi:this.comment.doi_nr,
+                        attribute:"aktive",
+                        value:this.comment.active,
+                };
+                
+                var result = this.$store.dispatch("askFromUser/setAttribute",request)
+                        .catch(err => {
+                                    alert.log(err);
+                                    });
 
             }
         },

@@ -25,6 +25,11 @@
                         <p @click="seeDetail(comment.doi_nr)">{{comment.doi_nr}}</p>
                     </a-descriptions-item>
 
+                    <a-descriptions-item label="Visibility">
+                        <p v-show="comment.active">Yes</p>
+                        <p v-show="!comment.active">No</p>
+                    </a-descriptions-item>
+
                     <a-descriptions-item label="Request">
                         <a-tag color="purple" @click="visiblePID=true">PID</a-tag>
                     </a-descriptions-item>

@@ -7,11 +7,6 @@
 
                 <a-menu theme="dark" mode="inline" v-model="menuKey" >
 
-                    <a-menu-item key="allUser">
-                        <a-icon type="user" />
-                        <span>All User</span>
-                    </a-menu-item>
-
                     <a-menu-item key="dr">
                         <span>default => Reseacher</span>
                     </a-menu-item>
@@ -47,43 +42,9 @@
                 <a-layout-content
                     :style="{ margin: '24px 16px', padding: '24px', background: '#fff', minHeight: '280px' }">
                     
-                    <!-- All User -->
                     <!-- Filter -->
                     <input type="text" style="margin-left:10vh" v-model="searchText" v-show="menuKey[0]=='allUser'">
-                    <a-table  :data-source="filterUser" rowKey="username" v-show="menuKey[0]=='allUser'" >
-                        
-                        <!-- User Name -->
-                        <a-table-column key="username" title="User Name" data-index="username" />
-                        
-                        <!-- Role -->
-                        <a-table-column key="role" title="Role" data-index="role">
-                            <template slot-scope="role">
-                                <span>
-                                    <a-tag v-for="tag in role" :key="tag" :color="getColor(tag)">{{ tag }}</a-tag>
-                                </span>
-                            </template>
-                        </a-table-column>
-
-                        <!-- Update Action -->
-                        <a-table-column key="update" title="Update">
-                            <template slot-scope="text, user">
-                                <span>
-
-                                    <a>Researcher</a>
-                                    <a-divider type="vertical" />
-                                        
-                                    <template  v-if="user.role.indexOf('Researcher')>-1">
-                                        <a>Reviewer</a>
-                                        <a-divider type="vertical" />
-                                        <a>Moderator</a>
-                                        <a-divider type="vertical" />
-                                        <a>Admin</a>
-                                    </template>
-                                </span>
-                            </template>
-                        </a-table-column>
-                    </a-table>
-
+                
                     <!-- Requests -->
                     <a-table  :data-source="userList[menuKey[0]]" rowKey="username"  v-show="menuKey[0]!='allUser'">
                         
@@ -127,18 +88,10 @@
         data(){
             return{
                 collapsed: false,
-                menuKey:["allUser"],
+                menuKey:["dr"],
                
                 searchText:"",
                 userList:{
-                    allUser:[
-                        {   username:"test1",
-                            role:["default"],
-                        },
-                        {   username:"abc",
-                            role:['default', 'Researcher', 'Reviewer'],
-                        }
-                    ],
                     dr:[
                         {   username:"dr",
                             role:["default"],
@@ -185,7 +138,6 @@
              * @returns true, if the current user is Admin
              */
             isAdmin(){
-                //return true; //! FOR TEST
 
                 var login = this.$store.state.account.username;
 
@@ -232,43 +184,68 @@
         methods:{
             
             /**
-             * ! 涉及后端交互
              * Request the userList from background
              */
             getUserList(){
 
                 // get userList from DB
-                // TODO:this.$store.....getUserList();
-                //要么给我分类搞好  要么给我有from to的
+                var result = this.$store.dispatch("adminAktion/getUserList",{toRole:"Researcher"})
+                            .catch(err => {
+                                        alert.log(err);});
+              
+                for(var key in result){
+                    var user = result[key];
+                    user.key=key;
+                    this.userList.dr.push(user);
 
-                //! FOR TEST
-                // this.userList.allUser = [
-                //     {   username:"test1",
-                //         role:["default"],
-                //     },
-                //     {   username:"abc",
-                //         role:['default', 'Researcher', 'Reviewer'],
-                //     }
-                // ];
+                }
+
+                result = this.$store.dispatch("adminAktion/getUserList",{toRole:"Reviewer"})
+                            .catch(err => {
+                                        alert.log(err);});
+              
+                for(var key in result){
+                    var user = result[key];
+                    user.key=key;
+                    this.userList.rr.push(user);
+
+                }
+
+                result = this.$store.dispatch("adminAktion/getUserList",{toRole:"Moderator"})
+                            .catch(err => {
+                                        alert.log(err);});
+              
+                for(var key in result){
+                    var user = result[key];
+                    user.key=key;
+                    this.userList.rm.push(user);
+
+                }
                 
-                // this.userList.dr = [
-                //     {   username:"test1",
-                //         role:["default"],
-                //     },
-                //     {   username:"abc",
-                //         role:['default', 'Researcher', 'Reviewer'],
-                //     }
-                // ];
+                result = this.$store.dispatch("adminAktion/getUserList",{toRole:"Admin"})
+                            .catch(err => {
+                                        alert.log(err);});
+              
+                for(var key in result){
+                    var user = result[key];
+                    user.key=key;
+                    this.userList.ra.push(user);
+
+                }
+
 
             },
 
             /**
-             * ! 涉及后端交互
              * Request the background to change the role of users
              */
             updateRole(agree,user){
                
-                // TODO:this.$store.....updateRole(agree,user);
+                this.$store.dispatch("adminAktion/updateRole",{toRole:"Admin",
+                                                                flag:agree,
+                                                                    userKey:user.key,})
+                            .catch(err => {
+                                        alert.log(err);});
             
             },
 
