@@ -67,7 +67,6 @@ const router = new Router({
 router.beforeEach(
   (to, from, next)=> {
  
-  console.log( firebase.auth().currentUser);
   firebase.auth().onAuthStateChanged((user) => {
 		if (user) {
 			store.dispatch('account/relogin',{}).then(

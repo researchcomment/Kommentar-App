@@ -10,7 +10,7 @@
         <li>
           <span class="iconfont icon-jiaose"></span>
           <div class="texts">
-            Role: {{role}}
+            
           </div>
         </li>
 
@@ -116,7 +116,7 @@ export default {
     },
     openReviewer(){
       if(this.$router.currentRoute.path!="/Review"){
-        this.$router.push('/Personal');
+        this.$router.push('/Review');
       }
       else{
         this.openNotification();
