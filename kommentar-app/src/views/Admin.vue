@@ -43,13 +43,14 @@
                     :style="{ margin: '24px 16px', padding: '24px', background: '#fff', minHeight: '280px' }">
                     
                     <!-- Filter -->
-                    <input type="text" style="margin-left:10vh" v-model="searchText" v-show="menuKey[0]=='allUser'">
+                    <input type="text" style="margin-left:10vh" v-model="searchText">
                 
                     <!-- Requests -->
-                    <a-table  :data-source="userList[menuKey[0]]" rowKey="username"  v-show="menuKey[0]!='allUser'">
+                    <a-table  :data-source="userList[menuKey[0]]" rowKey="username" @onFilter="filter(username)">
                         
                         <!-- User Name -->
                         <a-table-column key="username" title="User Name" data-index="username" />
+
                         
                         <!-- Role -->
                         <a-table-column key="role" title="Role" data-index="role">
@@ -91,43 +92,8 @@
                 menuKey:["dr"],
                
                 searchText:"",
-                userList:{
-                    dr:[
-                        {   username:"dr",
-                            role:["default"],
-                        },
-                        {   username:"dr1",
-                            role:['default', 'Researcher', 'Reviewer'],
-                        }
-                    ],
-                    rr:[
-                        {   username:"rr1",
-                            role:["default"],
-                        },
-                        {   username:"rr",
-                            role:['default', 'Researcher', 'Reviewer'],
-                        }
-                    ],
-                    rm:[
-                        {   username:"rm1",
-                            role:["default"],
-                        },
-                        {   username:"rm",
-                            role:['default', 'Researcher', 'Reviewer'],
-                        }
-                    ],
-                    ra:[
-                        {   username:"test1",
-                            role:["default"],
-                        },
-                        {   username:"abc",
-                            role:['default', 'Researcher', 'Reviewer'],
-                        }
-                    ],
-                    
-
-                },
-                changedUserList:new Set(),
+                userList:{},
+                
                 aftersearch: false,
             }
         },
@@ -150,18 +116,18 @@
 
             },
             filterUser(){
-                if(!this.searchText){
-                    return this.userList["allUser"];
-                }
-                else{
-                    var list=[];
-                    for(var user of this.userList["allUser"]){
-                        if(user.username.indexOf(this.searchText) > -1){
-                            list.push(user);
-                        } 
-                    }
-                    return list;
-                }
+                // if(!this.searchText){
+                //     return this.userList["allUser"];
+                // }
+                // else{
+                //     var list=[];
+                //     for(var user of this.userList["allUser"]){
+                //         if(user.username.indexOf(this.searchText) > -1){
+                //             list.push(user);
+                //         } 
+                //     }
+                //     return list;
+                // }
             }
 
         },
@@ -191,8 +157,10 @@
                 // get userList from DB
 
                 this.userList={
+                    dr:[],
                     rm:[],
-
+                    rr:[],
+                    ra:[],
                 };
 
                 this.$store.dispatch("adminAktion/getUserList",{toRole:"Researcher"}).then((result)=>{
@@ -226,7 +194,7 @@
                                 console.log(err);});
               
                 
-                this.$store.dispatch("adminAktion/getUserList",{toRole:"Moderator"}).then((result)=>{
+                this.$store.dispatch("adminAktion/getUserList",{toRole:"Admin"}).then((result)=>{
                     for(var key in result){
                         var user = result[key];
                         user.key=key;
@@ -243,12 +211,24 @@
              * Request the background to change the role of users
              */
             updateRole(agree,user){
+                var role="";
+                if(this.menuKey=="dr"){
+                    role="Researcher";
+                }
+                else if(this.menuKey=="rm"){
+                   role="Moderator";     
+                }
+                else if(this.menuKey=="rr"){
+                    role="Reviewer";
+                }
+                else if(this.menuKey=="ra"){
+                    role="Admin";
+                }
                
-                this.$store.dispatch("adminAktion/updateRole",{toRole:"Admin",
+                this.$store.dispatch("adminAktion/updateRole",{toRole:role,
                                                                 flag:agree,
-                                                                    userKey:user.key,})
-                            .catch(err => {
-                                        alert.log(err);});
+                                                                    userKey:user.key,});
+                
             
             },
 
@@ -260,6 +240,7 @@
              * @returns boolean   - true, if it related to search text
              */
             filter(userName){
+                
                 return userName.indexOf(this.searchText) > -1 ;
             },
 

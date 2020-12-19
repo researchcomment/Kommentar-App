@@ -128,7 +128,6 @@ export default {
       }
     },
     openPersonal(){
-      //this.$router.push('/Personal');
       if(this.$router.currentRoute.path!="/Personal"){
         this.$router.push('/Personal');
       }
@@ -139,7 +138,7 @@ export default {
 
     openNotification() {
       var msg = "You are already on this page";
-      this.$notification[type]({
+      this.$notification["warning"]({
         message: 'Oops',
         description:msg,
       });
