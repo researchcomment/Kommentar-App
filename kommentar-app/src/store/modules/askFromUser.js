@@ -42,10 +42,9 @@ const actions = {
             setvalue=await firebase.database().ref('doi_repository/' + doiKey + '/comments/' + uid+"/"+attribute)
             .once('value')
             .then((valuedb) => {
-                if (attribute=="likes"){
-                    return valuedb.val()+1;
-                }
-                return valuedb.val()-1;
+                
+                return valuedb.val()+1;
+               
             })
         }
         firebase.database().ref('doi_repository/' + doiKey + '/comments/' + uid+"/"+attribute).set(setvalue);
