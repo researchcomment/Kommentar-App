@@ -14,7 +14,10 @@ const actions = {
         return firebase.database().ref('updateRole/'+toRole)
         .once('value')
         .then((userinfo)=>{
-            return (userinfo.val())
+            if (userinfo.val())
+                return (userinfo.val())
+            else
+                return {}
         }).catch((error) => {
             //for debug only, will be finished later
             console.log(error.message);
