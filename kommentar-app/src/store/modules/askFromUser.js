@@ -17,7 +17,7 @@ const actions = {
         .then((commentinfo) => {
             if (!commentinfo.val().status[requestType])
             {
-                firebase.database().ref(requestType+'/' + uid).set(commentinfo);
+                firebase.database().ref(requestType+'/' + uid).set(commentinfo.val());
                 firebase.database().ref('doi_repository/' + doiKey + '/comments/' + uid+"/status/"+requestType).set(true);
             }
         }).catch((error) => {
@@ -49,9 +49,9 @@ const actions = {
             .once('value')
             .then((valuedb) => {
                 if (attribute=="likes"){
-                    return valuedb+1;
+                    return valuedb.val()+1;
                 }
-                return valuedb-1;
+                return valuedb.val()-1;
             })
         }
         firebase.database().ref('doi_repository/' + doiKey + '/comments/' + uid+"/"+attribute).set(setvalue);
