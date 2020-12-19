@@ -14,6 +14,7 @@
           </div>
         </li>
 
+        <!-- Admin -->
         <li v-show="isAdmin" @click="openAdmin">
           <span class="iconfont icon-biaoqiankuozhan_guanli-159"></span>
           <div class="texts">
@@ -26,6 +27,14 @@
           <span class="iconfont icon-biaoqiankuozhan_guanli-159"></span>
           <div class="texts">
             Reviewer
+          </div>
+        </li>
+
+        <!-- Personal Information -->
+        <li @click="openPersonal">
+          <span class="iconfont icon-biaoqiankuozhan_guanli-159"></span>
+          <div class="texts">
+            Personal Information
           </div>
         </li>
 
@@ -89,14 +98,49 @@ export default {
     },
     logout(){
       this.$store.dispatch('account/logout');
+      this.$message({
+          type: 'success',
+          message: "Logout successfully. Goodbye!",
+          duration: 1000
+      });
       this.$emit('logout');
     },
     openAdmin(){
-      this.$router.push('/Admin');
+      if(this.$router.currentRoute.path!="/Admin"){
+        this.$router.push('/Admin');
+      }
+      else{
+        this.openNotification();
+      }
+      
     },
     openReviewer(){
-      this.$router.push('/Review');
-    }
+      if(this.$router.currentRoute.path!="/Review"){
+        this.$router.push('/Personal');
+      }
+      else{
+        this.openNotification();
+      }
+    },
+    openPersonal(){
+      //this.$router.push('/Personal');
+      if(this.$router.currentRoute.path!="/Personal"){
+        this.$router.push('/Personal');
+      }
+      else{
+        this.openNotification();
+      }
+    },
+
+    openNotification() {
+      var msg = "You are already on this page";
+      this.$notification[type]({
+        message: 'Oops',
+        description:msg,
+      });
+    },
+  
+    
   }
 
 }

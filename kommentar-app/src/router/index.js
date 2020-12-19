@@ -5,6 +5,7 @@ import Search from  '../views/Search.vue'
 import Detail from  '../views/Detail.vue'
 import Admin from  '../views/Admin.vue'
 import Reviewer from  '../views/Reviewer.vue'
+import Personal from  '../views/Personal.vue'
 import store from '@/store'
 import firebase from "firebase/app";
 Vue.use(Router)
@@ -43,6 +44,11 @@ const router = new Router({
       path: '/Review',
       name: 'reviewer',
       component: Reviewer
+    },
+    {
+      path: '/Personal',
+      name: 'Personal',
+      component: Personal
     },
     {
       path: '*',

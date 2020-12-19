@@ -33,7 +33,7 @@ export default {
 
   computed: {
     
-    username: function () {
+    username() {
       return this.$store.state.account.username;
     },
 
@@ -54,33 +54,7 @@ export default {
   
   watch:{
     
-    /**
-     * Monitor login/logout status and prompt success message
-     * 
-     * @param newName  - the current user name
-     * @param oldName
-     */
-    username(newName,oldName){
-
-      // Login Action
-      if((!oldName)&&newName){
-        this.$message({         
-          type: 'success',
-          message: "Login successfully. Welcome!",
-          duration: 1000
-        });
-      }
-
-      // Logout Action
-      if((!newName)&&oldName){
-        this.$message({
-          type: 'success',
-          message: "Logout successfully. Goodbye!",
-          duration: 1000
-        });
-      }
-
-    },
+    
   }
 }
 </script>
