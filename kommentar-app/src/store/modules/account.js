@@ -28,8 +28,7 @@ const actions = {
 
         //when everything ok, update inform//get information from google this.$this.$firebase backend
         //when username does not compare to the password, return false and reason
-        return firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL)
-        .then(function() {
+      
             // Existing and future Auth states are now persisted in the current
             // session only. Closing the window would clear any existing state even
             // if a user forgets to sign out.
@@ -40,25 +39,19 @@ const actions = {
             .signInWithEmailAndPassword(username, password)
             .then(async function ({user}) {  
                 //cache account information
-                result=await firebase.database().ref('users/'+user.uid+'/role').once('value').then((role) => {
+                let result=await firebase.database().ref('users/'+user.uid+'/role').once('value').then((role) => {
                     commit("setrole", role.val()); 
                     commit("setusername", username);
                 }).catch(err => {
                     console.log(err);
                 });
-                console.log(result)
+                commit("setError", null);
                 return result;  
             })
-            .catch(error => {
+            .catch((error) => {
                 commit("setError", error.message);
             });
-        })
-        .catch(function(error) {
-            // Handle Errors here.
-            var errorCode = error.code;
-            var errorMessage = error.message;
-            alert( error.message);
-        });
+       
        
     },
    
@@ -103,13 +96,20 @@ const actions = {
                     username: username,
                     role: ['default'],
                     email: username, 
+                    messagebox:null,
+                    update:{
+                        Researcher:false,
+                        Reviewer:false,
+                        Moderator:false,
+                        Admin:false,
+                    }
+
                 }
                 
                 firebase.database().ref('users/'+user.uid).set(entry);
-
+                commit("setError", null);
             })
             .catch((error) => {
-                console.log('false');
                 commit("setError", error.message);
             });
 
