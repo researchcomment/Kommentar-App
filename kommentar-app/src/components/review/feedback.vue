@@ -25,6 +25,10 @@
                         <p @click="seeDetail(comment.doi_nr)">{{comment.doi_nr}}</p>
                     </a-descriptions-item>
 
+                    <a-descriptions-item label="Visibility">
+                        {{comment.active}}
+                    </a-descriptions-item>
+
                     <a-descriptions-item label="Request">
                         <a-tag color="cyan" @click="visibleFeedback=true">Review</a-tag>
                     </a-descriptions-item>

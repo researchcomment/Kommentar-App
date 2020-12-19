@@ -104,6 +104,11 @@ export default {
           duration: 1000
       });
       this.$emit('logout');
+      var router=this.$router.currentRoute.name;
+      console.log(router);
+      if(router != "search" || router != "home"){
+        this.$router.back(-1);
+      }
     },
     openAdmin(){
       if(this.$router.currentRoute.path!="/Admin"){

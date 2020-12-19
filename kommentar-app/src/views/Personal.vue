@@ -1,5 +1,5 @@
 <template>
-    <div v-if="username">
+    <div>
         <h1>Personal Information</h1>
         <p>
             <b>Name:</b>
