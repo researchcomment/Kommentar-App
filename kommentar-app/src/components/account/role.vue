@@ -94,13 +94,6 @@
 
         </div>
 
-        <!-- <a-modal v-model="visible" title="Basic Modal" @ok="handleOk">
-            <p>Some contents...</p>
-            <p>Some contents...</p>
-            <p>Some contents...</p>
-        </a-modal> -->
-     
-
     </div>
 </template>
 
@@ -126,28 +119,11 @@ import Antd from 'ant-design-vue'
             },
 
             update() {
-                return {
-                    "Researcher":false,
-                    "Moderator":false,
-                    "Admin":false,
-                    "Reviewer":false,
-                }
                 return this.$store.state.account.update;
             },
 
         },
 
-        mounted(){
-
-            // this.update = {
-            //         "Researcher":true,
-            //         "Moderator":false,
-            //         "Admin":false,
-            //         "Reviewer":false,
-            //     }
-            // this.update=this.$store.state.account.update;
-
-        },
     
         methods:{
 
@@ -159,7 +135,13 @@ import Antd from 'ant-design-vue'
              */
             updateRole(role){
                 this.$store.dispatch("askFromUser/updateRole",{toRole:role});
-                //this.update[role]=true;
+                this.update[role]=true;
+                this.$notification.open({
+                        message: 'Success',
+                        description:
+                        'Your Request has been submitted.',
+                        icon: <a-icon type="smile" style="color: #108ee9" />,
+                    });
 
             },
 
