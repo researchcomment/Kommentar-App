@@ -90,7 +90,7 @@
     .workimg{
         width: 30vw;
         top: 0vh;
-        padding: 1vh;
+        padding: 3vw;
         padding-right: 0;
     }
 </style>

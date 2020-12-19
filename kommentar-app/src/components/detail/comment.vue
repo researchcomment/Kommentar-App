@@ -1,8 +1,9 @@
 <template>
+<div>
     <a-comment v-if="comment.active || isAdmin">
         <template slot="actions" >
             <!-- the number of likes -->
-            <span key="comment-basic-like">
+            <span key="comment-basic-like" class="action">
                 <a-tooltip title="Like">
                 <a-icon type="like" :theme="action === 'liked' ? 'filled' : 'outlined'" @click="like"/>
                 </a-tooltip>
@@ -12,7 +13,7 @@
             </span>
 
             <!-- the number of dislikes -->
-            <span key="comment-basic-dislike">
+            <span key="comment-basic-dislike" class="action">
                 <a-tooltip title="Dislike">
                 <a-icon
                     type="dislike"
@@ -24,27 +25,33 @@
                 {{ comment.dislikes }}
                 </span>
             </span>
-            <span key="comment-basic-reply-to">Reply to</span>
 
+            <div v-if = "isAdmin"  class="auactions" @click="setVisiblity" style="margin-right:0.7vw">
+                <a-icon type="eye-invisible" v-if="comment.active"/>
+                <a-icon type="eye" v-if="!comment.active"/>
+            </div>
             <!-- Editing Options for Author -->
-            <div v-if = "isAuthor">
-                
-                <a-button type="dashed" :disabled="inReview" @click="askForReview">Review</a-button>
+            <div v-if = "isAuthor" class="actionb">
+                <!-- popfirm -->
+                <div id="components-popover-demo-placement">
+                    <div :style="{whiteSpace: 'nowrap'}">
+                        <a-popover placement="bottomLeft" v-model="visible" title="Options" trigger="click">
+                             
+                            <div slot="content" >
+                                <div :class="inReview?'auactionstabu':'auactions'"  @click="askForReview">Ask For Review</div>
 
-                <a-button type="dashed"  v-if="(isResearcher) && (!comment.PermanentID)"  :disabled="inRequest" @click="askForPID">Ask For PermanentID</a-button>
+                                <div :class="inRequest?'auactionstabu':'auactions'" v-if="(isResearcher) && (!comment.PermanentID)" @click="askForPID">Ask For PermanentID</div>
 
-                <a-icon type="delete" theme="twoTone" two-tone-color="#eb2f96"  @click="deleteComment" />
-         
+                                <div class="auactions" @click="deleteComment">Delete <a-icon type="delete" theme="twoTone" two-tone-color="#eb2f96"/></div>
+                                
+                                <!-- Editing Options for Admin : hide/unhide the comment -->
+                                
+                            </div>
+                            <i class="iconfont icon-xiaoxiguanli-quanbux" @click="hide" style="cursor:pointer"></i>
+                        </a-popover>
+                    </div>
+                </div>
             </div>
-
-            <!-- Editing Options for Admin : hide/unhide the comment -->
-            <div v-if = "isAdmin">
-                <a-icon type="eye-invisible" v-if="comment.active" @click="setVisiblity"/>
-                <a-icon type="eye" v-if="!comment.active" @click="setVisiblity"/>
-            </div>
-            
-
-
         </template>
     
         <!-- the detail of this comment -->
@@ -66,8 +73,14 @@
             </a-tooltip>
 
             
-
+            
     </a-comment>
+    <!-- cover -->
+    <div :style="TheCover">
+                     
+	</div>
+</div>
+    
 </template>
 
 <script>
@@ -86,7 +99,8 @@ Vue.use(Antd)
             return {
                 action: null,
                 alreadySendLikes:false,    // Can't repeat likes 
-               
+                buttonWidth: 10,
+                visible: false,
                // comment:this.commentFromParent, 改完取消这行注释
                //! Sample Comment FOR TEST 改完注释调
                 comment: {
@@ -106,7 +120,15 @@ Vue.use(Antd)
                     likes: 0,
                     dislikes: 0,
                 },   
-
+                TheCover:{
+                    width: '100%',
+                    height: '100%',
+	                position: 'absolute',
+	                background: 'rgba(0,0,0,0.6)',
+	                opacity: '0.6',
+                    bottom: '0',
+                    display:'none',
+                },
             };
         },
 
@@ -169,6 +191,13 @@ Vue.use(Antd)
         },
 
         methods: {
+            /**
+             * 弹窗
+             */
+            hide() {
+                console.log(111);
+                this.visible = false;
+            },
             /**
              * ! 涉及后端交互
              * send review Request to firebase
@@ -242,7 +271,13 @@ Vue.use(Antd)
                 this.comment.active = !this.comment.active;
 
                 //TODO this.$store.dispatch("setVisiblity",this.comment.ID);
-
+                //show cover
+                if(this.$data.TheCover.display=='none'){
+                   this.$data.TheCover.display='block'; 
+                }else{
+                    this.$data.TheCover.display='none'; 
+                }
+                
             }
         },
 };
@@ -252,5 +287,27 @@ Vue.use(Antd)
 .avatarp{
     font-size: 2.5vw;
     line-height: 4.4vw;
+}
+#components-popover-demo-placement .ant-btn {
+  width: 5vw;
+  text-align: center;
+  padding: 0;
+  margin-right: 3vw;
+  margin-bottom: 3vw;
+}
+.auactions{
+    cursor: pointer;
+    height: 5vh;
+}
+.auactionstabu{
+    pointer-events: none;
+    height: 5vh;
+    text-decoration: line-through;
+}
+.actionb{
+    left: 10vw;
+}
+.ant-comment{
+    z-index: 500;
 }
 </style>
