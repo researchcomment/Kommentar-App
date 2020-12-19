@@ -74,7 +74,7 @@ const actions = {
         .then((userinfo)=>{
             if (!userinfo.val().update[toRole])
             {
-                firebase.database().ref('users/' + userKey+'/update'+toRole).set(true);
+                firebase.database().ref('users/' + userKey+'/update/'+toRole).set(true);
                 firebase.database().ref('updateRole/'+toRole+"/"+userKey).set(userinfo);
             }
         }).catch((error) => {

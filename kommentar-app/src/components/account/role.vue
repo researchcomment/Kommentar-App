@@ -4,12 +4,17 @@
 
         <!-- Role Request -->
         <h3>Update Role</h3>
+        <p>Role-Request in Checking</p>
+        <a-tag v-show="update['Researcher']">Researcher</a-tag>
+        <a-tag v-show="update['Moderator']">Moderator</a-tag>
+        <a-tag v-show="update['Reviewer']">Reviewer</a-tag>
+        <a-tag v-show="update['Admin']">Admin</a-tag>
+
         <p>I want to be a </p>
        
 
         <!-- Researcher Card -->
-       
-        <a-card hoverable style="width: 200px" v-if="role.indexOf('Researcher')<0"  @click="updateRole('Researcher')">
+        <a-card hoverable style="width: 200px" v-if="role.indexOf('Researcher')<0 && !update['Researcher']"  @click="updateRole('Researcher')">
             <img
             slot="cover"
             alt="example"
@@ -34,7 +39,7 @@
         <div v-show="role.indexOf('Researcher')>-1">
 
             <!-- Reviewer Card -->
-            <a-card hoverable style="width: 200px"  v-if="role.indexOf('Reviewer')<0" @click="updateRole('Reviewer')">
+            <a-card hoverable style="width: 200px"  v-if="role.indexOf('Reviewer')<0 && !update['Reviewer']" @click="updateRole('Reviewer')">
                 <img
                 slot="cover"
                 alt="example"
@@ -52,7 +57,7 @@
             </a-card>
 
             <!-- Moderator Card -->
-            <a-card hoverable style="width: 200px"  v-if="role.indexOf('Moderator')<0"  @click="updateRole('Moderator')">
+            <a-card hoverable style="width: 200px"  v-if="role.indexOf('Moderator')<0&& !update['Moderator']"  @click="updateRole('Moderator')">
                 <img
                 slot="cover"
                 alt="example"
@@ -70,7 +75,7 @@
             </a-card>
 
             <!-- Admin Card -->
-            <a-card hoverable style="width: 200px"  v-if="role.indexOf('Admin')<0"  @click="updateRole('Admin')">
+            <a-card hoverable style="width: 200px"  v-if="role.indexOf('Admin')<0 && !update['Admin']"  @click="updateRole('Admin')">
                 <img
                 slot="cover"
                 alt="example"
@@ -120,9 +125,30 @@ import Antd from 'ant-design-vue'
                 return this.$store.state.account.role;
             },
 
-        },
-        
+            update() {
+                return {
+                    "Researcher":false,
+                    "Moderator":false,
+                    "Admin":false,
+                    "Reviewer":false,
+                }
+                return this.$store.state.account.update;
+            },
 
+        },
+
+        mounted(){
+
+            // this.update = {
+            //         "Researcher":true,
+            //         "Moderator":false,
+            //         "Admin":false,
+            //         "Reviewer":false,
+            //     }
+            // this.update=this.$store.state.account.update;
+
+        },
+    
         methods:{
 
 
@@ -132,24 +158,8 @@ import Antd from 'ant-design-vue'
              * @param role - the role which the user selects
              */
             updateRole(role){
-                var msg = 'Do you want to update to the Role '+ role + '?';
-                //open a Modal
-                this.$confirm({
-                        title: "Update Role Request",
-                        content: msg,
-                        onOk() {
-                            console.log(role);
-                            // var result = this.$store.dispatch("askFromUser/updateRole",role)
-                            // .catch(err => {
-                            //         alert.log(err);
-                            //             });
-                            // return new Promise((resolve, reject) => {
-                            //     setTimeout(Math.random() > 0.5 ? resolve : reject, 1000);
-                            // }).catch(() => console.log('Oops errors!'));
-                        },
-                        onCancel() {},
-                    });
-
+                this.$store.dispatch("askFromUser/updateRole",{toRole:role});
+                //this.update[role]=true;
 
             },
 
