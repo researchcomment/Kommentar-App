@@ -220,10 +220,7 @@ Vue.use(Antd)
                     doi:this.comment.doi_nr,
                 }
             
-                var result = this.$store.dispatch("askFromUser/delete",request)
-                                                .catch(err => {
-                                                            alert.log(err);
-                                                         });
+                this.$store.dispatch("askFromUser/deleteComment",request);
                 this.$emit("refresh");
             },
            
@@ -242,10 +239,7 @@ Vue.use(Antd)
                         attribute:"likes",
                     };
 
-                    var result =this.$store.dispatch("askFromUser/setAttribute",request)
-                                .catch(err => {
-                                            alert.log(err);
-                                            });
+                    this.$store.dispatch("askFromUser/setAttribute",request);
                                               
                 }
                 
@@ -266,10 +260,7 @@ Vue.use(Antd)
                         attribute:"dislikes",
                     };
 
-                    var result = this.$store.dispatch("askFromUser/setAttribute",request)
-                                .catch(err => {
-                                            alert.log(err);
-                                            });
+                   this.$store.dispatch("askFromUser/setAttribute",request);
 
                 }
             },
@@ -287,10 +278,7 @@ Vue.use(Antd)
                         value:this.comment.active,
                 };
                 
-                var result = this.$store.dispatch("askFromUser/setAttribute",request)
-                        .catch(err => {
-                                    alert.log(err);
-                                    });
+                this.$store.dispatch("askFromUser/setAttribute",request);
 
             }
         },

@@ -186,53 +186,56 @@
             /**
              * Request the userList from background
              */
-            getUserList(){
+            async getUserList(){
 
                 // get userList from DB
-                var result = this.$store.dispatch("adminAktion/getUserList",{toRole:"Researcher"})
-                            .catch(err => {
-                                        alert.log(err);});
+
+                this.userList={
+                    rm:[],
+
+                };
+
+                this.$store.dispatch("adminAktion/getUserList",{toRole:"Researcher"}).then((result)=>{
+                    if(result){
+                        for(var key in result){
+                            var user = result[key];
+                            user.key=key;
+                            this.userList.dr.push(user);
+                        }
+                    }
+                    
+                }).catch(err => {console.log(err);});
+
+                this.$store.dispatch("adminAktion/getUserList",{toRole:"Reviewer"}).then((result)=>{
+                    for(var key in result){
+                        var user = result[key];
+                        user.key=key;
+                        this.userList.rr.push(user);
+
+                    }
+                }).catch(err => {console.log(err);});
+
+                this.$store.dispatch("adminAktion/getUserList",{toRole:"Moderator"}).then((result)=>{
+                    for(var key in result){
+                        var user = result[key];
+                        user.key=key;
+                        this.userList.rm.push(user);
+
+                    }
+                }).catch(err => {
+                                console.log(err);});
               
-                for(var key in result){
-                    var user = result[key];
-                    user.key=key;
-                    this.userList.dr.push(user);
-
-                }
-
-                result = this.$store.dispatch("adminAktion/getUserList",{toRole:"Reviewer"})
-                            .catch(err => {
-                                        alert.log(err);});
-              
-                for(var key in result){
-                    var user = result[key];
-                    user.key=key;
-                    this.userList.rr.push(user);
-
-                }
-
-                result = this.$store.dispatch("adminAktion/getUserList",{toRole:"Moderator"})
-                            .catch(err => {
-                                        alert.log(err);});
-              
-                for(var key in result){
-                    var user = result[key];
-                    user.key=key;
-                    this.userList.rm.push(user);
-
-                }
                 
-                result = this.$store.dispatch("adminAktion/getUserList",{toRole:"Admin"})
-                            .catch(err => {
-                                        alert.log(err);});
-              
-                for(var key in result){
-                    var user = result[key];
-                    user.key=key;
-                    this.userList.ra.push(user);
+                this.$store.dispatch("adminAktion/getUserList",{toRole:"Moderator"}).then((result)=>{
+                    for(var key in result){
+                        var user = result[key];
+                        user.key=key;
+                        this.userList.ra.push(user);
 
-                }
-
+                    }
+                }).catch(err => {
+                                console.log(err);});
+                
 
             },
 

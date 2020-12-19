@@ -17,7 +17,7 @@ const actions = {
         .then((commentinfo) => {
             if (!commentinfo.val().status[requestType])
             {
-                firebase.database().ref(requestType+'/' + uid).set(commentinfo);
+                firebase.database().ref(requestType+'/' + uid).set(commentinfo.val());
                 firebase.database().ref('doi_repository/' + doiKey + '/comments/' + uid+"/status/"+requestType).set(true);
             }
         }).catch((error) => {
@@ -28,16 +28,10 @@ const actions = {
     deleteComment({ commit, state }, { uid,doi }){
         let doiKey=doi.replaceAll(".","'");
         firebase.database().ref('doi_repository/' + doiKey + '/comments').child(uid).remove();
-        let tempnode=firebase.database().ref('Review/'+uid);
-        if (tempnode)
-        {
-            firebase.database().ref('Review').child(uid).remove();
-        }
-        tempnode=firebase.database().ref('PID/'+uid);
-        if (tempnode)
-        {
-            firebase.database().ref('PID').child(uid).remove();
-        }
+        
+        firebase.database().ref('Review').child(uid).remove();
+        firebase.database().ref('PID').child(uid).remove();
+        
     },
 
     async setAttribute({ commit, state }, { uid, doi ,attribute,value  }){
@@ -55,16 +49,26 @@ const actions = {
             })
         }
         firebase.database().ref('doi_repository/' + doiKey + '/comments/' + uid+"/"+attribute).set(setvalue);
-        let tempnode=firebase.database().ref('Review/'+uid);
-        if (tempnode)
-        {
-            tempnode.child(attribute).set(setvalue);
-        }
-        tempnode=firebase.database().ref('PID/'+uid);
-        if (tempnode)
-        {
-            tempnode.child(attribute).set(setvalue);
-        }
+        let tempnode=firebase.database().ref('Review/'+uid).once('value')
+        .then((info) => {
+            if (info.val())
+            {
+                firebase.database().ref('Review/'+uid+"/"+attribute).set(setvalue);
+            }
+        }).catch((error) => {
+            //for debug only, will be finished later
+            console.log(error.message);
+        });
+        tempnode=firebase.database().ref('PID/'+uid).once('value')
+        .then((info) => {
+            if (info.val())
+            {
+                firebase.database().ref('PID/'+uid+"/"+attribute).set(setvalue);
+            }
+        }).catch((error) => {
+            //for debug only, will be finished later
+            console.log(error.message);
+        });
     },
 
     async updateRole({ commit, state }, { toRole }){
@@ -75,7 +79,7 @@ const actions = {
             if (!userinfo.val().update[toRole])
             {
                 firebase.database().ref('users/' + userKey+'/update/'+toRole).set(true);
-                firebase.database().ref('updateRole/'+toRole+"/"+userKey).set(userinfo);
+                firebase.database().ref('updateRole/'+toRole+"/"+userKey).set(userinfo.val());
             }
         }).catch((error) => {
             //for debug only, will be finished later
