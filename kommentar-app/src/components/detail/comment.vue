@@ -187,7 +187,7 @@ Vue.use(Antd)
                                                             console.log(err);
                                                          });
                 
-                this.comment.status.push("Review");
+                this.comment.status["Review"]=true;
 
             },
 
@@ -207,7 +207,7 @@ Vue.use(Antd)
                                                             alert.log(err);
                                                          });
 
-                this.comment.status.push("PID");
+                this.comment.status["PID"]=true;
             },
 
             /**
