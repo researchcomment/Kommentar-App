@@ -96,6 +96,14 @@ const actions = {
                     username: username,
                     role: ['default'],
                     email: username, 
+                    messagebox:null,
+                    update:{
+                        Researcher:false,
+                        Reviewer:false,
+                        Moderator:false,
+                        Admin:false,
+                    }
+
                 }
                 
                 firebase.database().ref('users/'+user.uid).set(entry);

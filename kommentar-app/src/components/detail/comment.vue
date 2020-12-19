@@ -170,7 +170,7 @@ Vue.use(Antd)
             askForReview(){
 
                 // JJY : 暂时前端应该已经拦截了role不对的 已经在review的 应该不会发生重复提交申请的问题
-                //TODO this.$store.dispatch("review",this.comment.UID);
+                //TODO this.$store.dispatch("review", {this.comment.UID});
                 
                 this.comment.status.push("in Review");
 
