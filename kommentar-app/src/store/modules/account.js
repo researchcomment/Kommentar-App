@@ -5,6 +5,7 @@ import firebase from "firebase/app";
 const state = () => ({
     username: null,
     role: null, //list:['default', 'Researcher', 'Reviewer','Moderator','Admin']  from JJY
+    update: null,
     error: null
 })
 
@@ -39,8 +40,9 @@ const actions = {
             .signInWithEmailAndPassword(username, password)
             .then(async function ({user}) {  
                 //cache account information
-                let result=await firebase.database().ref('users/'+user.uid+'/role').once('value').then((role) => {
-                    commit("setrole", role.val()); 
+                let result=await firebase.database().ref('users/'+user.uid).once('value').then((user) => {
+                    commit("setrole", user.val().role);
+                    commit("setupdate", user.val().update);
                     commit("setusername", username);
                 }).catch(err => {
                     console.log(err);
@@ -59,8 +61,9 @@ const actions = {
         let user=firebase.auth().currentUser;
         if (user){
             commit ('setusername',user.email);
-            return firebase.database().ref('users/'+user.uid+'/role').once('value').then((role) => {
-                commit("setrole", role.val()); 
+            return firebase.database().ref('users/'+user.uid).once('value').then((user) => {
+                commit("setrole", user.val().role);
+                commit("setupdate", user.val().update);
             }).catch(err => {
                 console.log(err);
             });
@@ -128,7 +131,10 @@ const mutations = {
     },
     setError(state, error) {
         state.error = error;
-    }
+    },
+    setupdate(state, update) {
+        state.update = update
+    },
 
 }
 
