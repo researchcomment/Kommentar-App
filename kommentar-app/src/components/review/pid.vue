@@ -115,7 +115,6 @@
         methods:{
             
             /**
-             * ! 涉及后端交互 getCommentListInReview() 
              * Request the CommentList, which status has "PID", from background
              */
             async getCommentList(){
@@ -123,12 +122,7 @@
                 // open the loading-animation
                 this.loading=true;
 
-                // get CommentList form firebase, the status from these comments is "in Review"
-                // TODO:this.$store.....getCommentListInReview("PID");
-                // TODO:this.commentList = result;
-
-
-                
+                // get CommentList form firebase, the status from these comments is "in Review"               
                 this.$store.dispatch("adminAktion/getCommentListForRequest", 
                                                     {requestType:"PID"})
                 .then((result)=>{
@@ -150,48 +144,55 @@
             },
 
             /**
-             * ! 涉及后端交互 
-             * ! 接口 replyPID(UID,agree,reason) reason can be empty
              * Send to the firebase whether the request for PermanentID is passed
              * 
-             * @param agree {boolean}  - true, if the Reviewer is agree
              * @param comment
              */
             replyPID(comment){
                 var reason = comment.replyContentPID;
                 var agree = !(comment.agreePID=="refuse");
-
-                if(agree){
-                    //TODO this.$store.dispatch("replyPID",this.comment.UID,agree,reason);
-                    // the reason can be empty hier
-                }
-                else{
-
-                    // check if the reason is filled
-                    if(!reason){
-                        this.$error({
+                if((!agree)&&(!reason)){
+                    // check if the reason is filled by disagree
+                    this.$error({
                             title: 'Error message',
                             content: 'Please write down your Reason (Must fill in, if the request is rejected)',
-                        });
-                        return;
-                    }
-                    else{
-                        //TODO this.$store.dispatch("replyPID",this.comment.UID,agree,reason);
-                    }
+                    });
+                    return;
                 }
+                if(!reason){
+                    reason ="";
+                }
+                var request = {
+                    doi:comment.doi_nr,
+                    comment_uid:comment.key,
+                    user_id:comment.user_id,
+                    requestType:"PID",
+                    feedback_content:reason,
+                    flag:agree,
+                    comment_content:comment.content,
+                };
+                
+            
+                   
+                //send Request to firebase  
+                this.$store.dispatch("adminAktion/replyRequest",request).then(()=>{
+                    // Refresh the display, prompting success
+                    var index =  this.commentList.indexOf(comment);
+                    if (index > -1) {
+                        this.commentList.splice(index, 1);
+                    }
+                    this.visiblePID = false;
+                    this.$notification.open({
+                        message: 'Success',
+                        description:
+                        'Your evaluation has been communicated.',
+                        icon: <a-icon type="smile" style="color: #108ee9" />,
+                    });
 
-                // Refresh the display, prompting success
-                 var index =  this.commentList.indexOf(comment);
-                if (index > -1) {
-                    this.commentList.splice(index, 1);
-                }
-                this.visiblePID = false;
-                this.$notification.open({
-                    message: 'Success',
-                    description:
-                    'Your evaluation has been communicated.',
-                    icon: <a-icon type="smile" style="color: #108ee9" />,
                 });
+
+
+               
             },
 
            

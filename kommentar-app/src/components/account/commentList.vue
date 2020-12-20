@@ -1,9 +1,9 @@
 <template>
     <div>
         <!-- List of Comments -->
-        <a-list item-layout="vertical" size="large" :pagination="pagination" :data-source="commentList">
+        <a-list item-layout="vertical" size="large" :pagination="pagination" :data-source="commentList" rowKey="comment[key]">
                  
-            <a-list-item v-if="comment.status['Review']" slot="renderItem" slot-scope="comment"  rowKey="key">
+            <a-list-item slot="renderItem" slot-scope="comment"  >
                 
                 <!-- Detail about this comment -->
                 <a-descriptions  bordered  :column="{ xxl: 4, xl: 3, lg: 3, md: 3, sm: 2, xs: 1 }">
@@ -14,8 +14,9 @@
                         <p @click="seeDetail(comment.doi_nr)">{{comment.doi_nr}}</p>
                     </a-descriptions-item>
 
-                    <a-descriptions-item label="Request under review">
-                        <a-tag v-for="item in comment.status" v-bind:key="item">{{item}}</a-tag>
+                    <a-descriptions-item label="Requests in Checking">
+                        <a-tag  v-if="comment.status['Review']">Request</a-tag>
+                        <a-tag  v-if="comment.status['PID']">PID</a-tag>
                     </a-descriptions-item>
 
                     <a-descriptions-item label="New Request">
@@ -82,9 +83,8 @@
             },
 
             commentList(){
-                console.log(this.$store.state.account.commentList);
-                let result = this.$store.state.account.commentList;
                 
+                let result = this.$store.state.account.commentList;
                 
                 return result;
             }
@@ -98,7 +98,6 @@
         methods:{
             
             /**
-             * ! 涉及后端交互 getCommentList(username) 
              * Request the CommentList, which Author is the user, from background
              */
             async getCommentList(){
@@ -107,19 +106,10 @@
                 this.loading=true;
 
                 // get CommentList form firebase, the status from these comments is "in Review"
-                // TODO:this.$store.....getCommentList(this.username);
-                // TODO:this.commentList = result;
-
-
-                // // !FOR TEST     
                 this.$store.dispatch("account/getCommentList")
                                             .catch(err => {
                                                             console.log(err);
                                                          });
-                // this.commentList = result;
-                // for(var comment of this.commentList){
-                //     comment.status=["Review"];
-                // }
 
                 // close the loading-animation 
                 this.loading=false; 
@@ -128,23 +118,33 @@
 
             
             /**
-             * ! 涉及后端交互 
-             * ! 接口 replyReview(UID,request)
              * Send request to the firebase
              * @param request - "Review" or "PID"
              */
             newRequest(request,comment){
+                var request ={
+                    uid:comment.commitKey,
+                    doi:comment.doi_nr, 
+                    requestType:request,
+                }
                
-                //TODO this.$store.dispatch("requestReview",this.comment.UID,request);
+                this.$store.dispatch("account/askForRequest",request)
+                .then(()=>{
+                     // Refresh the display, prompting success
+                    comment.status.push(request);
+                    this.$notification.open({
+                        message: 'Success',
+                        description:
+                        'Your Request has been submitted.',
+                        icon: <a-icon type="smile" style="color: #108ee9" />,
+                    });  
 
-                // Refresh the display, prompting success
-                comment.status.push(request);
-                this.$notification.open({
-                    message: 'Success',
-                    description:
-                    'Your Request has been submitted.',
-                    icon: <a-icon type="smile" style="color: #108ee9" />,
-                });  
+                    })
+                .catch(err => {
+                                console.log(err);
+                            });
+
+               
                   
                 
                 
