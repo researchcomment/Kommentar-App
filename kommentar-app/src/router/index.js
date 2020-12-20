@@ -71,11 +71,18 @@ router.beforeEach(
 			store.dispatch('account/relogin',{}).then(
       ()=>{
         next();
-        var MessageBoxRef = firebase.database().ref('users/' + user.uid + '/Messagebox');
-        MessageBoxRef.on('value', (snapshot) =>{
-          const data = snapshot.val();
-          store.commit('account/setMessageBox',data);
+        if (user){
+          var MessageBoxRef = firebase.database().ref('users/' + user.uid + '/Messagebox');
+          MessageBoxRef.on('value', (snapshot) =>{
+            const data = snapshot.val();
+            store.commit('account/setMessageBox',data);
         });
+        }
+        firebase.auth().onAuthStateChanged((user)=> {
+          if (!user){
+            store.dispatch('account/relogin',{})
+          }
+        })
       }).catch(err => {
         console.log(err);
       })
