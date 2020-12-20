@@ -70,15 +70,23 @@ router.beforeEach(
   firebase.auth().onAuthStateChanged((user) => {
 		if (user) {
 			store.dispatch('account/relogin',{}).then(
-      ()=>{next();}
-      ).catch(err => {
+      ()=>{
+        next();
+        var MessageBoxRef = firebase.database().ref('users/' + user.uid + '/Messagebox');
+        MessageBoxRef.on('value', (snapshot) =>{
+          const data = snapshot.val();
+          store.commit('setMessageBox',data);
+        });
+      }).catch(err => {
         console.log(err);
       })
 		} else{
 			next()
 		}
-  	});
-
+    });
+   
+    
+      
   // update the login status for new Router
   
 

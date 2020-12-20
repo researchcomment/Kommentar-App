@@ -10,7 +10,7 @@ const actions = {
     
 
     //requestType is Review/PID
-    async askForRequest({ commit, state }, { uid,doi, requestType }) {
+    async askForRequest({ commit, state,dispatch }, { uid,doi, requestType }) {
         let doiKey=doi.replaceAll(".","'");
         return firebase.database().ref('doi_repository/' + doiKey + '/comments/' + uid)
         .once('value')
@@ -19,7 +19,7 @@ const actions = {
             {
                 firebase.database().ref(requestType+'/' + uid).set(commentinfo.val());
                 dispatch('setAttribute',{
-                    uid:comment_uid, 
+                    uid:uid, 
                     doi:doi ,
                     attribute:"status/"+requestType,
                     value:true

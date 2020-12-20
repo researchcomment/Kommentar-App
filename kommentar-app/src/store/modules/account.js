@@ -7,7 +7,8 @@ const state = () => ({
     role: null, //list:['default', 'Researcher', 'Reviewer','Moderator','Admin']  from JJY
     update: null,
     error: null,
-    commentList:[]
+    commentList:[],
+    Messagebox:{},
 })
 
 const getters = {
@@ -101,7 +102,7 @@ const actions = {
                     username: username,
                     role: ['default'],
                     email: username, 
-                    messagebox:null,
+                    Messagebox:null,
                     update:{
                         Researcher:false,
                         Reviewer:false,
@@ -165,6 +166,10 @@ const mutations = {
     },
     setCommentListNull(state){
         state.commentList=[];
+    },
+
+    setMessageBox(state,Messagebox){
+        state.Messagebox=Messagebox;
     }
 
 }
