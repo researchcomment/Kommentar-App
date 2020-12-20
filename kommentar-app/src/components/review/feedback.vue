@@ -155,7 +155,7 @@
                         comment_uid:comment.key,
                         user_id:comment.user_id,
                         requestType:"Review",
-                        feedback_content:feedback,
+                        feedback_content:feedBack,
                         comment_content:comment.content,
                     };
                     this.$store.dispatch("adminAktion/replyRequest",request).then(()=>{

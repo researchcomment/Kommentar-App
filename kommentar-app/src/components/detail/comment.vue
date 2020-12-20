@@ -1,5 +1,5 @@
 <template>
-    <a-comment v-if="comment.active || isModerator">
+    <a-comment v-if="comment.active || isModerator ">
         <template slot="actions" >
             <!-- the number of likes -->
             <span key="comment-basic-like">
@@ -33,12 +33,12 @@
 
                 <a-button type="dashed"  v-if="(isResearcher) && (!(comment.type=='official'))"  :disabled="inRequest" @click="askForPID">Ask For PermanentID</a-button>
             
-                <a-icon type="delete" theme="twoTone" two-tone-color="#eb2f96"  @click="deleteComment" />
+                <a-icon type="delete" v-if="!(comment.type=='official')" theme="twoTone" two-tone-color="#eb2f96"  @click="deleteComment" />
          
             </div>
 
             <!-- Editing Options for Moderator : hide/unhide the comment -->
-            <div v-if = "isModerator">
+            <div v-if = "isModerator && !(comment.type=='official')">
                 <a-icon type="eye-invisible" v-if="comment.active" @click="setVisiblity"/>
                 <a-icon type="eye" v-if="!comment.active" @click="setVisiblity"/>
             </div>
@@ -86,7 +86,7 @@ Vue.use(Antd)
             return {
                 action: null,
                 alreadySendLikes:false,    // Can't repeat likes 
-               
+
                 comment:this.commentFromParent, 
                
                //! Sample Comment FOR TEST 
@@ -214,14 +214,16 @@ Vue.use(Antd)
              * send delete Request to firebase
              */
             deleteComment(){
-
+                this.deleted =true;
                 var request = {
                     uid:this.comment.UID,
                     doi:this.comment.doi_nr,
                 }
             
-                this.$store.dispatch("askFromUser/deleteComment",request);
-                this.$emit("refresh");
+                this.$store.dispatch("askFromUser/deleteComment",request).then(()=>{
+                    this.$emit("refresh");
+                });
+            
             },
            
             /**

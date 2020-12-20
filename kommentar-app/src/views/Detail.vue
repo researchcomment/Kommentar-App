@@ -18,7 +18,7 @@
                 <ul>
                 <li v-for="item in officialCommentList" v-bind:key="item.id" class="ocommentli">
                     <div>
-                    <comment :comment="item" :username="username" @refresh="getComments"/>
+                    <comment :commentFromParent="item" :username="username" @refresh="getComments"/>
                     </div>
                 </li>
                 </ul>
@@ -127,7 +127,7 @@
                                             .catch(err => {
                                                             console.log(err);
                                                          });
-               
+                console.log(this.officialCommentList)
                 this.unofficialCommentList = await this.$store.dispatch("commitwork/loadComments", 
                                                     {doi: this.doi, 
                                                      rankType: 'submittime',

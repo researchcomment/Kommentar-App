@@ -1,7 +1,7 @@
 <template>
     <div>
         <!-- List of Comments -->
-        <a-list item-layout="vertical" size="large" :pagination="pagination" :data-source="commentList" rowKey="comment[key]">
+        <a-list item-layout="vertical" size="large" :pagination="pagination" :data-source="commentList">
                  
             <a-list-item slot="renderItem" slot-scope="comment"  >
                 
@@ -24,7 +24,7 @@
                         <!-- Review Request -->
                         <a-tag 
                         color="cyan" 
-                        v-if="!comment.status['Review']"  
+                        v-if="!comment.status['Review']&&comment.type!='official'"  
                         @click="newRequest('Review',comment)">
                         Review
                         </a-tag>
@@ -32,7 +32,7 @@
                         <!-- PID Request -->
                         <a-tag 
                         color="cyan" 
-                        v-if=" !comment.status['PID'] && role.indexOf('Researcher')>-1" 
+                        v-if=" !comment.status['PID'] && role.indexOf('Researcher')>-1&&comment.type!='official'" 
                         @click="newRequest('PID',comment)">
                             PID
                         </a-tag>
@@ -41,22 +41,26 @@
                     
                     <a-descriptions-item label="Content" >
                        <p v-html="comment.content"></p>
-                       <a-icon type="edit" @click.native="editorVisibility=!editorVisibility"/>
+                       <a-button :disabled="comment.type=='official'" type="edit" @click="openEditor(comment)">
+                        Editor
+                       </a-button>
                     </a-descriptions-item>
 
- 
-
                 </a-descriptions>
-
-                
-                
-                <quill-editor
-                   v-show="editorVisibility"
-                    v-model="comment.content"
-                    :options="editorOption">
-                </quill-editor>
             </a-list-item>
         </a-list>
+
+        <a-modal 
+            :visible="editorVisibility" 
+            title="Editor" 
+            @ok="editorRequest"
+            @cancel="editorVisibility =false">
+            <quill-editor
+                v-model="templateComment.content"
+                :options="editorOption"
+            >
+            </quill-editor>
+        </a-modal>
 
     </div>
 </template>
@@ -67,7 +71,8 @@
         data(){
             return{
                 //commentList:[],
-
+                templateComment:{},
+               
                 pagination: {
                     onChange: page => {
                         console.log(page);
@@ -150,22 +155,48 @@
                     requestType:request,
                 }
                
-                this.$store.dispatch("account/askForRequest",request)
+                this.$store.dispatch("askFromUser/askForRequest",request)
                 .then(()=>{
                      // Refresh the display, prompting success
-                    comment.status.push(request);
-                    this.$notification.open({
-                        message: 'Success',
-                        description:
-                        'Your Request has been submitted.',
-                        icon: <a-icon type="smile" style="color: #108ee9" />,
-                    });  
+                    comment.status[request] = true;
+                        this.$notification.open({
+                            message: 'Success',
+                            description:
+                            'Your Request has been submitted.',
+                            icon: <a-icon type="smile" style="color: #108ee9" />,
+                        });  
 
                     })
                 .catch(err => {
                                 console.log(err);
                             });
  
+            },
+
+            editorRequest(){
+                var request ={
+                    uid:this.templateComment.commitKey, 
+                    doi:this.templateComment.doi_nr,
+                    attribute:"content",
+                    value:this.templateComment.content,
+                }
+                this.$store.dispatch("askFromUser/setAttribute",request)
+                .then(()=>{
+                     // Refresh the display, prompting success
+                   
+                    this.$notification.open({
+                        message: 'Success',
+                        description:
+                        'Your Request has been submitted.',
+                        icon: <a-icon type="smile" style="color: #108ee9" />,
+                    });  
+                    this.editorVisibility =false;
+
+                    })
+                .catch(err => {
+                                console.log(err);
+                            });
+
             },
 
             /**
@@ -183,6 +214,10 @@
                 window.open(routeData.href, "_blank");
 
             },
+            openEditor(comment){
+                this.templateComment =comment;
+                this.editorVisibility =true;
+            }
 
 
         }
