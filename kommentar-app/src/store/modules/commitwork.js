@@ -171,15 +171,15 @@ const actions = {
         let result=[];  
         let doiKey=doi.replaceAll(".","'");
         let commentsRef=firebase.database().ref('doi_repository/' + doiKey + '/comments');
-        if (type=="unofficial")
-        return 
-            commentsRef.orderByChild("type")
+       
+        
+        return   commentsRef.orderByChild("type")
             .equalTo(type)
             .once('value')
             .then((snapshot) => {
                 let tmpvalue=snapshot.val();
                 if (tmpvalue)
-                    return tempvalue;
+                    return tmpvalue;
                 return [];
             }).catch((error) => {
                 //for debug only, will be finished later

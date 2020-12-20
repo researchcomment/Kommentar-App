@@ -18,7 +18,7 @@
                 <ul>
                 <li v-for="(item,key) in officialCommentList" v-bind:key="key" class="ocommentli">
                     <div>
-                    <comment :commentFromParent="item" :username="username" @refresh="getComments"/>
+                    <comment :commentFromParent="item" :username="username" :UID="key" @refresh="getComments"/>
                     </div>
                 </li>
                 </ul>
@@ -37,7 +37,7 @@
                 <ul>
                     <li v-for="(item,key) in unofficialCommentList" v-bind:key="key" class="ucommitli">
                         <div>
-                            <comment :commentFromParent="item"  :username="username" @refresh="getComments"/>
+                            <comment :commentFromParent="item"  :username="username" :UID="key" @refresh="getComments"/>
                         </div>
                     </li>
                 </ul>
