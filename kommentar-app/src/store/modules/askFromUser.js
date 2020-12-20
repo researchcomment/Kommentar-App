@@ -92,7 +92,12 @@ const actions = {
             //for debug only, will be finished later
             console.log(error.message);
         });  
+    },
+    deleteMessageFromBox({},{message_id}){
+        let userKey = firebase.auth().currentUser.uid;
+        firebase.database().ref('users/' + userKey,'/Messagebox').remove(message_id);
     }
+
 
 
 
