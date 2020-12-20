@@ -12,11 +12,11 @@
                         <span>default => Reseacher</span>
                     </a-menu-item>
 
-                    <a-menu-item key="Moderator">
+                    <a-menu-item key="Reviewer">
                         <span>Reseacher => Reviewer</span>
                     </a-menu-item>
 
-                    <a-menu-item key="Reviewer">
+                    <a-menu-item key="Moderator">
                         <span>Reseacher => Moderator</span>
                     </a-menu-item>
                     

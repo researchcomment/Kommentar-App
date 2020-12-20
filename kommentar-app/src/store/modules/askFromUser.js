@@ -28,7 +28,8 @@ const actions = {
     deleteComment({ commit, state }, { uid,doi }){
         let doiKey=doi.replaceAll(".","'");
         firebase.database().ref('doi_repository/' + doiKey + '/comments').child(uid).remove();
-        
+        let userKey = firebase.auth().currentUser.uid;
+        firebase.database().ref('users/' + userKey + '/comments').child(uid).remove();
         firebase.database().ref('Review').child(uid).remove();
         firebase.database().ref('PID').child(uid).remove();
         

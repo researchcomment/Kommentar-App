@@ -157,7 +157,8 @@ const actions = {
         
         let comments_key = firebase.database().ref('doi_repository/' + doiKey + '/comments').push(newComent).key;
         return firebase.database().ref('users/' + userKey + '/comments/' + comments_key).set({
-            type: 'unofficial'
+            type: 'unofficial',
+            doi: doi
         }).catch((error) => {
             //for debug only, will be finished later
             console.log(error.message);

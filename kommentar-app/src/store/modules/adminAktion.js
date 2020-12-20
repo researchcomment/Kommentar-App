@@ -8,7 +8,7 @@ const state = () => ({
 const getters = {}
 const actions = {
     
-
+    //the function that used from app-admin side.
     //requestType is Review/PID
     async getUserList({ commit, state }, { toRole }) {
         return firebase.database().ref('updateRole/'+toRole)
@@ -38,7 +38,23 @@ const actions = {
                 firebase.database().ref('users/' + userKey+'/role').set(setroles);
             })
         }
+    },
+    //actions for reviewer
+    getCommentListForRequest({ commit, state },{requestType}){
+        return firebase.database().ref(requestType)
+        .once('value')
+        .then((userinfo)=>{
+            if (userinfo.val())
+                return (userinfo.val())
+            else
+                return {}
+        }).catch((error) => {
+            //for debug only, will be finished later
+            console.log(error.message);
+        });  
     }
+
+
 
    
 
