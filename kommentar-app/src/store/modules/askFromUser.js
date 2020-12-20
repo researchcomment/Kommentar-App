@@ -18,7 +18,12 @@ const actions = {
             if (!commentinfo.val().status[requestType])
             {
                 firebase.database().ref(requestType+'/' + uid).set(commentinfo.val());
-                firebase.database().ref('doi_repository/' + doiKey + '/comments/' + uid+"/status/"+requestType).set(true);
+                dispatch('setAttribute',{
+                    uid:comment_uid, 
+                    doi:doi ,
+                    attribute:"status/"+requestType,
+                    value:true
+                });
             }
         }).catch((error) => {
             //for debug only, will be finished later
@@ -79,7 +84,9 @@ const actions = {
             if (!userinfo.val().update[toRole])
             {
                 firebase.database().ref('users/' + userKey+'/update/'+toRole).set(true);
-                firebase.database().ref('updateRole/'+toRole+"/"+userKey).set(userinfo.val());
+                firebase.database().ref('updateRole/'+toRole+"/"+userKey).set(
+                    userinfo.val()
+                );
             }
         }).catch((error) => {
             //for debug only, will be finished later
