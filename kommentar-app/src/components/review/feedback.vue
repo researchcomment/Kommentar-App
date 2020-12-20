@@ -30,8 +30,16 @@
                         <p v-show="!comment.active">No</p>
                     </a-descriptions-item>
 
+                    <a-descriptions-item label="Likes">
+                        {{comment.likes}}
+                    </a-descriptions-item>
+
+                    <a-descriptions-item label="Disliks">
+                        {{comment.dislikes}}
+                    </a-descriptions-item>
+
                     <a-descriptions-item label="Request">
-                        <a-tag color="cyan" @click="visibleFeedback=true">Review</a-tag>
+                        <a-tag color="cyan" @click="openEditor(comment)">Review</a-tag>
                     </a-descriptions-item>
 
                     <a-descriptions-item label="Content">
@@ -41,27 +49,29 @@
                 </a-descriptions>
 
                
-                <!-- Review Options -->
-                <!-- Feedback -->
-                <a-modal
-                    title="Feedback"
-                    :visible="visibleFeedback"
-                    @ok="replyReview(comment)"
-                    @cancel="handleCancel(comment)"
-                    >
-                    <b>Original Content</b>
-                    <p v-html="comment.content"></p>
-
-                    <!-- Input -->
-                    <quill-editor
-                        v-model="comment.replyContentReview"
-                        :options="editorOptionReview">
-                    </quill-editor>
-                </a-modal>
+               
                 
 
             </a-list-item>
         </a-list>
+
+        <!-- Review Options -->
+        <!-- Feedback -->
+        <a-modal
+            title="Feedback"
+            :visible="visibleFeedback"
+            @ok="replyReview"
+            @cancel="handleCancel"
+            >
+            <b>Original Content</b>
+            <p v-html="templateComment.content"></p>
+
+            <!-- Input -->
+            <quill-editor
+                v-model="templateComment.replyContentReview"
+                :options="editorOptionReview">
+            </quill-editor>
+        </a-modal>
 
     </div>
 </template>
@@ -72,6 +82,7 @@
         data(){
             return{
                 commentList:[],
+                templateComment:{},
 
                 pagination: {
                     onChange: page => {
@@ -135,9 +146,10 @@
             /**
              * Send Feedback to the firebase
              */
-            replyReview(comment){
+            replyReview(){
+               
+                var comment =this.templateComment;
                 var feedBack = comment.replyContentReview;
-                
                 // check if the feedback is filled
                 if(!feedBack){
                     this.$error({
@@ -172,6 +184,8 @@
                     });    
                   
                 }
+
+                this.getCommentList();
                 
             },
 
@@ -193,12 +207,16 @@
 
             /**
              * reset the comment by Cancel
-             * @param comment
              */
-            handleCancel(comment){
-                comment.replyContentReview = "";
+            handleCancel(){
+                this.templateComment = {};
                 this.visibleFeedback =false;
             },
+
+            openEditor(comment){
+                this.templateComment =JSON.parse(JSON.stringify(comment));
+                this.visibleFeedback =true;
+            }
 
         }
 

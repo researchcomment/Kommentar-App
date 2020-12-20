@@ -16,7 +16,7 @@
 
                 <!-- List of official Comments -->
                 <ul>
-                <li v-for="item in officialCommentList" v-bind:key="item.id" class="ocommentli">
+                <li v-for="(item,key) in officialCommentList" v-bind:key="key" class="ocommentli">
                     <div>
                     <comment :commentFromParent="item" :username="username" @refresh="getComments"/>
                     </div>
@@ -35,7 +35,7 @@
                 
                 <!-- List of official Comments -->
                 <ul>
-                    <li v-for="item in unofficialCommentList" v-bind:key="item.id" class="ucommitli">
+                    <li v-for="(item,key) in unofficialCommentList" v-bind:key="key" class="ucommitli">
                         <div>
                             <comment :commentFromParent="item"  :username="username" @refresh="getComments"/>
                         </div>
@@ -44,7 +44,7 @@
 
             </div>   
 
-            <commentEditor :doi="doi" :username="username" @submit="refresh"></commentEditor>
+            <commentEditor :doi="doi" :username="username" @submit="getComments"></commentEditor>
 
         </div>
     </div>
@@ -106,9 +106,9 @@
         methods:{
             
             // refresh the page
-            refresh(){
-                window.location.reload();
-            },
+            // refresh(){
+            //     window.location.reload();
+            // },
 
             /**
              * Request comment content from the backend
@@ -127,7 +127,7 @@
                                             .catch(err => {
                                                             console.log(err);
                                                          });
-                console.log(this.officialCommentList)
+                                                         
                 this.unofficialCommentList = await this.$store.dispatch("commitwork/loadComments", 
                                                     {doi: this.doi, 
                                                      rankType: 'submittime',

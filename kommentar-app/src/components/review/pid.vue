@@ -30,8 +30,16 @@
                         <p v-show="!comment.active">No</p>
                     </a-descriptions-item>
 
+                    <a-descriptions-item label="Likes">
+                        {{comment.likes}}
+                    </a-descriptions-item>
+
+                    <a-descriptions-item label="Disliks">
+                        {{comment.dislikes}}
+                    </a-descriptions-item>
+
                     <a-descriptions-item label="Request">
-                        <a-tag color="purple" @click="visiblePID=true">PID</a-tag>
+                        <a-tag color="purple" @click="openEditor(comment)">PID</a-tag>
                     </a-descriptions-item>
 
                     <a-descriptions-item label="Content">
@@ -41,39 +49,42 @@
                 </a-descriptions>
 
                
-                <!-- Review Options -->
-                <!-- Reply for Permanent ID -->
-                <a-modal
-                    title="Permanent ID"
-                    :visible="visiblePID"
-                    @ok="replyPID(comment)"
-                    @cancel="handleCancel(comment)"
-                    >
-
-                    <b>Original Content</b>
-                    <p v-html="comment.content"></p>
-
-                    <!-- agree or not -->
-                    <a-radio-group v-model="comment.agreePID" default-value="agree">
-                        <a-radio-button value="agree">
-                            Agree <a-icon type="check-square" theme="twoTone" two-tone-color="#52c41a"/>
-                        </a-radio-button>
-                        <a-radio-button value="refuse">
-                            Refuse <a-icon type="close-square" theme="twoTone" two-tone-color="#eb2f96" />
-                        </a-radio-button>
-                    </a-radio-group>
-
-                    <!-- Input -->
-                    <quill-editor
-                        v-model="comment.replyContentPID"
-                        :options="editorOptionPID">
-                    </quill-editor>
-                   
-                </a-modal>
+               
 
             </a-list-item>
         </a-list>
 
+         <!-- Review Options -->
+        <!-- Reply for Permanent ID -->
+        <a-modal
+            title="Permanent ID"
+            :visible="visiblePID"
+            @ok="replyPID"
+            @cancel="handleCancel"
+            >
+
+            <b>Original Content</b>
+            <p v-html="templateComment.content"></p>
+
+            <!-- agree or not -->
+            <a-radio-group v-model="templateComment.agreePID" default-value="agree">
+                <a-radio-button value="agree">
+                    Agree <a-icon type="check-square" theme="twoTone" two-tone-color="#52c41a"/>
+                </a-radio-button>
+                <a-radio-button value="refuse">
+                    Refuse <a-icon type="close-square" theme="twoTone" two-tone-color="#eb2f96" />
+                </a-radio-button>
+            </a-radio-group>
+
+            <!-- Input -->
+            <quill-editor
+                v-model="templateComment.replyContentPID"
+                :options="editorOptionPID">
+            </quill-editor>
+            
+        </a-modal>
+        
+        
     </div>
 </template>
 
@@ -83,6 +94,7 @@
         data(){
             return{
                 commentList:[],
+                templateComment:{},
 
                 pagination: {
                     onChange: page => {
@@ -146,9 +158,9 @@
             /**
              * Send to the firebase whether the request for PermanentID is passed
              * 
-             * @param comment
              */
-            replyPID(comment){
+            replyPID(){
+                var comment = this.templateComment;
                 var reason = comment.replyContentPID;
                 var agree = !(comment.agreePID=="refuse");
                 if((!agree)&&(!reason)){
@@ -162,6 +174,14 @@
                 if(!reason){
                     reason ="";
                 }
+
+                if(agree){
+                    reason = '<h2 style="color:green">Your Request of Permanent ID is accepted</h2>'+ reason;
+                }
+                else{
+                    reason = '<h2 style="color:red">Your Request of Permanent ID is denied.</h2>'+ reason;
+                }
+
                 var request = {
                     doi:comment.doi_nr,
                     comment_uid:comment.key,
@@ -172,6 +192,7 @@
                     comment_content:comment.content,
                 };
                 
+               
             
                    
                 //send Request to firebase  
@@ -191,11 +212,9 @@
 
                 });
 
-
+                this.getCommentList();
                
             },
-
-           
 
             /**
              * open a new window which shows the details of this book
@@ -218,10 +237,14 @@
              * @param comment
              */
             handleCancel(comment){
-                comment.replyContentPID ="",
-                comment.agreePID = true;
+                this.templateComment = {};
                 this.visiblePID =false;
             },
+
+            openEditor(comment){
+                this.templateComment =JSON.parse(JSON.stringify(comment));
+                this.visiblePID =true;
+            }
 
         }
 

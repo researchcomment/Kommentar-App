@@ -15,7 +15,7 @@
                     </a-descriptions-item>
 
                     <a-descriptions-item label="Requests in Checking">
-                        <a-tag  v-if="comment.status['Review']">Request</a-tag>
+                        <a-tag  v-if="comment.status['Review']">Review</a-tag>
                         <a-tag  v-if="comment.status['PID']">PID</a-tag>
                     </a-descriptions-item>
 

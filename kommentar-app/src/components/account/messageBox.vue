@@ -2,12 +2,14 @@
     <div>
 
 
-        <div v-for="item in Messagebox" :key="item.key"   style="background:#ECECEC; padding:10px">
+        <div v-for="(item,key) in Messagebox" v-bind:key="key" style="background:#ECECEC; padding:10px">
 
                 <a-card  title="Message" >
                     
-                    <a slot="extra" @click="deleteMessage(item.key)">delete</a>
-                    
+                    <a slot="extra">
+                         <p   @click="deleteMessage(key)">delete</p>
+                    </a>
+                   
                     <a-descriptions  bordered  :column="{ xxl: 4, xl: 3, lg: 3, md: 3, sm: 2, xs: 1 }">
                         
                             <a-descriptions-item label="Book Link">
@@ -37,17 +39,14 @@
             Messagebox(){
                 return this.$store.state.account.Messagebox;
             },
-            messageList(){
-                return Object.keys(this.Messagebox).map((key) => {
-                                    var comment = result[key];
-                                    comment.key=key;
-                                    return comment;
-                                })
-            }
 
         },
         methods:{
 
+            /**
+             * send delete Request to firebase
+             * @param key - the key of message
+             */
             deleteMessage(key){
                 this.$store.dispatch("askFromUser/deleteMessageFromBox",{message_id:key});
             },
