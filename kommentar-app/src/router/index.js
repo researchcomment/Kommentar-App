@@ -75,7 +75,7 @@ router.beforeEach(
         var MessageBoxRef = firebase.database().ref('users/' + user.uid + '/Messagebox');
         MessageBoxRef.on('value', (snapshot) =>{
           const data = snapshot.val();
-          store.commit('setMessageBox',data);
+          store.commit('account/setMessageBox',data);
         });
       }).catch(err => {
         console.log(err);
