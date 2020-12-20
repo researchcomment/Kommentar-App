@@ -31,18 +31,16 @@
         </li>
 
         <!-- Personal Information -->
-        <li @click="openPersonal">
+        <li @click="openPersonal('role')">
           <span class="iconfont icon-biaoqiankuozhan_guanli-159"></span>
           <div class="texts">
             Personal_info
           </div>
         </li>
 
-        <li>
-          
-        
+        <li  @click="openPersonal('messageBox')">
          <span class="iconfont icon-youxiang"></span>
-              <div class="texts">
+              <div class="texts" >
                 Mailbox
               </div>
         </li>
@@ -53,10 +51,10 @@
           </div>
         </li>
       </ul>
-      {{Messagebox}}
-        <a-badge :count="Object.keys(Messagebox).length" show-zero style="font-size: xx-small;">
+      <!-- {{Messagebox}} -->
+        <!-- <a-badge :count="Object.keys(Messagebox).length" show-zero style="font-size: xx-small;">
             <a href="#" class="head-example" />
-          </a-badge>
+          </a-badge> -->
       <!-- Logout button
       <button class="btn" @click="logout">Logout</button> -->
   </div>
@@ -114,9 +112,13 @@ export default {
       });
       this.$emit('logout');
       var router=this.$router.currentRoute.name;
-      if(router != "search" || router != "home"){
-        this.$router.back(-1);
+      if(router=="personal"||router=="admin"||router=="reviewer"){
+        this.$router.push('/');
       }
+      // if(router != "search" || router != "home"){
+      //   this.$router.back(-1);
+      // }
+      
     },
     openAdmin(){
 
@@ -137,13 +139,20 @@ export default {
         this.openNotification();
       }
     },
-    openPersonal(){
 
-      if(this.$router.currentRoute.name!="personal"){
+    openPersonal(menuKey){
+      var sameRouter=(this.$router.currentRoute.name=="personal");
+      sameRouter = sameRouter && (this.$route.query.menu==menuKey);
+      if(!sameRouter){
+          this.$router.push({path:'/Personal',
+                            query:{
+                              menu:menuKey,
+                            }});
+         
+          //this.$router.push('/Personal');
         
-        this.$router.push('/Personal');
       }
-      else{
+      else{       
         this.openNotification();
       }
     },

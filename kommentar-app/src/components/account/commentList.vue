@@ -211,6 +211,7 @@
                 window.open(routeData.href, "_blank");
 
             },
+            
             openEditor(comment){
                 this.templateComment =JSON.parse(JSON.stringify(comment));
                 this.editorVisibility =true;

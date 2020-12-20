@@ -77,6 +77,7 @@ router.beforeEach(
           const data = snapshot.val();
           store.commit('account/setMessageBox',data);
         });
+       
       }).catch(err => {
         console.log(err);
       })
