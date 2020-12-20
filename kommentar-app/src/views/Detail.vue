@@ -127,7 +127,7 @@
                                             .catch(err => {
                                                             console.log(err);
                                                          });
-                                                         
+
                 this.unofficialCommentList = await this.$store.dispatch("commitwork/loadComments", 
                                                     {doi: this.doi, 
                                                      rankType: 'submittime',
@@ -136,8 +136,6 @@
                                             .catch(err => {
                                                             console.log(err);
                                                          });
-
-            
 
                 // close the loading-animation 
                 this.loading = false;

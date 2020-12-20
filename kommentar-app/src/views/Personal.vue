@@ -73,10 +73,17 @@ import messageBox from "@/components/account/messageBox";
 
         },
 
+        mounted(){
+            console.log(this.$route.query.menu)
+            if(this.$route.query.menu){
+                 this.menu = [this.$route.query.menu];
+            }
+        },
+
         watch:{
             
             menuKey(newValue){
-                console.log(newValue)
+                //console.log(newValue)
                 if(newValue){
                     this.menu = [newValue];
                 }

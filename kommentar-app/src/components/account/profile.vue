@@ -41,7 +41,9 @@
         <li  @click="openPersonal('messageBox')">
          <span class="iconfont icon-youxiang"></span>
               <div class="texts" >
-                Mailbox
+                <a-badge :count="Object.keys(Messagebox).length" >
+                  <p >Message</p>
+                </a-badge>
               </div>
         </li>
         <li @click="logout">
@@ -53,8 +55,8 @@
       </ul>
       <!-- {{Messagebox}} -->
         <!-- <a-badge :count="Object.keys(Messagebox).length" show-zero style="font-size: xx-small;">
-            <a href="#" class="head-example" />
-          </a-badge> -->
+          <a href="#" class="head-example" />
+        </a-badge> -->
       <!-- Logout button
       <button class="btn" @click="logout">Logout</button> -->
   </div>
@@ -140,7 +142,10 @@ export default {
 
     openPersonal(menuKey){
       var sameRouter=(this.$router.currentRoute.name=="personal");
-      sameRouter = sameRouter && (this.$route.query.menu==menuKey);
+      if(sameRouter){
+        sameRouter = sameRouter && (this.$route.query.menu==menuKey);
+      }
+      
       if(!sameRouter){
           this.$router.push({path:'/Personal',
                             query:{

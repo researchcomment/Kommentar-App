@@ -215,6 +215,7 @@ Vue.use(Antd)
              * send delete Request to firebase
              */
             deleteComment(){
+                
                 this.deleted =true;
                 var request = {
                     uid:this.comment.UID,
