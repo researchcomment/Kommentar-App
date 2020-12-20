@@ -112,7 +112,6 @@ async function get_detail(doi) {
         }
 
         console.log("results construction endding：" + new Date());
-        console.log(returnValue);
         return returnValue;
     }).catch(err => {
         console.log(err);
@@ -130,7 +129,6 @@ const actions = {
         //version 2
         //找到userkey
         let userKey = firebase.auth().currentUser.uid;
-        console.log(userKey)
         var aData = new Date();//utc
         //uhrzeit, die Zeit von verschiedenen Regionen anzupassen.
         const value = aData.getFullYear() + "-" + (aData.getMonth() + 1) + "-" + aData.getDate();

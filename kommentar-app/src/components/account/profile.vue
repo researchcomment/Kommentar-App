@@ -34,15 +34,17 @@
         <li @click="openPersonal">
           <span class="iconfont icon-biaoqiankuozhan_guanli-159"></span>
           <div class="texts">
-            Personal Information
+            Personal_info
           </div>
         </li>
 
         <li>
-          <span class="iconfont icon-youxiang"></span>
-          <div class="texts">
-            Mailbox
-          </div>
+          
+        
+         <span class="iconfont icon-youxiang"></span>
+              <div class="texts">
+                Mailbox
+              </div>
         </li>
         <li @click="logout">
           <span class="iconfont icon-tuichu5"></span>
@@ -51,7 +53,10 @@
           </div>
         </li>
       </ul>
-
+      {{Messagebox}}
+        <a-badge :count="Object.keys(Messagebox).length" show-zero style="font-size: xx-small;">
+            <a href="#" class="head-example" />
+          </a-badge>
       <!-- Logout button
       <button class="btn" @click="logout">Logout</button> -->
   </div>
@@ -69,6 +74,10 @@ export default {
 
     role(){
       return this.$store.state.account.role;
+    },
+    Messagebox()
+    {
+      return this.$store.state.account.Messagebox;
     },
 
     isAdmin(){

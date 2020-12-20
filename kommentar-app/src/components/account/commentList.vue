@@ -110,9 +110,7 @@
 
             commentList(){
                 
-                let result = this.$store.state.account.commentList;
-                
-                return result;
+                return  this.$store.state.account.commentList;
             }
 
         },
@@ -129,8 +127,6 @@
             async getCommentList(){
 
                 // open the loading-animation
-                this.loading=true;
-
                 // get CommentList form firebase, the status from these comments is "in Review"
                 this.$store.dispatch("account/getCommentList")
                                             .catch(err => {
@@ -138,7 +134,6 @@
                                                          });
 
                 // close the loading-animation 
-                this.loading=false; 
 
             },
 
@@ -158,13 +153,14 @@
                 this.$store.dispatch("askFromUser/askForRequest",request)
                 .then(()=>{
                      // Refresh the display, prompting success
-                    comment.status[request] = true;
+                    
                         this.$notification.open({
                             message: 'Success',
                             description:
                             'Your Request has been submitted.',
                             icon: <a-icon type="smile" style="color: #108ee9" />,
                         });  
+                        this.getCommentList();
 
                     })
                 .catch(err => {
@@ -191,6 +187,7 @@
                         icon: <a-icon type="smile" style="color: #108ee9" />,
                     });  
                     this.editorVisibility =false;
+                    this.getCommentList();
 
                     })
                 .catch(err => {
@@ -215,7 +212,7 @@
 
             },
             openEditor(comment){
-                this.templateComment =comment;
+                this.templateComment =JSON.parse(JSON.stringify(comment));
                 this.editorVisibility =true;
             }
 
