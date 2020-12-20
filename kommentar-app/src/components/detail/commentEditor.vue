@@ -63,7 +63,6 @@ export default {
     methods: {
         
         /**
-         * TODO JJY has changed form of entry
          *  Send the request to the backend to store the comment
          *  It will be called when the submit button is clicked
          */
@@ -77,17 +76,9 @@ export default {
 
             // build request data
             var entry={
-                // doi:this.doi,
-                // username:this.$store.state.account.username,
-                // content:this.content,    // the comment is in html form 
-
-                //TODO JJY has changed form of entry
                 doi:this.doi,
-
                 author:this.$store.state.account.username,
-                 
                 content:this.content,    // the comment is in html form 
-
             }
 
             // Send request to backend

@@ -39,14 +39,22 @@
                     </a-descriptions-item>
 
                     
-                    <a-descriptions-item label="Content">
+                    <a-descriptions-item label="Content" >
                        <p v-html="comment.content"></p>
+                       <a-icon type="edit" @click.native="editorVisibility=!editorVisibility"/>
                     </a-descriptions-item>
+
+ 
 
                 </a-descriptions>
 
                 
-
+                
+                <quill-editor
+                   v-show="editorVisibility"
+                    v-model="comment.content"
+                    :options="editorOption">
+                </quill-editor>
             </a-list-item>
         </a-list>
 
@@ -66,6 +74,19 @@
                     },
                     pageSize: 6,
                 },
+
+                editorVisibility:false,
+                editorOption: {    // style for quill-editor
+                    placeholder: "Please write down your comment....",
+                    modules:{
+                        toolbar:[
+                                ['bold', 'italic', 'underline', 'strike'],    // toggled buttons
+                                ['blockquote', 'code-block'], 
+                                // [{ 'size': ['small', false, 'large', 'huge'] }], // front size
+                                [{ 'color': [] }],   // front color
+                                ]
+                            }
+                }, 
 
 
 
@@ -120,6 +141,7 @@
             /**
              * Send request to the firebase
              * @param request - "Review" or "PID"
+             * @param comment
              */
             newRequest(request,comment){
                 var request ={
@@ -143,11 +165,7 @@
                 .catch(err => {
                                 console.log(err);
                             });
-
-               
-                  
-                
-                
+ 
             },
 
             /**

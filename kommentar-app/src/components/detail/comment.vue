@@ -29,9 +29,9 @@
             <!-- Editing Options for Author -->
             <div v-if = "isAuthor">
                 
-                <a-button type="dashed" :disabled="inReview" @click="askForReview">Review</a-button>
+                <a-button type="dashed" v-if="!(comment.type=='official')" :disabled="inReview" @click="askForReview">Review</a-button>
 
-                <a-button type="dashed"  v-if="(isResearcher) && (!comment.PermanentID)"  :disabled="inRequest" @click="askForPID">Ask For PermanentID</a-button>
+                <a-button type="dashed"  v-if="(isResearcher) && (!(comment.type=='official'))"  :disabled="inRequest" @click="askForPID">Ask For PermanentID</a-button>
             
                 <a-icon type="delete" theme="twoTone" two-tone-color="#eb2f96"  @click="deleteComment" />
          
