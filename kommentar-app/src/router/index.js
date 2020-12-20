@@ -68,7 +68,6 @@ router.beforeEach(
   (to, from, next)=> {
  
   firebase.auth().onAuthStateChanged((user) => {
-		if (user) {
 			store.dispatch('account/relogin',{}).then(
       ()=>{
         next();
@@ -80,10 +79,7 @@ router.beforeEach(
       }).catch(err => {
         console.log(err);
       })
-		} else{
-			next()
-		}
-    });
+  });
    
     
       

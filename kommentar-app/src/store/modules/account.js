@@ -70,6 +70,12 @@ const actions = {
                 console.log(err);
             });
         }
+        else
+        {
+            commit('setrole',null)
+            commit('setupdate',null)
+            commit('setusername',null)
+        }
         return;
     },
     logout ({ commit}) {
