@@ -150,6 +150,7 @@ const actions = {
             likes: 0,
             dislikes: 0,
             createDate: value,
+            user_id:userKey,
         }
         let doiKey=doi.replaceAll(".","'");
         //在doi资料库中生成一个评论的key,并把key加入用户数据的comments项中
