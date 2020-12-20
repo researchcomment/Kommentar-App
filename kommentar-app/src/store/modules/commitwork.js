@@ -177,7 +177,10 @@ const actions = {
             .equalTo(type)
             .once('value')
             .then((snapshot) => {
-                return snapshot.val();
+                let tmpvalue=snapshot.val();
+                if (tmpvalue)
+                    return tempvalue;
+                return [];
             }).catch((error) => {
                 //for debug only, will be finished later
                 console.log(error.message);
