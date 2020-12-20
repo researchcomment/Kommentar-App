@@ -78,15 +78,21 @@
         </a-layout>
 
         
+        <div>
+            <bottom></bottom>
+        </div>
     </div>
+    
 </template>
 
 <script>
-
+    import bottom from '@/components/footer/bottom';
     export default {
 
         name: "admin",
-
+        components:{
+            bottom
+        },
         data(){
             return{
                 collapsed: false,
@@ -259,6 +265,11 @@
 </script>
 
 <style>
+/* searchinput style */
+.usersearch{
+    margin-left:10vh;
+}
+/* userlist style */
 .userlists{
     margin: 10vh;
     border: 1px solid rgba(0,0,0,.125);
@@ -276,6 +287,7 @@
 .combtn{
     display: block;
     margin-left: 10vh;
+    margin-bottom: 5vh;
 }
 #components-layout-demo-custom-trigger .trigger {
   font-size: 18px;

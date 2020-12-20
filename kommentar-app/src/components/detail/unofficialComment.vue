@@ -111,6 +111,7 @@ export default {
 .ucomment .ucommitli{
     margin-bottom: 4vh;
     width: 70vw;
+    position: relative;
 }
 .ant-comment-inner{
     padding: 0;
@@ -120,6 +121,10 @@ export default {
 }
 .ant-comment-content-author .ant-comment-content-author-name a{
     font-size: 1.5vw;
+}
+.ant-comment-content-author .ant-comment-content-author-time span{
+    font-size: 1.2vw;
+    line-height: -2vw
 }
 .ant-comment-content-detail p{
     font-size: 1.5vw;
@@ -148,8 +153,8 @@ export default {
     margin-right: 3vw;
 }
 .ucomment .ant-comment-actions{
-    margin-bottom: 4vh;
     padding: 0;
+    margin-bottom: 1vw;
 }
 .ucomment .ant-comment .ant-comment-actions span span{
     font-size: 1.2vw;

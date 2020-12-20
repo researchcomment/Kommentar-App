@@ -2,7 +2,7 @@
     <a-comment v-if="comment.active || isModerator ">
         <template slot="actions" >
             <!-- the number of likes -->
-            <span key="comment-basic-like">
+            <span key="comment-basic-like" class="action">
                 <a-tooltip title="Like">
                 <a-icon type="like" :theme="action === 'liked' ? 'filled' : 'outlined'" @click="like"/>
                 </a-tooltip>
@@ -12,7 +12,7 @@
             </span>
 
             <!-- the number of dislikes -->
-            <span key="comment-basic-dislike">
+            <span key="comment-basic-dislike" class="action">
                 <a-tooltip title="Dislike">
                 <a-icon
                     type="dislike"
@@ -42,9 +42,6 @@
                 <a-icon type="eye-invisible" v-if="comment.active" @click="setVisiblity"/>
                 <a-icon type="eye" v-if="!comment.active" @click="setVisiblity"/>
             </div>
-            
-
-
         </template>
     
         <!-- the detail of this comment -->
@@ -66,8 +63,12 @@
             </a-tooltip>
 
             
-
+            
     </a-comment>
+    <!-- cover -->
+
+
+    
 </template>
 
 <script>
@@ -291,5 +292,27 @@ Vue.use(Antd)
 .avatarp{
     font-size: 2.5vw;
     line-height: 4.4vw;
+}
+#components-popover-demo-placement .ant-btn {
+  width: 5vw;
+  text-align: center;
+  padding: 0;
+  margin-right: 3vw;
+  margin-bottom: 3vw;
+}
+.auactions{
+    cursor: pointer;
+    height: 5vh;
+}
+.auactionstabu{
+    pointer-events: none;
+    height: 5vh;
+    text-decoration: line-through;
+}
+.actionb{
+    left: 10vw;
+}
+.ant-comment{
+    z-index: 500;
 }
 </style>
