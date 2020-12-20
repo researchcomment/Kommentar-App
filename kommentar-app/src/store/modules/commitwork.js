@@ -170,37 +170,16 @@ const actions = {
         //rankType: 'submittime', 'onlyfromCurrentUser'
         let result=[];  
         let doiKey=doi.replaceAll(".","'");
-        result = await firebase
+        return firebase
             .database()
             .ref('doi_repository/' + doiKey + '/comments')
             .once('value')
             .then((snapshot) => {
-                var commentsList = []
-                var commentsList_CurrentUser = []
-                snapshot.forEach((childSnapshot) => {
-                    if (childSnapshot.val().type === type) {
-                        var value=childSnapshot.val();
-                        value.UID=childSnapshot.key;
-                        commentsList.push(value)
-                        if (childSnapshot.val().usr === username) {
-                            commentsList_CurrentUser.push(value)
-                        }
-                    }
-                })
-                if (rankType === 'onlyfromCurrentUser') {
-                    return commentsList_CurrentUser.slice().reverse();
-                }
-                else {
-                    return commentsList.slice().reverse();
-                }
+                return snapshot.val();
             }).catch((error) => {
                 //for debug only, will be finished later
                 console.log(error.message);
             });
-        
-        return result;
-        
-        
     },
 
    
