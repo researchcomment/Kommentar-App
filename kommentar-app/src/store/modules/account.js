@@ -5,7 +5,7 @@ import firebase from "firebase/app";
 const state = () => ({
     username: null,
     role: null, //list:['default', 'Researcher', 'Reviewer','Moderator','Admin']  from JJY
-    update: null,
+    update: {},
     error: null,
     commentList:[],
     Messagebox:{},
@@ -72,8 +72,8 @@ const actions = {
         }
         else
         {
-            commit('setrole',null)
-            commit('setupdate',null)
+            commit('setrole',[])
+            commit('setupdate',{})
             commit('setusername',null)
         }
         return;
@@ -85,8 +85,8 @@ const actions = {
         .signOut()
         .then(() => {
            
-            commit('setrole',null)
-            commit('setupdate',null)
+            commit('setrole',[])
+            commit('setupdate',{})
             commit('setusername',null)
         })
         .catch(error => {

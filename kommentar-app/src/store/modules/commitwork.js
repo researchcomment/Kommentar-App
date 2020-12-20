@@ -170,9 +170,11 @@ const actions = {
         //rankType: 'submittime', 'onlyfromCurrentUser'
         let result=[];  
         let doiKey=doi.replaceAll(".","'");
-        return firebase
-            .database()
-            .ref('doi_repository/' + doiKey + '/comments')
+        let commentsRef=firebase.database().ref('doi_repository/' + doiKey + '/comments');
+        if (type=="unofficial")
+        return 
+            commentsRef.orderByChild("type")
+            .equalTo(type)
             .once('value')
             .then((snapshot) => {
                 return snapshot.val();
