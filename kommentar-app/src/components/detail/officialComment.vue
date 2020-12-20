@@ -67,10 +67,11 @@ export default {
       
       // send request
       var result = await this.$store.dispatch(
-                                              "commitwork/loadOfficialComments",
+                                              "commitwork/loadComments",
                                               {doi: this.doi, 
                                                rankType: "submittime", 
-                                               username: this.$store.state.account.username }
+                                               username: this.$store.state.account.username ,
+                                               type:"official"}
                                               );
 
       // !FOR TEST 

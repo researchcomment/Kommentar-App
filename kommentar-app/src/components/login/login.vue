@@ -36,7 +36,7 @@
                 formLabelWidth: '120px',
                 dialogFormVisible: false,
                 form:{
-                    username:"123@gmail.com",    //! FOR TEST  default: ""
+                    username:"test3@gmail.com",    //! FOR TEST  default: ""
                     password:"123123",          //! FOR TEST   default: ""
                 },  
                 validationErrors: [],
@@ -68,8 +68,26 @@
                 if (this.validationErrors.length <= 0) {
 
                     // send request to firebase
-                    this.$store.dispatch('account/login',this.form);
+                    this.$store.dispatch('account/login',this.form).then(()=>{
+                        var error=this.$store.state.account.error;
+                        
+                        if(error){
+                            this.$message({         
+                                type: 'error',
+                                message: error,
+                                duration: 3000
+                            });
+                        }
+                        else{
+                            this.$message({         
+                                type: 'success',
+                                message: "Login successfully. Welcome!",
+                                duration: 1000
+                            });
 
+                        }
+                    })
+                    
                 }
 
                 // close the login Form

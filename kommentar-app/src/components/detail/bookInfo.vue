@@ -15,7 +15,7 @@
             <h2 style="font-size:3vw">
                 {{detail.title}}
             </h2>
-
+            
             <!-- Detail  -->
             <div>
                 <div v-for="(item, index) in detail" v-bind:key="index">

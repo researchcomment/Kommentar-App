@@ -4,7 +4,10 @@ import Home from '../views/Home.vue'
 import Search from  '../views/Search.vue'
 import Detail from  '../views/Detail.vue'
 import Admin from  '../views/Admin.vue'
+import Reviewer from  '../views/Reviewer.vue'
+import Personal from  '../views/Personal.vue'
 import store from '@/store'
+import firebase from "firebase/app";
 Vue.use(Router)
 
 
@@ -38,6 +41,16 @@ const router = new Router({
       component: Admin
     },
     {
+      path: '/Review',
+      name: 'reviewer',
+      component: Reviewer
+    },
+    {
+      path: '/Personal',
+      name: 'Personal',
+      component: Personal
+    },
+    {
       path: '*',
       name: 'other',
       // route level code-splitting
@@ -50,12 +63,24 @@ const router = new Router({
   ]
 })
 
-router.beforeEach((to, from, next) => {
-  const username = window.localStorage.getItem('username')
+
+router.beforeEach(
+  (to, from, next)=> {
+ 
+  firebase.auth().onAuthStateChanged((user) => {
+		if (user) {
+			store.dispatch('account/relogin',{}).then(
+      ()=>{next();}
+      ).catch(err => {
+        console.log(err);
+      })
+		} else{
+			next()
+		}
+  	});
+
   // update the login status for new Router
-  store.commit("account/setusername",username); 
   
-  next()
 
 })
 

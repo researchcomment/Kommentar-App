@@ -155,7 +155,8 @@ export default {
                                                 to:this.page*10,
                                                 date:this.filterCondition.date,
                                                 type:this.filterCondition.selectedType,
-                                                flag:newSearch})   // flag = false , when it should change page, not new search
+                                                flag:newSearch
+                                                })   // flag = false , when it should change page, not new search
         .then((result) => {
           this.searchResultList = result.list;
           this.resultLength=result.length;

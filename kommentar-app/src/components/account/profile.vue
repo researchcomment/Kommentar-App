@@ -10,15 +10,34 @@
         <li>
           <span class="iconfont icon-jiaose"></span>
           <div class="texts">
-            Role: {{role}}
+            
           </div>
         </li>
+
+        <!-- Admin -->
         <li v-show="isAdmin" @click="openAdmin">
           <span class="iconfont icon-biaoqiankuozhan_guanli-159"></span>
           <div class="texts">
             Admin
           </div>
         </li>
+
+        <!-- Reviewer -->
+        <li v-show="isReviewer" @click="openReviewer">
+          <span class="iconfont icon-biaoqiankuozhan_guanli-159"></span>
+          <div class="texts">
+            Reviewer
+          </div>
+        </li>
+
+        <!-- Personal Information -->
+        <li @click="openPersonal">
+          <span class="iconfont icon-biaoqiankuozhan_guanli-159"></span>
+          <div class="texts">
+            Personal Information
+          </div>
+        </li>
+
         <li>
           <span class="iconfont icon-youxiang"></span>
           <div class="texts">
@@ -47,19 +66,31 @@ export default {
     }
   },
   computed:{
-    role:function(){
+
+    role(){
       return this.$store.state.account.role;
     },
+
     isAdmin(){
-      return true; //!for test
-      if(this.username){
+      if(this.role){
           //check whether the logged user is Admin
           return (this.role.indexOf("Admin"))>-1;
       }
       else{
           return false;
       }
-    }
+    },
+
+    isReviewer(){
+      if(this.role){
+          //check whether the logged user is Admin
+          return (this.role.indexOf("Reviewer"))>-1;
+      }
+      else{
+          return false;
+      }
+    },
+
   },
   methods:{
     close(){
@@ -67,11 +98,53 @@ export default {
     },
     logout(){
       this.$store.dispatch('account/logout');
+      this.$message({
+          type: 'success',
+          message: "Logout successfully. Goodbye!",
+          duration: 1000
+      });
       this.$emit('logout');
+      var router=this.$router.currentRoute.name;
+      console.log(router);
+      if(router != "search" || router != "home"){
+        this.$router.back(-1);
+      }
     },
     openAdmin(){
-      this.$router.push('/Admin');
-    }
+      if(this.$router.currentRoute.path!="/Admin"){
+        this.$router.push('/Admin');
+      }
+      else{
+        this.openNotification();
+      }
+      
+    },
+    openReviewer(){
+      if(this.$router.currentRoute.path!="/Review"){
+        this.$router.push('/Review');
+      }
+      else{
+        this.openNotification();
+      }
+    },
+    openPersonal(){
+      if(this.$router.currentRoute.path!="/Personal"){
+        this.$router.push('/Personal');
+      }
+      else{
+        this.openNotification();
+      }
+    },
+
+    openNotification() {
+      var msg = "You are already on this page";
+      this.$notification["warning"]({
+        message: 'Oops',
+        description:msg,
+      });
+    },
+  
+    
   }
 
 }
