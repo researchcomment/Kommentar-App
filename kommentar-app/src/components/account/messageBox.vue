@@ -5,7 +5,8 @@
         <div v-for="item in Messagebox" :key="item.key"   style="background:#ECECEC; padding:10px">
 
                 <a-card  title="Message" >
-                    <a slot="extra" >delete</a>
+                    
+                    <a slot="extra" @click="deleteMessage(item.key)">delete</a>
                     
                     <a-descriptions  bordered  :column="{ xxl: 4, xl: 3, lg: 3, md: 3, sm: 2, xs: 1 }">
                         
@@ -46,6 +47,10 @@
 
         },
         methods:{
+
+            deleteMessage(key){
+                this.$store.dispatch("askFromUser/deleteMaessageFromBox",{message_id:key});
+            },
             
             /**
              * open a new window which shows the details of this book
