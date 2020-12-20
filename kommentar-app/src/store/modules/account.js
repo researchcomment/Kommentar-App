@@ -127,10 +127,10 @@ const actions = {
                 let doiKey,tempCommitValue;
                 snapshot.forEach((childSnapshot) => {
                     doiKey=childSnapshot.val().doi.replaceAll(".","'");
-                    tempCommitValue=firebase.database().ref('doi_repository/' + doiKey + '/comments/'+childSnapshot.key)
+                    firebase.database().ref('doi_repository/' + doiKey + '/comments/'+childSnapshot.key)
                     .once('value').then((value)=>{
-                        tempCommitValue=childSnapshot.val();
-                        tempCommitValue.commitKey=childSnapshot.key;
+                        tempCommitValue=value.val();
+                        tempCommitValue.commitKey=value.key;
                         commit('setCommentList',tempCommitValue);
                     })
 

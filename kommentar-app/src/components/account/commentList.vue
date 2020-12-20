@@ -3,7 +3,7 @@
         <!-- List of Comments -->
         <a-list item-layout="vertical" size="large" :pagination="pagination" :data-source="commentList">
                  
-            <a-list-item v-if="comment.status['Review']" slot="renderItem" slot-scope="comment" >
+            <a-list-item v-if="comment.status['Review']" slot="renderItem" slot-scope="comment"  rowKey="key">
                 
                 <!-- Detail about this comment -->
                 <a-descriptions  bordered  :column="{ xxl: 4, xl: 3, lg: 3, md: 3, sm: 2, xs: 1 }">
@@ -83,14 +83,10 @@
 
             commentList(){
                 console.log(this.$store.state.account.commentList);
-                var result = this.$store.state.account.commentList;
+                let result = this.$store.state.account.commentList;
                 
-                commentList= Object.keys(result).map((key) => {
-                    var comment = result[key];
-                    comment.key=key;
-                    return comment;
-                })
-                return commentList;
+                
+                return result;
             }
 
         },
