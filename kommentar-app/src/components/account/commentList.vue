@@ -11,7 +11,7 @@
                     <a-descriptions-item label="type">{{comment.type}}</a-descriptions-item>
                     
                     <a-descriptions-item label="Book Link">
-                        <p @click="seeDetail(comment.doi_nr)">{{comment.doi_nr}}</p>
+                        <p @click="seeDetail(comment.doi_nr)">{{getTitle(comment.doi_nr)}}</p>
                     </a-descriptions-item>
 
                     <a-descriptions-item label="Requests in Checking">
@@ -111,7 +111,13 @@
             commentList(){
                 
                 return  this.$store.state.account.commentList;
+            },
+
+            title(doi){
+                console.log(doi)
+                return this.getTitle(doi);
             }
+            
 
         },
 
@@ -169,6 +175,9 @@
  
             },
 
+            /**
+             * send Editor Request to firebase
+             */
             editorRequest(){
                 var request ={
                     uid:this.templateComment.commitKey, 
@@ -194,6 +203,15 @@
                                 console.log(err);
                             });
 
+            },
+
+            getTitle(doi){
+                this.$store.dispatch("commitwork/askfordetail", {
+                                    doi:doi,
+                                    username:this.username,}).then(()=>) 
+                  
+                //console.log(detail.title)
+                return detail.title;
             },
 
             /**

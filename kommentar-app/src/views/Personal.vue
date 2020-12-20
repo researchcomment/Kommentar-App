@@ -74,9 +74,8 @@ import messageBox from "@/components/account/messageBox";
         },
 
         mounted(){
-            console.log(this.$route.query.menu)
             if(this.$route.query.menu){
-                 this.menu = [this.$route.query.menu];
+                this.menu = [this.$route.query.menu];
             }
         },
 
@@ -87,9 +86,7 @@ import messageBox from "@/components/account/messageBox";
                 if(newValue){
                     this.menu = [newValue];
                 }
-            },
-
-            
+            }, 
         },
         
 

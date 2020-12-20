@@ -85,6 +85,7 @@ export default {
             let result=1;
             this.$store.dispatch('commitwork/sendFromEditorToDatabase',entry).then(() => {
                 this.$emit("submit");
+                this.content=null;
             }).catch(err => {
                 console.log(err);
             })
