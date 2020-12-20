@@ -119,7 +119,7 @@ const actions = {
             });
     },
     async getCommentList({commit}){
-        commit(setCommentListNull);
+        commit('setCommentListNull');
         let user=firebase.auth().currentUser;
         if (user){
             commit ('setusername',user.email);
@@ -127,11 +127,11 @@ const actions = {
                 let doiKey,tempCommitValue;
                 snapshot.forEach((childSnapshot) => {
                     doiKey=childSnapshot.val().doi.replaceAll(".","'");
-                    tempCommitValue=firebase.database().ref('doi_repository/' + doiKey + '/comments/'+childSnapshot.key)
+                    firebase.database().ref('doi_repository/' + doiKey + '/comments/'+childSnapshot.key)
                     .once('value').then((value)=>{
-                        tempCommitValue=childSnapshot.val();
-                        tempCommitValue.commitKey=childSnapshot.key;
-                        commit(setCommentList,tempCommitValue);
+                        tempCommitValue=value.val();
+                        tempCommitValue.commitKey=value.key;
+                        commit('setCommentList',tempCommitValue);
                     })
 
                 })
