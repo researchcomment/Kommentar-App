@@ -3,7 +3,7 @@
         <!-- List of Comments -->
         <a-list item-layout="vertical" size="large" :pagination="pagination" :data-source="commentList">
                  
-            <a-list-item v-if="comment.status.indexOf('Review')>-1" slot="renderItem" slot-scope="comment" >
+            <a-list-item v-if="comment.status['Review']" slot="renderItem" slot-scope="comment" >
                 
                 <!-- Detail about this comment -->
                 <a-descriptions  bordered  :column="{ xxl: 4, xl: 3, lg: 3, md: 3, sm: 2, xs: 1 }">
@@ -23,7 +23,7 @@
                         <!-- Review Request -->
                         <a-tag 
                         color="cyan" 
-                        v-if="comment.status.indexOf('Review')<0"  
+                        v-if="!comment.status['Review']"  
                         @click="newRequest('Review',comment)">
                         Review
                         </a-tag>
@@ -31,7 +31,7 @@
                         <!-- PID Request -->
                         <a-tag 
                         color="cyan" 
-                        v-if="comment.status.indexOf('PID')<0 && role.indexOf('Researcher')>-1" 
+                        v-if=" !comment.status['PID'] && role.indexOf('Researcher')>-1" 
                         @click="newRequest('PID',comment)">
                             PID
                         </a-tag>
@@ -57,7 +57,7 @@
         name:"reviewer",
         data(){
             return{
-                commentList:[],
+                //commentList:[],
 
                 pagination: {
                     onChange: page => {
@@ -81,6 +81,18 @@
                 return this.$store.state.account.role;
             },
 
+            commentList(){
+                console.log(this.$store.state.account.commentList);
+                var result = this.$store.state.account.commentList;
+                
+                commentList= Object.keys(result).map((key) => {
+                    var comment = result[key];
+                    comment.key=key;
+                    return comment;
+                })
+                return commentList;
+            }
+
         },
 
         mounted(){
@@ -103,19 +115,15 @@
                 // TODO:this.commentList = result;
 
 
-                // !FOR TEST     
-                var result = await this.$store.dispatch("commitwork/loadComments", 
-                                                    {doi: "10.18034/abcra", 
-                                                     rankType: 'submittime',
-                                                     username: this.$store.state.account.username,
-                                                     type:"unofficial"})
+                // // !FOR TEST     
+                this.$store.dispatch("account/getCommentList")
                                             .catch(err => {
                                                             console.log(err);
                                                          });
-                this.commentList = result;
-                for(var comment of this.commentList){
-                    comment.status=["Review"];
-                }
+                // this.commentList = result;
+                // for(var comment of this.commentList){
+                //     comment.status=["Review"];
+                // }
 
                 // close the loading-animation 
                 this.loading=false; 

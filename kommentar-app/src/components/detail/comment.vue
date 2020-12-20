@@ -32,7 +32,7 @@
                 <a-button type="dashed" :disabled="inReview" @click="askForReview">Review</a-button>
 
                 <a-button type="dashed"  v-if="(isResearcher) && (!comment.PermanentID)"  :disabled="inRequest" @click="askForPID">Ask For PermanentID</a-button>
-
+            
                 <a-icon type="delete" theme="twoTone" two-tone-color="#eb2f96"  @click="deleteComment" />
          
             </div>
@@ -121,7 +121,7 @@ Vue.use(Antd)
             isResearcher(){
                 var login = this.$store.state.account.role;
                 if(login){
-                    return (this.$store.state.account.role.indexOf("Reaseacher"))>-1;
+                    return (this.$store.state.account.role.indexOf("Researcher"))>-1;
                 }
                 return false;
             },

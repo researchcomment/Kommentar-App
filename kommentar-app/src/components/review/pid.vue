@@ -3,7 +3,7 @@
         <!-- List of Comments -->
         <a-list item-layout="vertical" size="large" :pagination="pagination" :data-source="commentList">
                  
-            <a-list-item  v-if="comment.status.indexOf('PID')>-1"  slot="renderItem" slot-scope="comment" >
+            <a-list-item slot="renderItem" slot-scope="comment" >
                 
                 <!-- About Author -->
                 <a-list-item-meta>
@@ -128,20 +128,22 @@
                 // TODO:this.commentList = result;
 
 
-                // !FOR TEST     
-                var result = await this.$store.dispatch("commitwork/loadComments", 
-                                                    {doi: "10.18034/abcra", 
-                                                     rankType: 'submittime',
-                                                     username: this.$store.state.account.username,
-                                                     type:"unofficial"})
-                                            .catch(err => {
-                                                            console.log(err);
-                                                         });
-                this.commentList = result;
-                for(var comment of this.commentList){
-                    comment.status=["Review","PID"];
-                }
-
+                
+                this.$store.dispatch("adminAktion/getCommentListForRequest", 
+                                                    {requestType:"PID"})
+                .then((result)=>{
+                                
+                                this.commentList= Object.keys(result).map((key) => {
+                                    var comment = result[key];
+                                    comment.key=key;
+                                    return comment;
+                                })
+ 
+                                })
+                .catch(err => {
+                                console.log(err);
+                              });
+               
                 // close the loading-animation 
                 this.loading=false; 
 

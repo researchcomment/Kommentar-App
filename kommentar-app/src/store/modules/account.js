@@ -119,7 +119,7 @@ const actions = {
             });
     },
     async getCommentList({commit}){
-        commit(setCommentListNull);
+        commit('setCommentListNull');
         let user=firebase.auth().currentUser;
         if (user){
             commit ('setusername',user.email);
@@ -131,7 +131,7 @@ const actions = {
                     .once('value').then((value)=>{
                         tempCommitValue=childSnapshot.val();
                         tempCommitValue.commitKey=childSnapshot.key;
-                        commit(setCommentList,tempCommitValue);
+                        commit('setCommentList',tempCommitValue);
                     })
 
                 })
