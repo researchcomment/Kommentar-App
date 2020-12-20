@@ -196,6 +196,14 @@
 
             },
 
+            getTitle(doi){
+                this.$store.dispatch("commitwork/askfordetail", {
+                    doi:doi,
+                username:this.username,}).then(
+                    (detail)=>{
+                        return detail.title;
+                    })
+            },
             /**
              * open a new window which shows the details of this book
              */
