@@ -49,7 +49,7 @@
         methods:{
 
             deleteMessage(key){
-                this.$store.dispatch("askFromUser/deleteMaessageFromBox",{message_id:key});
+                this.$store.dispatch("askFromUser/deleteMessageFromBox",{message_id:key});
             },
             
             /**
