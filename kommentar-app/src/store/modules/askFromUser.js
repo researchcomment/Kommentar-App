@@ -10,7 +10,11 @@ const actions = {
     
 
     //requestType is Review/PID
+<<<<<<< HEAD
     async askForRequest({ commit, state,dispatch }, { uid,doi, requestType }) {
+=======
+    async askForRequest({ commit, state, dispatch }, { uid,doi, requestType }) {
+>>>>>>> origin/jjydev/vue_setup
         let doiKey=doi.replaceAll(".","'");
         return firebase.database().ref('doi_repository/' + doiKey + '/comments/' + uid)
         .once('value')

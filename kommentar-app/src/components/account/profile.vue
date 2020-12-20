@@ -110,7 +110,8 @@ export default {
       }
     },
     openAdmin(){
-      if(this.$router.currentRoute.name!="Admin"){
+
+      if(this.$router.currentRoute.name!="admin"){
         this.$router.push('/Admin');
       }
       else{
@@ -119,7 +120,8 @@ export default {
       
     },
     openReviewer(){
-      if(this.$router.currentRoute.name!="Review"){
+ 
+      if(this.$router.currentRoute.name!="reviewer"){
         this.$router.push('/Review');
       }
       else{
@@ -127,7 +129,9 @@ export default {
       }
     },
     openPersonal(){
-      if(this.$router.currentRoute.name!="Personal"){
+
+      if(this.$router.currentRoute.name!="personal"){
+        
         this.$router.push('/Personal');
       }
       else{

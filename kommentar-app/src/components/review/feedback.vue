@@ -1,7 +1,7 @@
 <template>
     <div>
         <!-- List of Comments -->
-        <a-list item-layout="vertical" size="large" :pagination="pagination" :data-source="commentList">
+        <a-list item-layout="vertical" size="large" :pagination="pagination" :data-source="commentList" >
                  
             <a-list-item slot="renderItem" slot-scope="comment" >
                 
@@ -26,7 +26,8 @@
                     </a-descriptions-item>
 
                     <a-descriptions-item label="Visibility">
-                        {{comment.active}}
+                        <p v-show="comment.active">Yes</p>
+                        <p v-show="!comment.active">No</p>
                     </a-descriptions-item>
 
                     <a-descriptions-item label="Request">
@@ -111,16 +112,10 @@
                 // open the loading-animation
                 this.loading=true;
 
-                // get CommentList form firebase, the status from these comments is "in Review"
-                // TODO:this.$store.....getCommentListInReview("Review");
-                // TODO:this.commentList = result;
-
-
                 this.$store.dispatch("adminAktion/getCommentListForRequest", 
                                                     {requestType:"Review"})
                 .then((result)=>{
 
-                            
                                 this.commentList= Object.keys(result).map((key) => {
                                     var comment = result[key];
                                     comment.key=key;
@@ -155,20 +150,31 @@
                     return;
                 }
                 else{
-                    //TODO this.$store.dispatch("replyReview",this.comment.UID,feedback);
+                    var request = {
+                        doi:comment.doi_nr,
+                        comment_uid:comment.key,
+                        user_id:comment.user_id,
+                        requestType:"Review",
+                        feedback_content:feedBack,
+                        comment_content:comment.content,
+                    };
+                    this.$store.dispatch("adminAktion/replyRequest",request).then(()=>{
+                        // Refresh the display, prompting success
+                        var index =  this.commentList.indexOf(comment);
+                        if (index > -1) {
+                            this.commentList.splice(index, 1);
+                        }
+                        this.visibleFeedback = false;
+                        this.$notification.open({
+                            message: 'Success',
+                            description:
+                            'Your Feedback has been communicated.',
+                            icon: <a-icon type="smile" style="color: #108ee9" />,
+                        });  
 
-                    // Refresh the display, prompting success
-                    var index =  this.commentList.indexOf(comment);
-                    if (index > -1) {
-                        this.commentList.splice(index, 1);
-                    }
-                    this.visibleFeedback = false;
-                    this.$notification.open({
-                        message: 'Success',
-                        description:
-                        'Your Feedback has been communicated.',
-                        icon: <a-icon type="smile" style="color: #108ee9" />,
-                    });  
+                    });
+
+                    
                   
                 }
                 
