@@ -138,7 +138,8 @@ export default {
     openNotification() {
       var msg = "You are already on this page";
       this.$notification["warning"]({
-        message: 'Oops',
+        message: "Oops",
+        placement:"topLeft",
         description:msg,
       });
     },

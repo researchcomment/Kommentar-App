@@ -37,7 +37,7 @@
 
         <!-- Options for the user, who is already a researcher -->
         <div v-show="role.indexOf('Researcher')>-1">
-
+            
             <!-- Reviewer Card -->
             <a-card hoverable style="width: 200px"  v-if="role.indexOf('Reviewer')<0 && !update['Reviewer']" @click="updateRole('Reviewer')">
                 <img
