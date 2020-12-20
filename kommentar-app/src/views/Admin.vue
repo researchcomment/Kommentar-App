@@ -1,25 +1,26 @@
 <template>
     <div>
-        
-        <!-- Menu -->
+       
         <a-layout id="components-layout-demo-custom-trigger">
+
+             <!-- Menu -->
             <a-layout-sider v-model="collapsed" :trigger="null" collapsible>
 
                 <a-menu theme="dark" mode="inline" v-model="menuKey" >
 
-                    <a-menu-item key="dr">
+                    <a-menu-item key="Researcher">
                         <span>default => Reseacher</span>
                     </a-menu-item>
 
-                    <a-menu-item key="rr">
+                    <a-menu-item key="Moderator">
                         <span>Reseacher => Reviewer</span>
                     </a-menu-item>
 
-                    <a-menu-item key="rm">
+                    <a-menu-item key="Reviewer">
                         <span>Reseacher => Moderator</span>
                     </a-menu-item>
                     
-                    <a-menu-item key="ra">
+                    <a-menu-item key="Admin">
                         <span>Reseacher => Admin</span>
                     </a-menu-item>
                 </a-menu>
@@ -46,11 +47,10 @@
                     <input type="text" style="margin-left:10vh" v-model="searchText">
                 
                     <!-- Requests -->
-                    <a-table  :data-source="userList[menuKey[0]]" rowKey="username" @onFilter="filter(username)">
-                        
+                    <a-table  :data-source="userList[menuKey[0]]" rowKey="username"  >
+                          
                         <!-- User Name -->
                         <a-table-column key="username" title="User Name" data-index="username" />
-
                         
                         <!-- Role -->
                         <a-table-column key="role" title="Role" data-index="role">
@@ -70,6 +70,7 @@
                                 </span>
                             </template>
                         </a-table-column>
+                         
                     </a-table>
 
                 </a-layout-content>
@@ -95,7 +96,7 @@
         data(){
             return{
                 collapsed: false,
-                menuKey:["dr"],
+                menuKey:["Researcher"],
                
                 searchText:"",
                 userList:{},
@@ -163,10 +164,10 @@
                 // get userList from DB
 
                 this.userList={
-                    dr:[],
-                    rm:[],
-                    rr:[],
-                    ra:[],
+                    Researcher:[],
+                    Moderator:[],
+                    Reviewer:[],
+                    Admin:[],
                 };
 
                 this.$store.dispatch("adminAktion/getUserList",{toRole:"Researcher"}).then((result)=>{
@@ -174,7 +175,7 @@
                         for(var key in result){
                             var user = result[key];
                             user.key=key;
-                            this.userList.dr.push(user);
+                            this.userList.Researcher.push(user);
                         }
                     }
                     
@@ -184,7 +185,7 @@
                     for(var key in result){
                         var user = result[key];
                         user.key=key;
-                        this.userList.rr.push(user);
+                        this.userList.Reviewer.push(user);
 
                     }
                 }).catch(err => {console.log(err);});
@@ -193,7 +194,7 @@
                     for(var key in result){
                         var user = result[key];
                         user.key=key;
-                        this.userList.rm.push(user);
+                        this.userList.Moderator.push(user);
 
                     }
                 }).catch(err => {
@@ -204,7 +205,7 @@
                     for(var key in result){
                         var user = result[key];
                         user.key=key;
-                        this.userList.ra.push(user);
+                        this.userList.Admin.push(user);
 
                     }
                 }).catch(err => {
@@ -217,24 +218,15 @@
              * Request the background to change the role of users
              */
             updateRole(agree,user){
-                var role="";
-                if(this.menuKey=="dr"){
-                    role="Researcher";
-                }
-                else if(this.menuKey=="rm"){
-                   role="Moderator";     
-                }
-                else if(this.menuKey=="rr"){
-                    role="Reviewer";
-                }
-                else if(this.menuKey=="ra"){
-                    role="Admin";
-                }
-               
+                var role=this.menuKey[0];
+
                 this.$store.dispatch("adminAktion/updateRole",{toRole:role,
-                                                                flag:agree,
+                                                                 flag:agree,
                                                                     userKey:user.key,});
-                
+                var index = this.userList[role].indexOf(user);
+                if (index > -1) {
+                        this.userList[role].splice(index, 1);
+                }
             
             },
 
@@ -245,9 +237,10 @@
              * @param userName - username in the list
              * @returns boolean   - true, if it related to search text
              */
-            filter(userName){
-                
-                return userName.indexOf(this.searchText) > -1 ;
+            onFilter(userName){ 
+                console.log(userName)
+                return false
+                // return userName.indexOf(this.searchText) > -1 ;
             },
 
             getColor(tag){
