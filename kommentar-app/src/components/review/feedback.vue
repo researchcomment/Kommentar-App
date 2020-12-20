@@ -104,7 +104,6 @@
         methods:{
             
             /**
-             * ! 涉及后端交互 getCommentListInReview() 
              * Request the CommentList, which status is "in Review", from background
              */
             async getCommentList(){
@@ -134,8 +133,6 @@
 
             
             /**
-             * ! 涉及后端交互 
-             * ! 接口 replyReview(UID,feedback)
              * Send Feedback to the firebase
              */
             replyReview(comment){
@@ -172,9 +169,7 @@
                             icon: <a-icon type="smile" style="color: #108ee9" />,
                         });  
 
-                    });
-
-                    
+                    });    
                   
                 }
                 

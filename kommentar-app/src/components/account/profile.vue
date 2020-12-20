@@ -115,9 +115,7 @@ export default {
       if(router=="personal"||router=="admin"||router=="reviewer"){
         this.$router.push('/');
       }
-      // if(router != "search" || router != "home"){
-      //   this.$router.back(-1);
-      // }
+
       
     },
     openAdmin(){
