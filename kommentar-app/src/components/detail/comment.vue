@@ -34,7 +34,20 @@
                 <a-button type="dashed"  v-if="(isResearcher) && (!(comment.type=='official'))"  :disabled="inRequest" @click="askForPID">Ask For PermanentID</a-button>
             
                 <a-icon type="delete" v-if="!(comment.type=='official')" theme="twoTone" two-tone-color="#eb2f96"  @click="deleteComment" />
-         
+
+                <a-button :disabled="comment.type=='official'" type="edit" @click="openEditor()">Editor</a-button>
+
+                <a-modal 
+            :visible="editorVisibility" 
+            title="Editor" 
+            @ok="editorRequest"
+            @cancel="editorVisibility =false">
+            <quill-editor
+                v-model="content"
+                :options="editorOption"
+            >
+            </quill-editor>
+        </a-modal>
             </div>
 
             <!-- Editing Options for Moderator : hide/unhide the comment -->
@@ -89,6 +102,20 @@ Vue.use(Antd)
                 alreadySendLikes:false,    // Can't repeat likes 
 
                 comment:this.commentFromParent, 
+
+                content:comment.content,
+                editorVisibility:false,
+                editorOption: {    // style for quill-editor
+                    placeholder: "Please write down your comment....",
+                    modules:{
+                        toolbar:[
+                                ['bold', 'italic', 'underline', 'strike'],    // toggled buttons
+                                ['blockquote', 'code-block'], 
+                                // [{ 'size': ['small', false, 'large', 'huge'] }], // front size
+                                [{ 'color': [] }],   // front color
+                                ]
+                            }
+                }, 
                
                //! Sample Comment FOR TEST 
                /* comment: {
@@ -227,6 +254,39 @@ Vue.use(Antd)
                 });
             
             },
+
+
+
+            /**
+             * send Editor Request to firebase
+             */
+            editorRequest(){
+                var request ={
+                    uid:this.comment.key, 
+                    doi:this.comment.doi_nr,
+                    attribute:"content",
+                    value:this.this.content,
+                }
+                this.$store.dispatch("askFromUser/setAttribute",request)
+                .then(()=>{
+                   
+                   // Refresh the display, prompting success                   
+                    this.$notification.open({
+                        message: 'Success',
+                        description:
+                        'Your Request has been submitted.',
+                        icon: <a-icon type="smile" style="color: #108ee9" />,
+                    });  
+                    
+                    this.editorVisibility =false;
+                    this.$emit("refresh");
+
+                })
+                .catch(err => {
+                                console.log(err);
+                            });
+
+            },
            
             /**
              * When the user clicks the like button, send like request to firebase
@@ -284,6 +344,11 @@ Vue.use(Antd)
                 
                 this.$store.dispatch("askFromUser/setAttribute",request);
 
+            },
+
+            openEditor(){
+                this.content =this.comment.content;
+                this.editorVisibility =true;
             }
         },
 };

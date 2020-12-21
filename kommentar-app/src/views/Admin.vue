@@ -27,8 +27,7 @@
             </a-layout-sider>
 
             <!-- Contents -->
-            
-            <a-layout>
+            <a-layout >
                 <a-layout-header style="background: #fff; padding: 0">
                     
                     <a-icon
@@ -113,7 +112,6 @@
             return{
                 collapsed: false,
                 menuKey:["Researcher"],
-               
                 searchText:"",
                 userList:{},
                 
@@ -186,9 +184,14 @@
             /**
              * Request the userList from background
              */
-            async getUserList(){
-
-                var toRoleList=["Researcher","Reviewer","Moderator","Admin"];
+            async getUserList(role){
+                var toRoleList=[];
+                if(!role){
+                    toRoleList=["Researcher","Reviewer","Moderator","Admin"];
+                }
+                else{
+                    toRoleList=[role];
+                }
 
                 // get userList from DB
                 toRoleList.map((role)=>{
@@ -206,17 +209,16 @@
                 })
             },
 
-            async getPartUserList(role){
-                this.$store.dispatch("adminAktion/getUserList",{toRole:role}).then((result)=>{
-                                           
-                        var list = Object.keys(result).map((key) => {
-                                var user = result[key];
-                                user.key=key;
-                                return user;
-                        })
-                        this.userList[role] =list;
-                    }).catch(err => {console.log(err);});
-            },
+            // async getUserList(role){
+            //     this.$store.dispatch("adminAktion/getUserList",{toRole:role}).then((result)=>{                                          
+            //             var list = Object.keys(result).map((key) => {
+            //                     var user = result[key];
+            //                     user.key=key;
+            //                     return user;
+            //             })
+            //             this.userList[role] =list;
+            //         }).catch(err => {console.log(err);});
+            // },
 
             /**
              * Request the background to change the role of users
@@ -251,7 +253,7 @@
             
                 this.$store.dispatch("adminAktion/updateRole",request).then(()=>{
                     this.handleCancel();
-                    this.getPartUserList(role);
+                    this.getUserList(role);
                 }).catch((err)=>{console.log(err)})
         
             },
@@ -307,10 +309,9 @@
 
         watch:{
             menuKey(newValue){
-
-                this.getPartUserList(newValue[0]);
-
                 
+                this.getUserList(newValue[0]);
+    
             }
         }
     }
