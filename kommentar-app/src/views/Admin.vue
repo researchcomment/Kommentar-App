@@ -122,18 +122,19 @@
                 }
 
             },
+            
             filteredUserList(){
                 if(!this.searchText){
                     return this.userList;
                 }
                 else{
-                    console.log(this.userList);
+                    //console.log(this.userList);
                     var list = Object.keys(this.userList).map(key=>(
                         {[key]:this.userList[key].filter( user =>
                             user.username.includes(this.searchText))
                         })
                     ).reduce( ( prev, curr ) =>  Object.assign(prev,curr));
-                    console.log( )
+                    //console.log( )
                     return list
                 }
             }

@@ -5,7 +5,12 @@
 
             <bookInfo :doi="doi" @setDetail="setDetail"></bookInfo>
 
-            <!-- officialComment -->
+            <!-- Ranking -->
+            <a-select default-value="time" v-model="rankType" style="width: 120px" @change="getComments">
+                <a-select-option v-for="rank in rankList" :key="rank" :value="rank">{{rank}}</a-select-option>
+            </a-select>
+
+            <!-- Official Comments -->
             <div class="ocomment" >
 
                 <!-- Title -->
@@ -25,7 +30,7 @@
 
             </div>
 
-             <!-- unofficialComment -->
+             <!-- Unofficial Comments -->
             <div class="ucomment">
 
                 <!-- Title -->
@@ -33,7 +38,7 @@
                     Comments <span style="color:#ABABAB;font-size:1.5vw">{{Object.keys(unofficialCommentList).length}}</span>
                 </h2>
                 
-                <!-- List of official Comments -->
+                <!-- List of unofficial Comments -->
                 <ul class="ucommitli">
                     <a-list item-layout="vertical" size="large" :pagination="paginationUnOfficial" :data-source="unofficialCommentList">   
                         <a-list-item slot="renderItem" slot-scope="comment" >
@@ -85,6 +90,8 @@
                 paginationUnOfficial: {
                     pageSize: 5,
                 },
+                rankList:["time","name",],
+                rankType:"time",
             }
         },
 
@@ -106,31 +113,30 @@
             username: function () {
                 return this.$store.state.account.username;
             },
+            
+            rankList(){
+                return [];
+            }
 
         },
 
 
-        methods:{
-
-            /**
-             * reload the page by submit
-             */
-            refresh(){
-                this.$router.go(0);
-            },
+        methods:{ 
 
             /**
              * Request comment content from the backend
+             * 
              */
             async getComments() {    
             
                 // open the loading-animation 
                 this.loading = true;
-                
+
+
                 // send request
                 this.$store.dispatch("commitwork/loadComments", 
                                                     {doi: this.doi, 
-                                                     rankType: 'submittime',
+                                                     rankType:this.rankType,    //  rankType:"time",
                                                      username: this.$store.state.account.username,
                                                      type:"official"})
                                             .then((result)=>{
@@ -147,7 +153,7 @@
 
                this.$store.dispatch("commitwork/loadComments", 
                                                     {doi: this.doi, 
-                                                     rankType: 'submittime',
+                                                     rankType:this.rankType,
                                                      username: this.$store.state.account.username,
                                                      type:"unofficial"})
                                             .then((result)=>{
@@ -165,6 +171,13 @@
                 // close the loading-animation 
                 this.loading = false;
 
+            },
+
+            /**
+             * reload the page by submit from editor
+             */
+            refresh(){
+                this.$router.go(0);
             },
 
             setDetail(detail){
