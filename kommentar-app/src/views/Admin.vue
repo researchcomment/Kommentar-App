@@ -47,7 +47,7 @@
                     <input type="text" style="margin-left:10vh" v-model="searchText">
                 
                     <!-- Requests -->
-                    <a-table  :data-source="userList[menuKey[0]]" rowKey="username"  >
+                    <a-table  :data-source="filteredUserList[menuKey[0]]" rowKey="username"  >
                           
                         <!-- User Name -->
                         <a-table-column key="username" title="User Name" data-index="username" />
@@ -122,19 +122,20 @@
                 }
 
             },
-            filterUser(){
-                // if(!this.searchText){
-                //     return this.userList["allUser"];
-                // }
-                // else{
-                //     var list=[];
-                //     for(var user of this.userList["allUser"]){
-                //         if(user.username.indexOf(this.searchText) > -1){
-                //             list.push(user);
-                //         } 
-                //     }
-                //     return list;
-                // }
+            filteredUserList(){
+                if(!this.searchText){
+                    return this.userList;
+                }
+                else{
+            
+                    var list = Object.values(this.userList).map((roleList)=>{
+                        return roleList.filter( user =>
+                            user.username.includes(this.searchText)
+                        )
+                    })
+                    
+                    return list;
+                }
             }
 
         },
@@ -161,57 +162,22 @@
              */
             async getUserList(){
 
+                var toRoleList=["Researcher","Reviewer","Moderator","Admin"];
+
                 // get userList from DB
-
-                this.userList={
-                    Researcher:[],
-                    Moderator:[],
-                    Reviewer:[],
-                    Admin:[],
-                };
-
-                this.$store.dispatch("adminAktion/getUserList",{toRole:"Researcher"}).then((result)=>{
-                    if(result){
-                        for(var key in result){
-                            var user = result[key];
-                            user.key=key;
-                            this.userList.Researcher.push(user);
-                        }
-                    }
+                toRoleList.map((role)=>{
                     
-                }).catch(err => {console.log(err);});
-
-                this.$store.dispatch("adminAktion/getUserList",{toRole:"Reviewer"}).then((result)=>{
-                    for(var key in result){
-                        var user = result[key];
-                        user.key=key;
-                        this.userList.Reviewer.push(user);
-
-                    }
-                }).catch(err => {console.log(err);});
-
-                this.$store.dispatch("adminAktion/getUserList",{toRole:"Moderator"}).then((result)=>{
-                    for(var key in result){
-                        var user = result[key];
-                        user.key=key;
-                        this.userList.Moderator.push(user);
-
-                    }
-                }).catch(err => {
-                                console.log(err);});
-              
-                
-                this.$store.dispatch("adminAktion/getUserList",{toRole:"Admin"}).then((result)=>{
-                    for(var key in result){
-                        var user = result[key];
-                        user.key=key;
-                        this.userList.Admin.push(user);
-
-                    }
-                }).catch(err => {
-                                console.log(err);});
-                
-
+                   this.$store.dispatch("adminAktion/getUserList",{toRole:role}).then((result)=>{
+                                           
+                        var list = Object.keys(result).map((key) => {
+                                var user = result[key];
+                                user.key=key;
+                                return user;
+                        })
+                        this.userList[role] =list;
+                    }).catch(err => {console.log(err);});
+                   
+                })
             },
 
             /**
@@ -237,10 +203,10 @@
              * @param userName - username in the list
              * @returns boolean   - true, if it related to search text
              */
-            onFilter(userName){ 
+            filter(userName){ 
                 //console.log(userName)
-                return false
-                // return userName.indexOf(this.searchText) > -1 ;
+                //return false
+                return userName.indexOf(this.searchText) > -1 ;
             },
 
             getColor(tag){

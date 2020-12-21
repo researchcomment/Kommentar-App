@@ -195,11 +195,6 @@
                    
                 //send Request to firebase  
                 this.$store.dispatch("adminAktion/replyRequest",request).then(()=>{
-                    // Refresh the display, prompting success
-                    var index =  this.commentList.indexOf(comment);
-                    if (index > -1) {
-                        this.commentList.splice(index, 1);
-                    }
                     this.visiblePID = false;
                     this.$notification.open({
                         message: 'Success',

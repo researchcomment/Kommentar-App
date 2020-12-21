@@ -167,17 +167,13 @@
                     };
                     this.$store.dispatch("adminAktion/replyRequest",request).then(()=>{
                         // Refresh the display, prompting success
-                        var index =  this.commentList.indexOf(comment);
-                        if (index > -1) {
-                            this.commentList.splice(index, 1);
-                        }
                         this.visibleFeedback = false;
                         this.$notification.open({
                             message: 'Success',
                             description:
                             'Your Feedback has been communicated.',
                             icon: <a-icon type="smile" style="color: #108ee9" />,
-                        });  
+                        });   
 
                     });    
                   
