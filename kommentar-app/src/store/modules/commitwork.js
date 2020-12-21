@@ -183,8 +183,8 @@ const actions = {
                         
                     } 
                     //sort with Created Date
-                    let timeFlag=-1;
-                    if (rankType.includes("history")) timeFlag=1;
+                    let timeFlag=1;
+                    if (rankType.includes("history")) timeFlag=-1;
                  
                     let newtmpvalue=tmpkeys.sort((a, b) => { 
                             //sorted for eldest comment,for newest -1 timeFlag
