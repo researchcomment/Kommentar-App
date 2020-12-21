@@ -161,19 +161,40 @@ const actions = {
 
     //load comments for work from realtime Database
     async loadComments({ commit, state }, { doi, rankType, username,type}) {
-        //rankType: 'submittime', 'onlyfromCurrentUser'
-        let result=[];  
+        //rankType: ['onlyfromCurrentUser',"history","latest"] 
         let doiKey=doi.replaceAll(".","'");
         let commentsRef=firebase.database().ref('doi_repository/' + doiKey + '/comments');
-       
-        
+        let userKey = firebase.auth().currentUser.uid;
         return   commentsRef.orderByChild("type")
             .equalTo(type)
             .once('value')
             .then((snapshot) => {
                 let tmpvalue=snapshot.val();
-                if (tmpvalue)
+                if (tmpvalue){
+                    tmpvalue = Object.keys(tmpvalue)
+                    if (rankType.includes('onlyfromCurrentUser'))
+                    {
+                        tmpvalue = tmpvalue 
+                        .filter((key)=> 
+                            temp[key].user_id==userKey
+                        )
+                        
+                    } 
+                    //sort with Created Date
+                    let timeFlag=-1;
+                    if (rankType.includes("history")) timeFlag=1;
+                    tmpvalue=tmpvalue.sort(function(a, b) { 
+                            //sorted for eldest comment,for newest -1 timeFlag
+                            return timeFlag*(Date.parse(tmpvalue[b].createDate) - Date.parse(tmpvalue[a].createDate)); 
+                        })
+                        .reduce(
+                            ( prev, curr ) =>  Object.assign(prev,
+                                {[curr]:tmpvalue[curr]})
+                        );
+                    
                     return tmpvalue;
+                }
+                    
                 return [];
             }).catch((error) => {
                 //for debug only, will be finished later
