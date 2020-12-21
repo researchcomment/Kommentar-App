@@ -12,13 +12,14 @@
                    
                    <!-- Message about Comment -->
                    <div v-if="item.doi_nr">
-                        <a-descriptions  bordered  :column="{ xxl: 4, xl: 3, lg: 3, md: 3, sm: 2, xs: 1 }" >
+                       <h2>Your Request for FeedBack</h2>
+                        <a-descriptions  title="Comment Info" :column="1" >
                         
                             <a-descriptions-item label="Book Link">
                                 <p @click="seeDetail(item.doi_nr)">{{item.doi_nr}}</p>
                             </a-descriptions-item>
-
-                            <a-descriptions-item label="Content">
+                            
+                            <a-descriptions-item label="Comments" >
                             <p v-html="item.commentContent"></p>
                             </a-descriptions-item>
 
@@ -31,11 +32,10 @@
 
                    <!-- Message about Update Role -->
                    <div v-if="item.toRole">
-                        <b>Your Request about Update Role to {{item.toRole}}</b>
+                        <h2>Your Request about Update Role to {{item.toRole}}</h2>
                         <br>
                         <b>Feedback:</b>
-                        <p v-html="item.feedbackContent"></p>
-                       
+                        <p v-html="item.feedbackContent"></p>                       
                    </div>
                     
                 </a-card>

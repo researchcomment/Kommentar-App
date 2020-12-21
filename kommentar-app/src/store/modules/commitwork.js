@@ -194,7 +194,6 @@ const actions = {
                             ( prev, curr ) =>  Object.assign(prev,
                                 {[curr]:tmpvalue[curr]}),new Object()
                         );
-                    console.log(newtmpvalue)
                     return newtmpvalue;
                 }
                     

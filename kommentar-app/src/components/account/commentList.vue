@@ -1,9 +1,12 @@
 <template>
     <div>
+        <!-- Filter -->
+        <a-input placeholder="DOI...."  v-model="searchDOI"/>
+
         <!-- List of Comments -->
         <a-list item-layout="vertical" size="large" :pagination="pagination" :data-source="commentList">
                  
-            <a-list-item slot="renderItem" slot-scope="comment"  >
+            <a-list-item slot="renderItem" slot-scope="comment,index"  v-show="relate(comment)" >
                 
                 <!-- Detail about this comment -->
                 <a-descriptions  bordered  :column="{ xxl: 4, xl: 3, lg: 3, md: 3, sm: 2, xs: 1 }">
@@ -39,28 +42,31 @@
                         </a-tag>
                     </a-descriptions-item>
 
-                    
-                    <a-descriptions-item label="Content" >
-                       <p v-html="comment.content"></p>
-                       <a-button :disabled="comment.type=='official'" type="edit" @click="openEditor(comment)">Editor</a-button>
-                       <a-icon type="delete" v-if="!(comment.type=='official')" theme="twoTone" two-tone-color="#eb2f96"  @click="deleteComment(comment)" />
-                    </a-descriptions-item>
-
                 </a-descriptions>
+
+                <h2>Content</h2>
+                {{index}}
+                {{editorVisibility}}
+                {{editorVisibility[index]}}
+                <p  v-show="!editorVisibility[index]" v-html="comment.content"></p>
+                <div v-show="editorVisibility[index]"> 
+                    <quill-editor
+                    v-model="templateComment.content"
+                    :options="editorOption"
+                    >
+                    </quill-editor>
+                    <a-button @click="editorRequest">Submit</a-button>
+                    <a-button @click="editorVisibility[index]=false">Cancel</a-button>
+                </div>
+
+                <a-button :disabled="comment.type=='official'" icon="edit" @click="openEditor(comment,index)" >Editor</a-button>
+                <a-icon type="delete" v-if="!(comment.type=='official')" theme="twoTone" two-tone-color="#eb2f96"  @click="deleteComment(comment)" />
+
             </a-list-item>
+            
         </a-list>
 
-        <a-modal 
-            :visible="editorVisibility" 
-            title="Editor" 
-            @ok="editorRequest"
-            @cancel="editorVisibility =false">
-            <quill-editor
-                v-model="templateComment.content"
-                :options="editorOption"
-            >
-            </quill-editor>
-        </a-modal>
+        
 
     </div>
 </template>
@@ -70,15 +76,18 @@
         name:"reviewer",
         data(){
             return{
-                //commentList:[],
+               
                 templateComment:{},
                 title:[],
                
                 pagination: {
                     pageSize: 6,
                 },
+                index:0,
+               
+                searchDOI:"",
 
-                editorVisibility:false,
+                editorVisibility:[false,true],
                 editorOption: {    // style for quill-editor
                     placeholder: "Please write down your comment....",
                     modules:{
@@ -126,6 +135,7 @@
                                             .catch(err => {
                                                             console.log(err);
                                                          });
+                this.editorVisibility=new Array(this.commentList.length).fill(false);
 
             },
 
@@ -229,9 +239,20 @@
             /**
              * @param comment - the comment which user wants to edit
              */
-            openEditor(comment){
+            openEditor(comment,index){
                 this.templateComment =JSON.parse(JSON.stringify(comment));
-                this.editorVisibility =true;
+                this.editorVisibility[index]=!this.editorVisibility[index];
+            },
+
+            relate(comment){
+              
+                if(!this.searchDOI){
+                    return true;
+                }
+                else if( comment.doi_nr.includes(this.searchDOI)){ 
+                    return true
+                }
+                return false;
             }
 
 

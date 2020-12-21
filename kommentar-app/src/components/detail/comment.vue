@@ -1,43 +1,67 @@
 <template>
-
-    <a-comment v-if="comment.active || isModerator ">
-        <template slot="actions" >
-            <!-- the number of likes -->
-            <span key="comment-basic-like" class="action">
-                <a-tooltip title="Like">
-                <a-icon type="like" :theme="action === 'liked' ? 'filled' : 'outlined'" @click="like"/>
-                </a-tooltip>
-                <span style="padding-left: '8px';cursor: 'auto'">
-                    {{ comment.likes }}
+    <div>
+        <a-comment v-if="comment.active || isModerator ">
+            <template slot="actions" >
+                <!-- the number of likes -->
+                <span key="comment-basic-like" class="action">
+                    <a-tooltip title="Like">
+                    <a-icon type="like" :theme="action === 'liked' ? 'filled' : 'outlined'" @click="like"/>
+                    </a-tooltip>
+                    <span style="padding-left: '8px';cursor: 'auto'">
+                        {{ comment.likes }}
+                    </span>
                 </span>
-            </span>
 
-            <!-- the number of dislikes -->
-            <span key="comment-basic-dislike" class="action">
-                <a-tooltip title="Dislike">
-                <a-icon
-                    type="dislike"
-                    :theme="action === 'disliked' ? 'filled' : 'outlined'"
-                    @click="dislike"
-                />
-                </a-tooltip>
-                <span style="padding-left: '8px';cursor: 'auto'">
-                {{ comment.dislikes }}
+                <!-- the number of dislikes -->
+                <span key="comment-basic-dislike" class="action">
+                    <a-tooltip title="Dislike">
+                    <a-icon
+                        type="dislike"
+                        :theme="action === 'disliked' ? 'filled' : 'outlined'"
+                        @click="dislike"
+                    />
+                    </a-tooltip>
+                    <span style="padding-left: '8px';cursor: 'auto'">
+                    {{ comment.dislikes }}
+                    </span>
                 </span>
-            </span>
 
 
-            <!-- Editing Options for Author -->
-            <div v-if = "isAuthor">
+                <!-- Editing Options for Author -->
+                <div v-if = "isAuthor">
+                    
+                    <a-button type="dashed" v-if="!(comment.type=='official')" :disabled="inReview" @click="askForReview">Review</a-button>
+
+                    <a-button type="dashed"  v-if="(isResearcher) && (!(comment.type=='official'))"  :disabled="inRequest" @click="askForPID">Ask For PermanentID</a-button>
+
+                    <a-button :disabled="comment.type=='official'" icon="edit" @click="openEditor()">Editor</a-button>
                 
-                <a-button type="dashed" v-if="!(comment.type=='official')" :disabled="inReview" @click="askForReview">Review</a-button>
+                    <a-icon type="delete" v-if="!(comment.type=='official')" theme="twoTone" two-tone-color="#eb2f96"  @click="deleteComment" />
+               
+                </div>
 
-                <a-button type="dashed"  v-if="(isResearcher) && (!(comment.type=='official'))"  :disabled="inRequest" @click="askForPID">Ask For PermanentID</a-button>
-            
-                <a-icon type="delete" v-if="!(comment.type=='official')" theme="twoTone" two-tone-color="#eb2f96"  @click="deleteComment" />
+                <!-- Editing Options for Moderator : hide/unhide the comment -->
+                <div v-if = "isModerator && !(comment.type=='official')">
+                    <a-icon type="eye-invisible" v-if="comment.active" @click="setVisiblity"/>
+                    <a-icon type="eye" v-if="!comment.active" @click="setVisiblity"/>
+                </div>
+            </template>
+        
+            <!-- the detail of this comment -->
+                
+                <!-- Author -->
+                <a slot="author">{{comment.author}}</a>
 
-                <a-button :disabled="comment.type=='official'" type="edit" @click="openEditor()">Editor</a-button>
-                <div v-if="editorVisibility"> 
+                <!-- Author picture -->  
+                <a-avatar slot="avatar" style="color: #f56a00; backgroundColor: #fde3cf">
+                    <p class="avatarp">{{authorfirst}}</p>
+                </a-avatar>
+
+                <!-- Comment -->
+                <p slot="content" v-if="!editorVisibility" v-html="comment.content"></p>
+
+                <!-- Editor for Comments -->
+                <div v-if="editorVisibility" slot="content"> 
                     <quill-editor
                     v-model="content"
                     :options="editorOption"
@@ -46,36 +70,15 @@
                     <a-button @click="editorRequest">Submit</a-button>
                 </div>
                 
-
+                <!-- time -->
+                <a-tooltip slot="datetime" >
+                    <span>{{ new Date(Date.parse(comment.createDate)).toLocaleString()}}</span>
+                </a-tooltip>        
                 
-            </div>
+        </a-comment>   
 
-            <!-- Editing Options for Moderator : hide/unhide the comment -->
-            <div v-if = "isModerator && !(comment.type=='official')">
-                <a-icon type="eye-invisible" v-if="comment.active" @click="setVisiblity"/>
-                <a-icon type="eye" v-if="!comment.active" @click="setVisiblity"/>
-            </div>
-        </template>
-    
-        <!-- the detail of this comment -->
-            
-            <!-- Author -->
-            <a slot="author">{{comment.author}}</a>
-
-            <!-- Author picture -->  
-            <a-avatar slot="avatar" style="color: #f56a00; backgroundColor: #fde3cf">
-                <p class="avatarp">{{authorfirst}}</p>
-            </a-avatar>
-
-            <!-- Comment -->
-            <p slot="content" v-html="comment.content"></p>
-            
-            <!-- time -->
-            <a-tooltip slot="datetime" >
-                <span>{{ new Date(Date.parse(comment.createDate)).toLocaleString()}}</span>
-            </a-tooltip>        
-            
-    </a-comment>   
+        
+    </div>
 </template>
 
 <script>
@@ -248,8 +251,6 @@ Vue.use(Antd)
                 });
             
             },
-
-
 
             /**
              * send Editor Request to firebase

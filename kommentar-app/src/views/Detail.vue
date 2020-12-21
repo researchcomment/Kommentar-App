@@ -138,7 +138,7 @@
                                                      username: this.$store.state.account.username,
                                                      type:"official"})
                                             .then((result)=>{
-                                               console.log(result)
+                
                                                this.officialCommentList= Object.keys(result).map((key) => {
                                                                             var comment = result[key];
                                                                             comment.key=key;

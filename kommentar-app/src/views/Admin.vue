@@ -176,30 +176,40 @@
             })  
 
         },
+
         mounted(){
+            
             this.getUserList();
+            
         },
         methods:{
             
             /**
              * Request the userList from background
              */
-            async getUserList(role){
+            async getUserList(key){
                 var toRoleList=[];
-                if(!role){
+                if(!key){
                     toRoleList=["Researcher","Reviewer","Moderator","Admin"];
                 }
                 else{
-                    toRoleList=[role];
+                    toRoleList=[key];
                 }
 
+                this.userList={
+                    Researcher:[],
+                    Moderator:[],
+                    Reviewer:[],
+                    Admin:[],
+                };
+                
                 // get userList from DB
                 toRoleList.map((role)=>{
                     
                    this.$store.dispatch("adminAktion/getUserList",{toRole:role}).then((result)=>{
-                                           
+                        let user ;                   
                         var list = Object.keys(result).map((key) => {
-                                var user = result[key];
+                                user = result[key];
                                 user.key=key;
                                 return user;
                         })
@@ -207,18 +217,9 @@
                     }).catch(err => {console.log(err);});
                    
                 })
+   
+                
             },
-
-            // async getUserList(role){
-            //     this.$store.dispatch("adminAktion/getUserList",{toRole:role}).then((result)=>{                                          
-            //             var list = Object.keys(result).map((key) => {
-            //                     var user = result[key];
-            //                     user.key=key;
-            //                     return user;
-            //             })
-            //             this.userList[role] =list;
-            //         }).catch(err => {console.log(err);});
-            // },
 
             /**
              * Request the background to change the role of users
@@ -275,19 +276,6 @@
                 this.visible =false;
             },
 
-
-            /**
-             * Filter user list
-             * 
-             * @param userName - username in the list
-             * @returns boolean   - true, if it related to search text
-             */
-            filter(userName){ 
-                //console.log(userName)
-                //return false
-                return userName.includes(this.searchText) ;
-            },
-
             getColor(tag){
                 if(tag=="default"){
                     return "green";
@@ -309,10 +297,10 @@
 
         watch:{
             menuKey(newValue){
-                
                 this.getUserList(newValue[0]);
     
-            }
+            },
+
         }
     }
 </script>
