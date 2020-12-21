@@ -133,7 +133,7 @@
                         {[key]:this.userList[key].filter( user =>
                             user.username.includes(this.searchText))
                         })
-                    ).reduce( ( prev, curr ) =>  Object.assign(prev,curr));
+                    ).reduce( ( prev, curr ) =>  Object.assign(prev,curr),new Object());
                     //console.log( )
                     return list
                 }
