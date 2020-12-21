@@ -243,7 +243,7 @@
                                 flag:this.agree,
                                  userKey:this.tmpUser.key,
                                   feedback_content:reason,}
-                console.log(request)
+            
                 this.$store.dispatch("adminAktion/updateRole",request).then(()=>{
                     this.handleCancel();
                     this.getUserList();

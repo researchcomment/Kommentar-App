@@ -42,7 +42,6 @@ const actions = {
             firebase.database().ref("users/"+userKey+"/Messagebox/"+toRole).set({
                 feedbackContent:feedback_content,
                 toRole:toRole,
-                doi_nr:""
             }); 
         }
         return 1;

@@ -29,10 +29,10 @@
                        
                    </div>
 
-                    <!-- Message about Update Role -->
-                   <div v-if="item.role">
-                        <b>Your Request about Update Role to {{item.role}}</b>
-
+                   <!-- Message about Update Role -->
+                   <div v-if="item.toRole">
+                        <b>Your Request about Update Role to {{item.toRole}}</b>
+                        <br>
                         <b>Feedback:</b>
                         <p v-html="item.feedbackContent"></p>
                        
