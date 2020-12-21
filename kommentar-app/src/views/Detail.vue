@@ -93,7 +93,7 @@
                 rank:[],
                 rankOptions:[
                     { label: 'Only your own comments', value: 'onlyfromCurrentUser' },
-                    { label: 'Latest', value: 'latest' },
+                    { label: 'History', value: 'history' },
                     ],
             }
         },

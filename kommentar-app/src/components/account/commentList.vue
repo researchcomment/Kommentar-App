@@ -199,12 +199,12 @@
                 
                 this.templateComment =JSON.parse(JSON.stringify(comment));
                 var request = {
-                    uid:this.templateComment.key,
+                    uid:this.templateComment.commitKey,
                     doi:this.templateComment.doi_nr,
                 }
                 
                 this.$store.dispatch("askFromUser/deleteComment",request).then(()=>{
-                    this.$emit("refresh");
+                    this.getCommentList();
                 });
             
             },
