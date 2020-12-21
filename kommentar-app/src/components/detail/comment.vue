@@ -264,6 +264,8 @@ Vue.use(Antd)
                 }
                 this.$store.dispatch("askFromUser/setAttribute",request)
                 .then(()=>{
+
+                   this.$emit("refresh");
                    
                    // Refresh the display, prompting success                   
                     this.$notification.open({
@@ -274,7 +276,7 @@ Vue.use(Antd)
                     });  
                     
                     this.editorVisibility =false;
-                    this.$emit("refresh");
+                    
 
                 })
                 .catch(err => {
