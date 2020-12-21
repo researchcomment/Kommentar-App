@@ -72,6 +72,7 @@
             return{
                 //commentList:[],
                 templateComment:{},
+                title:[],
                
                 pagination: {
                     onChange: page => {
@@ -205,15 +206,16 @@
 
             },
 
-            getTitle(doi){
+            getTitle(){
+                
                 this.$store.dispatch("commitwork/askfordetail", {
-                                    doi:doi,
-                                    username:this.username,}).then(()=>) 
-                  
-                //console.log(detail.title)
-                return detail.title;
+                        doi:doi,
+                    username:this.username,}).then(
+                        (detail)=>{
+                            this.title[detail.doi]= detail.title;
+                        });
+                
             },
-
             /**
              * open a new window which shows the details of this book
              */
