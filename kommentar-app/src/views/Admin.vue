@@ -127,14 +127,14 @@
                     return this.userList;
                 }
                 else{
-            
-                    var list = Object.values(this.userList).map((roleList)=>{
-                        return roleList.filter( user =>
-                            user.username.includes(this.searchText)
-                        )
-                    })
-                    
-                    return list;
+                    console.log(this.userList);
+                    var list = Object.keys(this.userList).map(key=>(
+                        {[key]:this.userList[key].filter( user =>
+                            user.username.includes(this.searchText))
+                        })
+                    ).reduce( ( prev, curr ) =>  Object.assign(prev,curr));
+                    console.log( )
+                    return list
                 }
             }
 
