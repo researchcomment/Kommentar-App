@@ -6,9 +6,12 @@
             <bookInfo :doi="doi" @setDetail="setDetail"></bookInfo>
 
             <!-- Ranking -->
-            <a-select default-value="time" v-model="rankType" style="width: 120px" @change="getComments">
-                <a-select-option v-for="rank in rankList" :key="rank" :value="rank">{{rank}}</a-select-option>
-            </a-select>
+            <a-checkbox-group
+            v-model="rank"
+            name="Ranking"
+            :options="rankOptions"
+            @change="getComments"
+            />
 
             <!-- Official Comments -->
             <div class="ocomment" >
@@ -90,8 +93,8 @@
                 paginationUnOfficial: {
                     pageSize: 5,
                 },
-                rankList:["time","name",],
-                rankType:"time",
+                rank:[],
+                rankOptions:['onlyfromCurrentUser',"latest",],
             }
         },
 
@@ -113,10 +116,6 @@
             username: function () {
                 return this.$store.state.account.username;
             },
-            
-            rankList(){
-                return [];
-            }
 
         },
 
@@ -132,15 +131,14 @@
                 // open the loading-animation 
                 this.loading = true;
 
-
                 // send request
                 this.$store.dispatch("commitwork/loadComments", 
                                                     {doi: this.doi, 
-                                                     rankType:this.rankType,    //  rankType:"time",
+                                                     rankType:this.rank,    //  rankType:"time",
                                                      username: this.$store.state.account.username,
                                                      type:"official"})
                                             .then((result)=>{
-                                               
+                                               console.log(result)
                                                this.officialCommentList= Object.keys(result).map((key) => {
                                                                             var comment = result[key];
                                                                             comment.key=key;
@@ -153,7 +151,7 @@
 
                this.$store.dispatch("commitwork/loadComments", 
                                                     {doi: this.doi, 
-                                                     rankType:this.rankType,
+                                                     rankType:this.rank,
                                                      username: this.$store.state.account.username,
                                                      type:"unofficial"})
                                             .then((result)=>{
@@ -183,7 +181,7 @@
             setDetail(detail){
                 this.detail =detail;
             }
-        }
+        },
         
     }
 </script>
