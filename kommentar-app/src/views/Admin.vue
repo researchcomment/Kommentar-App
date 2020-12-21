@@ -213,6 +213,18 @@
                 })
             },
 
+            async getPartUserList(role){
+                this.$store.dispatch("adminAktion/getUserList",{toRole:role}).then((result)=>{
+                                           
+                        var list = Object.keys(result).map((key) => {
+                                var user = result[key];
+                                user.key=key;
+                                return user;
+                        })
+                        this.userList[role] =list;
+                    }).catch(err => {console.log(err);});
+            },
+
             /**
              * Request the background to change the role of users
              */
@@ -246,7 +258,7 @@
             
                 this.$store.dispatch("adminAktion/updateRole",request).then(()=>{
                     this.handleCancel();
-                    this.getUserList();
+                    this.getPartUserList(role);
                 }).catch((err)=>{console.log(err)})
         
             },
@@ -301,8 +313,11 @@
         },
 
         watch:{
-            menuKey(){
-                this.getUserList();
+            menuKey(newValue){
+
+                this.getPartUserList(newValue[0]);
+
+                
             }
         }
     }
