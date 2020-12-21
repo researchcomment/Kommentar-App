@@ -54,11 +54,15 @@ const actions = {
             })
         }
         firebase.database().ref('doi_repository/' + doiKey + '/comments/' + uid+"/"+attribute).set(setvalue);
+        if (attribute=="content")
+            firebase.database().ref('doi_repository/' + doiKey + '/comments/' + uid+"/createDate").set(new Date().toString());
         let tempnode=firebase.database().ref('Review/'+uid).once('value')
         .then((info) => {
             if (info.val())
             {
                 firebase.database().ref('Review/'+uid+"/"+attribute).set(setvalue);
+                if (attribute=="content")
+                    firebase.database().ref('Review/'+uid+"/createDate").set(new Date().toString());
             }
         }).catch((error) => {
             //for debug only, will be finished later
@@ -69,6 +73,8 @@ const actions = {
             if (info.val())
             {
                 firebase.database().ref('PID/'+uid+"/"+attribute).set(setvalue);
+                if (attribute=="content")
+                    firebase.database().ref('PID/'+uid+"/createDate").set(new Date().toString());
             }
         }).catch((error) => {
             //for debug only, will be finished later

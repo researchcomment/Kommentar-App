@@ -14,7 +14,7 @@
        
 
         <!-- Researcher Card -->
-        <a-card hoverable style="width: 200px" v-if="role.indexOf('Researcher')<0 && !update['Researcher']"  @click="updateRole('Researcher')">
+        <a-card hoverable style="width: 200px" v-if="!role.includes('Researcher') && !update['Researcher']"  @click="updateRole('Researcher')">
             <img
             slot="cover"
             alt="example"
@@ -36,10 +36,10 @@
         <p></p>
 
         <!-- Options for the user, who is already a researcher -->
-        <div v-show="role.indexOf('Researcher')>-1">
+        <div v-show="role.includes('Researcher')">
             
             <!-- Reviewer Card -->
-            <a-card hoverable style="width: 200px"  v-if="role.indexOf('Reviewer')<0 && !update['Reviewer']" @click="updateRole('Reviewer')">
+            <a-card hoverable style="width: 200px"  v-if="!role.includes('Reviewer') && !update['Reviewer']" @click="updateRole('Reviewer')">
                 <img
                 slot="cover"
                 alt="example"
@@ -57,7 +57,7 @@
             </a-card>
 
             <!-- Moderator Card -->
-            <a-card hoverable style="width: 200px"  v-if="role.indexOf('Moderator')<0&& !update['Moderator']"  @click="updateRole('Moderator')">
+            <a-card hoverable style="width: 200px"  v-if="!role.includes('Moderator') && !update['Moderator']"  @click="updateRole('Moderator')">
                 <img
                 slot="cover"
                 alt="example"
@@ -75,7 +75,7 @@
             </a-card>
 
             <!-- Admin Card -->
-            <a-card hoverable style="width: 200px"  v-if="role.indexOf('Admin')<0 && !update['Admin']"  @click="updateRole('Admin')">
+            <a-card hoverable style="width: 200px"  v-if="!role.includes('Admin') && !update['Admin']"  @click="updateRole('Admin')">
                 <img
                 slot="cover"
                 alt="example"

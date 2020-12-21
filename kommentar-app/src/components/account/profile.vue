@@ -83,7 +83,7 @@ export default {
     isAdmin(){
       if(this.role){
           //check whether the logged user is Admin
-          return (this.role.indexOf("Admin"))>-1;
+          return this.role.includes("Admin");
       }
       else{
           return false;
@@ -93,7 +93,7 @@ export default {
     isReviewer(){
       if(this.role){
           //check whether the logged user is Admin
-          return (this.role.indexOf("Reviewer"))>-1;
+          return this.role.includes("Reviewer");
       }
       else{
           return false;

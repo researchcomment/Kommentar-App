@@ -62,7 +62,7 @@ function settime(item) {
 
 function check_type(book_type, comparator) {
     var arr = book_type.split("-");
-    return arr.indexOf(comparator) > -1;
+    return arr.includes(comparator);
 }
 
 function cons_returnValue(item_ref) {
@@ -125,9 +125,6 @@ const actions = {
         //version 2
         //找到userkey
         let userKey = firebase.auth().currentUser.uid;
-        var aData = new Date();//utc
-        //uhrzeit, die Zeit von verschiedenen Regionen anzupassen.
-        const value = aData.getFullYear() + "-" + (aData.getMonth() + 1) + "-" + aData.getDate();
         const newComent = {
             //doi is optional
             doi_nr: doi,
@@ -144,7 +141,7 @@ const actions = {
             content: content,
             likes: 0,
             dislikes: 0,
-            createDate: value,
+            createDate: new Date().toString(),
             user_id:userKey,
         }
         let doiKey=doi.replaceAll(".","'");
