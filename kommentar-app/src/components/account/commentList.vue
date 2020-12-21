@@ -42,9 +42,8 @@
                     
                     <a-descriptions-item label="Content" >
                        <p v-html="comment.content"></p>
-                       <a-button :disabled="comment.type=='official'" type="edit" @click="openEditor(comment)">
-                        Editor
-                       </a-button>
+                       <a-button :disabled="comment.type=='official'" type="edit" @click="openEditor(comment)">Editor</a-button>
+                       <a-icon type="delete" v-if="!(comment.type=='official')" theme="twoTone" two-tone-color="#eb2f96"  @click="deleteComment(comment)" />
                     </a-descriptions-item>
 
                 </a-descriptions>
@@ -191,6 +190,23 @@
                                 console.log(err);
                             });
 
+            },
+
+            /**
+             * send delete Request to firebase
+             */
+            deleteComment(comment){
+                
+                this.templateComment =JSON.parse(JSON.stringify(comment));
+                var request = {
+                    uid:this.templateComment.key,
+                    doi:this.templateComment.doi_nr,
+                }
+                
+                this.$store.dispatch("askFromUser/deleteComment",request).then(()=>{
+                    this.$emit("refresh");
+                });
+            
             },
 
             
