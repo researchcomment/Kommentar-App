@@ -22,7 +22,8 @@
                     <a-descriptions-item label="type">{{comment.type}}</a-descriptions-item>
                     
                     <a-descriptions-item label="Book Link">
-                        <p @click="seeDetail(comment.doi_nr)">{{comment.doi_nr}}</p>
+                        <p @click="seeDetail(comment.doi_nr)">{{comment.title}}</p>
+                        <a :href="'https://dx.doi.org/'+ comment.doi_nr"  target="_blank">Link Outside</a>
                     </a-descriptions-item>
 
                     <a-descriptions-item label="Visibility">
@@ -97,9 +98,6 @@
                 templateComment:{},
 
                 pagination: {
-                    onChange: page => {
-                        console.log(page);
-                    },
                     pageSize: 6,
                 },
 

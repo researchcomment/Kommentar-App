@@ -106,12 +106,8 @@ async function get_detail(doi) {
         let ref = res.data.message;
         let returnValue = null;
         if (ref) {
-            //save current 100 results in items as a list
-            console.log("response endding：" + new Date());
             returnValue = cons_returnValue(ref);
         }
-
-        console.log("results construction endding：" + new Date());
         return returnValue;
     }).catch(err => {
         console.log(err);

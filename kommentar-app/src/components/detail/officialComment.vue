@@ -74,9 +74,6 @@ export default {
                                                type:"official"}
                                               );
 
-      // !FOR TEST 
-      // console.log(result);
-
       this.commentList = result;
 
       // close the loading-animation 

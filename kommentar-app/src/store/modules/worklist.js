@@ -75,19 +75,19 @@ async function get_worklist(keyword, rows, offset, date, type) {
             list: [],
             length: 0
         };
-        console.log("request beginning：" + new Date());
+        //console.log("request beginning：" + new Date());
         return axios.get(search_url).then(res => {
             //get reference : res -> data -> message
             let ref = res.data.message;
             if (ref) {
                 //save current 100 results in items as a list
                 items = ref.items;
-                console.log("response endding：" + new Date());
+                //console.log("response endding：" + new Date());
                 returnValue = cons_returnValue(returnValue, offset % cache, offset % cache + rows);
                 returnValue.length = ref["total-results"];
                 result_length = returnValue.length;
             }
-            console.log("results construction endding：" + new Date());
+            //console.log("results construction endding：" + new Date());
             return returnValue;
         }).catch(err => {
             console.log(err);

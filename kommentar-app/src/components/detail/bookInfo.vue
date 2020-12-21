@@ -58,6 +58,7 @@
                 .then((result) => {
                     this.detail = result;
                     this.loading=false;    // close the loading-animation 
+                    this.$emit("setDetail",this.detail)
                 }).catch(err => {
                     console.log(err);
             })

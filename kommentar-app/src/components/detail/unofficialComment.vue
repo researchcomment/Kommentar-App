@@ -84,9 +84,6 @@ export default {
                                                             console.log(err);
                                                          });
 
-            // !FOR TEST                                             
-            // console.log('finished')
-
             this.commentList = result;
 
             // close the loading-animation 

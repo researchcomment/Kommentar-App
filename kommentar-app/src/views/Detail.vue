@@ -3,7 +3,7 @@
     <div class="maincontent">
         <div class="detailpage">
 
-            <bookInfo :doi="doi"></bookInfo>
+            <bookInfo :doi="doi" @setDetail="setDetail"></bookInfo>
 
             <!-- officialComment -->
             <div class="ocomment" v-loading.fullscreen.lock="loading">
@@ -44,7 +44,7 @@
 
             </div>   
 
-            <commentEditor :doi="doi" :username="username" @submit="getComments"></commentEditor>
+            <commentEditor :doi="doi" :username="username" :title="detail.title" @submit="getComments"></commentEditor>
 
         </div>
     </div>
@@ -77,6 +77,7 @@
                 officialCommentList: [],
                 unofficialCommentList: [],
                 loading: false,
+                detail:{},
             }
         },
 
@@ -141,6 +142,10 @@
                 this.loading = false;
 
             },
+
+            setDetail(detail){
+                this.detail =detail;
+            }
         }
         
     }

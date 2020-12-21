@@ -11,7 +11,8 @@
                     <a-descriptions-item label="type">{{comment.type}}</a-descriptions-item>
                     
                     <a-descriptions-item label="Book Link">
-                        <p @click="seeDetail(comment.doi_nr)">{{commit.title}}</p>
+                        <p @click="seeDetail(comment.doi_nr)">{{comment.title}}</p>
+                        <a :href="'https://dx.doi.org/'+ comment.doi_nr"  target="_blank">Link Outside</a>
                     </a-descriptions-item>
 
                     <a-descriptions-item label="Requests in Checking">
@@ -75,9 +76,6 @@
                 title:[],
                
                 pagination: {
-                    onChange: page => {
-                        console.log(page);
-                    },
                     pageSize: 6,
                 },
 
@@ -93,13 +91,6 @@
                                 ]
                             }
                 }, 
-                
-             
-                
-            
-
-
-
             }
         },
 
@@ -118,10 +109,6 @@
                 return  this.$store.state.account.commentList;
             },
             
-
-            
-            
-
         },
 
         mounted(){
@@ -135,14 +122,11 @@
              */
             async getCommentList(){
 
-                // open the loading-animation
                 // get CommentList form firebase, the status from these comments is "in Review"
                 this.$store.dispatch("account/getCommentList")
                                             .catch(err => {
                                                             console.log(err);
                                                          });
-
-                // close the loading-animation 
 
             },
 
@@ -161,8 +145,8 @@
                
                 this.$store.dispatch("askFromUser/askForRequest",request)
                 .then(()=>{
-                     // Refresh the display, prompting success
                     
+                    // Refresh the display, prompting success                    
                         this.$notification.open({
                             message: 'Success',
                             description:
@@ -190,14 +174,15 @@
                 }
                 this.$store.dispatch("askFromUser/setAttribute",request)
                 .then(()=>{
-                     // Refresh the display, prompting success
                    
+                   // Refresh the display, prompting success                   
                     this.$notification.open({
                         message: 'Success',
                         description:
                         'Your Request has been submitted.',
                         icon: <a-icon type="smile" style="color: #108ee9" />,
                     });  
+                    
                     this.editorVisibility =false;
                     this.getCommentList();
 
@@ -225,6 +210,9 @@
 
             },
             
+            /**
+             * @param comment - the comment which user wants to edit
+             */
             openEditor(comment){
                 this.templateComment =JSON.parse(JSON.stringify(comment));
                 this.editorVisibility =true;
