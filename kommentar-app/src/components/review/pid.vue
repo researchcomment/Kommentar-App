@@ -129,9 +129,6 @@
              */
             async getCommentList(){
 
-                // open the loading-animation
-                this.loading=true;
-
                 // get CommentList form firebase, the status from these comments is "in Review"               
                 this.$store.dispatch("adminAktion/getCommentListForRequest", 
                                                     {requestType:"PID"})
@@ -147,15 +144,11 @@
                 .catch(err => {
                                 console.log(err);
                               });
-               
-                // close the loading-animation 
-                this.loading=false; 
 
             },
 
             /**
              * Send to the firebase whether the request for PermanentID is passed
-             * 
              */
             replyPID(){
                 var comment = this.templateComment;
@@ -189,10 +182,7 @@
                     flag:agree,
                     comment_content:comment.content,
                 };
-                
-               
-            
-                   
+                    
                 //send Request to firebase  
                 this.$store.dispatch("adminAktion/replyRequest",request).then(()=>{
                     this.visiblePID = false;

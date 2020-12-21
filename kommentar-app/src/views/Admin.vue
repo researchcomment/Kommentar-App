@@ -27,6 +27,7 @@
             </a-layout-sider>
 
             <!-- Contents -->
+            
             <a-layout>
                 <a-layout-header style="background: #fff; padding: 0">
                     
@@ -43,6 +44,8 @@
                 <a-layout-content
                     :style="{ margin: '24px 16px', padding: '24px', background: '#fff', minHeight: '280px' }">
                     
+                    <h2>Update to {{menuKey[0]}}</h2>
+
                     <!-- Filter -->
                     <input type="text" style="margin-left:10vh" v-model="searchText">
                 
@@ -65,8 +68,8 @@
                         <a-table-column key="update" title="Update">
                             <template slot-scope="text, user">
                                 <span>
-                                    <a-button type="dashed" icon="check" @click="updateRole(true,user)">Agree</a-button>
-                                    <a-button type="dashed" icon="close" @click="updateRole(false,user)">Refuse</a-button>
+                                    <a-button type="dashed" icon="check" @click="openEditor(true,user)">Agree</a-button>
+                                    <a-button type="dashed" icon="close" @click="openEditor(false,user)">Refuse</a-button>
                                 </span>
                             </template>
                         </a-table-column>
@@ -76,7 +79,20 @@
                 </a-layout-content>
             </a-layout>
         </a-layout>
-
+        
+        <!-- Feedback -->
+        <a-modal
+            :title="tmpUser.username"
+            :visible="visible"
+            @ok="updateRole"
+            @cancel="handleCancel"
+            >
+            <!-- Input -->
+            <quill-editor
+                v-model="reason"
+                :options="editorOption">
+            </quill-editor>
+        </a-modal>
         
         <div>
             <bottom></bottom>
@@ -100,6 +116,22 @@
                
                 searchText:"",
                 userList:{},
+                
+                tmpUser:{},
+                reason:"",
+                agree:true,
+                visible:false,
+                editorOption: {    // style for quill-editor by Review
+                    placeholder: "Write your Reason......   \n(Must fill in, if the request is rejected)",
+                    modules:{
+                        toolbar:[
+                                ['bold', 'italic', 'underline', 'strike'],    // toggled buttons
+                                ['blockquote', ], 
+                                [{ 'color': [] }],   // front color
+                                ]
+                            }
+                }, 
+
                 
                 aftersearch: false,
             }
@@ -127,16 +159,16 @@
                 if(!this.searchText){
                     return this.userList;
                 }
-                else{
-                    //console.log(this.userList);
+                
+
                     var list = Object.keys(this.userList).map(key=>(
                         {[key]:this.userList[key].filter( user =>
                             user.username.includes(this.searchText))
                         })
                     ).reduce( ( prev, curr ) =>  Object.assign(prev,curr),new Object());
-                    //console.log( )
+                  
                     return list
-                }
+                
             }
 
         },
@@ -184,14 +216,56 @@
             /**
              * Request the background to change the role of users
              */
-            updateRole(agree,user){
+            updateRole(){
                 var role=this.menuKey[0];
+                var reason = this.reason;
 
-                this.$store.dispatch("adminAktion/updateRole",{toRole:role,
-                                                                 flag:agree,
-                                                                    userKey:user.key,});
-                this.getUserList();
-            
+                if((!this.agree)&&(!reason)){
+                    // check if the reason is filled by disagree
+                    this.$error({
+                            title: 'Error message',
+                            content: 'Please write down your Reason (Must fill in, if the request is rejected)',
+                    });
+                    return;
+                }
+                if(!reason){
+                    reason ="";
+                }
+
+                if(this.agree){
+                    reason = '<h2 style="color:green">Your Request of Update-Role is accepted</h2>'+ reason;
+                }
+                else{
+                    reason = '<h2 style="color:red">Your Request of Update-Role is denied.</h2>'+ reason;
+                }
+                
+                var request = {toRole:role,
+                                flag:this.agree,
+                                 userKey:this.tmpUser.key,
+                                  feedback_content:reason,}
+                console.log(request)
+                this.$store.dispatch("adminAktion/updateRole",request).then(()=>{
+                    this.handleCancel();
+                    this.getUserList();
+                }).catch((err)=>{console.log(err)})
+        
+            },
+
+            openEditor(agree,user){
+                this.tmpUser =JSON.parse(JSON.stringify(user));
+                this.visible =true;
+                this.agree=agree;
+            },
+
+            /**
+             * reset the comment by Cancel
+             * @param comment
+             */
+            handleCancel(){
+                this.tmpUser = {};
+                this.reason = "";
+                this.agree = true;
+                this.visible =false;
             },
 
 
@@ -223,6 +297,12 @@
                 else if(tag=="Admin"){
                     return "red";
                 }
+            }
+        },
+
+        watch:{
+            menuKey(){
+                this.getUserList();
             }
         }
     }

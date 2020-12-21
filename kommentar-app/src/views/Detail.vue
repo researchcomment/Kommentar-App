@@ -175,7 +175,7 @@
              * reload the page by submit from editor
              */
             refresh(){
-                this.$router.go(0);
+               this.$router.go(0);
             },
 
             setDetail(detail){

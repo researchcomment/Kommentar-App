@@ -59,7 +59,7 @@
             
             <!-- time -->
             <a-tooltip slot="datetime" >
-                <span>{{ comment.createDate}}</span>
+                <span>{{ new Date(Date.parse(comment.createDate)).toLocaleString()}}</span>
             </a-tooltip>
 
             

@@ -7,10 +7,12 @@
                 <a-card  title="Message" >
                     
                     <a slot="extra">
-                         <p   @click="deleteMessage(key)">delete</p>
+                         <p @click="deleteMessage(key)">delete</p>
                     </a>
                    
-                    <a-descriptions  bordered  :column="{ xxl: 4, xl: 3, lg: 3, md: 3, sm: 2, xs: 1 }">
+                   <!-- Message about Comment -->
+                   <div v-if="item.doi_nr">
+                        <a-descriptions  bordered  :column="{ xxl: 4, xl: 3, lg: 3, md: 3, sm: 2, xs: 1 }" >
                         
                             <a-descriptions-item label="Book Link">
                                 <p @click="seeDetail(item.doi_nr)">{{item.doi_nr}}</p>
@@ -19,11 +21,23 @@
                             <a-descriptions-item label="Content">
                             <p v-html="item.commentContent"></p>
                             </a-descriptions-item>
+
                         </a-descriptions>
+                    
                         <b>Feedback:</b>
+                        <p v-html="item.feedbackContent"></p>
+                       
+                   </div>
 
-                    <p v-html="item.feedbackContent"></p>
+                    <!-- Message about Update Role -->
+                   <div v-if="item.role">
+                        <b>Your Request about Update Role to {{item.role}}</b>
 
+                        <b>Feedback:</b>
+                        <p v-html="item.feedbackContent"></p>
+                       
+                   </div>
+                    
                 </a-card>
 
         </div>
