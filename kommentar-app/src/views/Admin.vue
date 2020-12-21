@@ -156,18 +156,11 @@
             },
             
             filteredUserList(){
-                if(!this.searchText){
-                    return this.userList;
-                }
-                
-
-                    var list = Object.keys(this.userList).map(key=>(
+                return (!this.searchText?this.userList: Object.keys(this.userList).map(key=>(
                         {[key]:this.userList[key].filter( user =>
                             user.username.includes(this.searchText))
                         })
-                    ).reduce( ( prev, curr ) =>  Object.assign(prev,curr),new Object());
-                  
-                    return list
+                    ).reduce( ( prev, curr ) =>  Object.assign(prev,curr),new Object()))
                 
             }
 
