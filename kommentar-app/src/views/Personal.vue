@@ -14,12 +14,11 @@
         <a-menu v-model="menu" mode="horizontal">
             <a-menu-item key="role"> Role </a-menu-item>
             <a-menu-item key="comments" > Comment </a-menu-item>
-            <a-menu-item key="messageBox" > Message Box </a-menu-item>
         </a-menu>
         
         <Role v-show="menu[0]=='role'"></Role>
         <CommentList v-show="menu[0]=='comments'" ></CommentList>
-        <messageBox v-show="menu[0]=='messageBox'"></messageBox>
+        
 
     </div>
 </template>
@@ -27,14 +26,12 @@
 <script>
 import Role from "@/components/account/role";
 import CommentList from "@/components/account/commentList";
-import messageBox from "@/components/account/messageBox";
 
     export default {
         name: "personal",
         components: {
             Role,
             CommentList,
-            messageBox,
         },
 
         data(){
@@ -54,10 +51,6 @@ import messageBox from "@/components/account/messageBox";
                 return this.$store.state.account.role;
             },
 
-            menuKey(){       
-                return this.$route.query.menu;
-            }
-
         },
 
         beforeRouteEnter (to, from, next) {
@@ -72,24 +65,7 @@ import messageBox from "@/components/account/messageBox";
             })  
 
         },
-
-        mounted(){
-            if(this.$route.query.menu){
-                this.menu = [this.$route.query.menu];
-            }
-        },
-
-        watch:{
-            
-            menuKey(newValue){
-                //console.log(newValue)
-                if(newValue){
-                    this.menu = [newValue];
-                }
-            }, 
-        },
         
-
         methods:{
 
 

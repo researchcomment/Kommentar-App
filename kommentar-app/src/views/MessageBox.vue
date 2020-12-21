@@ -1,7 +1,6 @@
 <template>
     <div>
 
-
         <div v-for="(item,key) in Messagebox" v-bind:key="key" style="background:#ECECEC; padding:10px">
 
                 <a-card  title="Message" >
@@ -34,6 +33,7 @@
 
 <script>
     export default {
+        name:"messageBox",
         
         computed:{
             Messagebox(){

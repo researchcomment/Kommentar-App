@@ -6,12 +6,9 @@
             <bookInfo :doi="doi" @setDetail="setDetail"></bookInfo>
 
             <!-- Ranking -->
-            <a-checkbox-group
-            v-model="rank"
-            name="Ranking"
-            :options="rankOptions"
-            @change="getComments"
-            />
+            <a-icon type="filter"/>
+            <a-checkbox-group v-model="rank" name="Ranking" :options="rankOptions" @change="getComments"/>
+
 
             <!-- Official Comments -->
             <div class="ocomment" >
@@ -94,7 +91,10 @@
                     pageSize: 5,
                 },
                 rank:[],
-                rankOptions:['onlyfromCurrentUser',"latest",],
+                rankOptions:[
+                    { label: 'Only your own comments', value: 'onlyfromCurrentUser' },
+                    { label: 'Latest', value: 'latest' },
+                    ],
             }
         },
 
