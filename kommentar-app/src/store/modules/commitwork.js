@@ -171,28 +171,31 @@ const actions = {
             .then((snapshot) => {
                 let tmpvalue=snapshot.val();
                 if (tmpvalue){
-                    tmpvalue = Object.keys(tmpvalue)
+                    //keys of current comment
+                    let tmpkeys = Object.keys(tmpvalue)
+                    //then current user filter some of them
                     if (rankType.includes('onlyfromCurrentUser'))
                     {
-                        tmpvalue = tmpvalue 
+                        tmpkeys = tmpkeys
                         .filter((key)=> 
-                            temp[key].user_id==userKey
+                            tmpvalue[key].user_id==userKey
                         )
                         
                     } 
                     //sort with Created Date
                     let timeFlag=-1;
                     if (rankType.includes("history")) timeFlag=1;
-                    tmpvalue=tmpvalue.sort(function(a, b) { 
+                 
+                    let newtmpvalue=tmpkeys.sort((a, b) => { 
                             //sorted for eldest comment,for newest -1 timeFlag
                             return timeFlag*(Date.parse(tmpvalue[b].createDate) - Date.parse(tmpvalue[a].createDate)); 
                         })
                         .reduce(
                             ( prev, curr ) =>  Object.assign(prev,
-                                {[curr]:tmpvalue[curr]})
+                                {[curr]:tmpvalue[curr]}),new Object()
                         );
-                    
-                    return tmpvalue;
+                    console.log(newtmpvalue)
+                    return newtmpvalue;
                 }
                     
                 return [];
