@@ -1,8 +1,8 @@
 <template>
-    <a-comment v-if="comment.active || isAdmin">
+    <a-comment v-if="comment.active || isModerator ">
         <template slot="actions" >
             <!-- the number of likes -->
-            <span key="comment-basic-like">
+            <span key="comment-basic-like" class="action">
                 <a-tooltip title="Like">
                 <a-icon type="like" :theme="action === 'liked' ? 'filled' : 'outlined'" @click="like"/>
                 </a-tooltip>
@@ -12,7 +12,7 @@
             </span>
 
             <!-- the number of dislikes -->
-            <span key="comment-basic-dislike">
+            <span key="comment-basic-dislike" class="action">
                 <a-tooltip title="Dislike">
                 <a-icon
                     type="dislike"
@@ -24,27 +24,24 @@
                 {{ comment.dislikes }}
                 </span>
             </span>
-            <span key="comment-basic-reply-to">Reply to</span>
+
 
             <!-- Editing Options for Author -->
             <div v-if = "isAuthor">
                 
-                <a-button type="dashed" :disabled="inReview" @click="askForReview">Review</a-button>
+                <a-button type="dashed" v-if="!(comment.type=='official')" :disabled="inReview" @click="askForReview">Review</a-button>
 
-                <a-button type="dashed"  v-if="(isResearcher) && (!comment.PermanentID)"  :disabled="inRequest" @click="askForPID">Ask For PermanentID</a-button>
-
-                <a-icon type="delete" theme="twoTone" two-tone-color="#eb2f96"  @click="deleteComment" />
+                <a-button type="dashed"  v-if="(isResearcher) && (!(comment.type=='official'))"  :disabled="inRequest" @click="askForPID">Ask For PermanentID</a-button>
+            
+                <a-icon type="delete" v-if="!(comment.type=='official')" theme="twoTone" two-tone-color="#eb2f96"  @click="deleteComment" />
          
             </div>
 
-            <!-- Editing Options for Admin : hide/unhide the comment -->
-            <div v-if = "isAdmin">
+            <!-- Editing Options for Moderator : hide/unhide the comment -->
+            <div v-if = "isModerator && !(comment.type=='official')">
                 <a-icon type="eye-invisible" v-if="comment.active" @click="setVisiblity"/>
                 <a-icon type="eye" v-if="!comment.active" @click="setVisiblity"/>
             </div>
-            
-
-
         </template>
     
         <!-- the detail of this comment -->
@@ -62,12 +59,16 @@
             
             <!-- time -->
             <a-tooltip slot="datetime" >
-                <span>{{ comment.time.toLocaleString( )}}</span>
+                <span>{{ comment.createDate}}</span>
             </a-tooltip>
 
             
-
+            
     </a-comment>
+    <!-- cover -->
+
+
+    
 </template>
 
 <script>
@@ -80,33 +81,32 @@ Vue.use(Antd)
 
     export default {
 
-        props:["commentFromParent", "username"],
+        props:["commentFromParent", "username","UID"],
 
         data() {
             return {
                 action: null,
                 alreadySendLikes:false,    // Can't repeat likes 
+
+                comment:this.commentFromParent, 
                
-               // comment:this.commentFromParent, 改完取消这行注释
-               //! Sample Comment FOR TEST 改完注释调
-                comment: {
-                    doi:" ",    // not used hier
-
-                    ID:"MAKAVIVZSVSDFSDF",    // UID for comment 
+               //! Sample Comment FOR TEST 
+               /* comment: {
+                    UID:"MAKAVIVZSVSDFSDF",    // UID for comment 
                     PermanentID:"",    // '' or 'ASDASDAS'
-                    commentType:"unofficial",    // "official", "unofficial"
-                    status:[],    // ["in Review", "ask for PID",...] 
+                    type:"unofficial",    // "official", "unofficial"
+                    status:{
+                        "Review":true,
+                        "PID":false
+                    },  
                     active:true,    // the Admin can hide the comments
-
                     author:this.commentFromParent.author,
-                    authorRole:["default","Researcher"],    // ["default", "Researcher",....]
                     content:this.commentFromParent.content,    // the comment is in html form 
-
-                    time: new Date(),
+                    createDate: "2020-12-12",
                     likes: 0,
                     dislikes: 0,
                 },   
-
+                */
             };
         },
 
@@ -120,7 +120,11 @@ Vue.use(Antd)
             },
 
             isResearcher(){
-                return this.comment.authorRole.indexOf("Researcher") > -1 ;
+                var login = this.$store.state.account.role;
+                if(login){
+                    return (this.$store.state.account.role.indexOf("Researcher"))>-1;
+                }
+                return false;
             },
 
             isAuthor(){
@@ -128,18 +132,17 @@ Vue.use(Antd)
             },
 
             /**
-             * @returns true, if the current user is Admin
+             * @returns true, if the current user is Moderator
              */
-            isAdmin(){
-                return true; //! FOR TEST
+            isModerator(){
 
-                var login = this.$store.state.account.username;
+                var login = this.$store.state.account.role;
 
                 if(login){
-                    return (this.$store.state.account.role.indexOf("Admin"))>-1; // check whether the logged user is Admin
+                    return (this.$store.state.account.role.indexOf("Moderator"))>-1; // check whether the logged user is Moderator
                 }
                 else{
-                    return false; // not logged => not Admin
+                    return false; // not logged => not Moderator
                 }
 
             },
@@ -151,7 +154,7 @@ Vue.use(Antd)
 
                 // Duplicate application is prohibited
                 // in Reviewing => disable the Button
-                return this.comment.status.indexOf("in Review") > -1 ;
+                return this.comment.status["Review"] ;
 
             },
 
@@ -162,7 +165,7 @@ Vue.use(Antd)
                 
                 // Duplicate application is prohibited
                 // already requested => disable the Button
-                return this.comment.status.indexOf("ask for PID") > -1 ;
+                return this.comment.status["PID"];
                 
             },
 
@@ -170,41 +173,63 @@ Vue.use(Antd)
 
         methods: {
             /**
-             * ! 涉及后端交互
              * send review Request to firebase
              */
             askForReview(){
 
-                // JJY : 暂时前端应该已经拦截了role不对的 已经在review的 应该不会发生重复提交申请的问题
-                //TODO this.$store.dispatch("review",this.comment.ID);
+                var request = {
+                    uid:this.UID,
+                    doi:this.comment.doi_nr,
+                    requestType:"Review",
+                }
+    
+                var result = this.$store.dispatch("askFromUser/askForRequest",request)
+                                                .catch(err => {
+                                                            console.log(err);
+                                                         });
                 
-                this.comment.status.push("in Review");
+                this.comment.status["Review"]=true;
 
             },
 
             /**
-             * ! 涉及后端交互
              * ask firebase for PermanentID
              */
             askForPID(){
                 
-                // JJY : 暂时前端应该已经拦截了role不对的 已经有PID的 已经申请PID的
-                //TODO this.$store.dispatch("askForPID",this.comment.ID);
+                var request = {
+                    uid:this.UID,
+                    doi:this.comment.doi_nr,
+                    requestType:"PID",
+                }
+                
+                var result = this.$store.dispatch("askFromUser/askForRequest",request)
+                                                .catch(err => {
+                                                            alert.log(err);
+                                                         });
 
-                this.comment.status.push("ask for PID");
+                this.comment.status["PID"]=true;
             },
 
             /**
-             * ! 涉及后端交互
              * send delete Request to firebase
              */
             deleteComment(){
-                //TODO this.$store.dispatch("delete",this.comment.ID);
-                this.$emit("refresh");
+                
+                this.deleted =true;
+                var request = {
+                    uid:this.UID,
+                    doi:this.comment.doi_nr,
+                }
+                
+            
+                this.$store.dispatch("askFromUser/deleteComment",request).then(()=>{
+                    this.$emit("refresh");
+                });
+            
             },
            
             /**
-             * ! 涉及后端交互
              * When the user clicks the like button, send like request to firebase
              */
             like() {
@@ -213,14 +238,19 @@ Vue.use(Antd)
                     this.alreadySendLikes =true;    // Can't repeat likes
                     this.comment.likes += 1;
                        
-                    //TODO this.$store.dispatch("like",this.comment.ID);
+                    var request = {
+                        uid:this.UID,
+                        doi:this.comment.doi_nr,
+                        attribute:"likes",
+                    };
+
+                    this.$store.dispatch("askFromUser/setAttribute",request);
                                               
                 }
                 
             },
 
              /**
-             * ! 涉及后端交互
              * When the user clicks the like button, send dislike request to firebase
              */
             dislike() {
@@ -229,19 +259,31 @@ Vue.use(Antd)
                     this.alreadySendLikes =true;    // Can't repeat dislikes
                     this.comment.dislikes += 1;   
                     
-                    //TODO this.$store.dispatch("dislike",this.comment.ID);
+                    var request = {
+                        uid:this.UID,
+                        doi:this.comment.doi_nr,
+                        attribute:"dislikes",
+                    };
+
+                   this.$store.dispatch("askFromUser/setAttribute",request);
 
                 }
             },
 
             /**
-             * ! 涉及后端交互
              * The Admin ask firebase to hide/unhide the comment
              */
             setVisiblity(){
                 this.comment.active = !this.comment.active;
-
-                //TODO this.$store.dispatch("setVisiblity",this.comment.ID);
+                
+                var request = {
+                        uid:this.UID,
+                        doi:this.comment.doi_nr,
+                        attribute:"aktive",
+                        value:this.comment.active,
+                };
+                
+                this.$store.dispatch("askFromUser/setAttribute",request);
 
             }
         },
@@ -252,5 +294,27 @@ Vue.use(Antd)
 .avatarp{
     font-size: 2.5vw;
     line-height: 4.4vw;
+}
+#components-popover-demo-placement .ant-btn {
+  width: 5vw;
+  text-align: center;
+  padding: 0;
+  margin-right: 3vw;
+  margin-bottom: 3vw;
+}
+.auactions{
+    cursor: pointer;
+    height: 5vh;
+}
+.auactionstabu{
+    pointer-events: none;
+    height: 5vh;
+    text-decoration: line-through;
+}
+.actionb{
+    left: 10vw;
+}
+.ant-comment{
+    z-index: 500;
 }
 </style>

@@ -1,9 +1,14 @@
-import firebase from 'firebase/app';
+import firebase from "firebase/app";
+
+// Import needed firebase modules
 
 const state = () => ({
     username: null,
-    role: null, //['default', 'Researcher', 'Reviewer','Moderator','Admin']  from JJY
-    error: null
+    role: null, //list:['default', 'Researcher', 'Reviewer','Moderator','Admin']  from JJY
+    update: {},
+    error: null,
+    commentList:[],
+    Messagebox:{},
 })
 
 const getters = {
@@ -22,30 +27,66 @@ const getters = {
 
 
 const actions = {
-    login({ commit, state }, { username, password }) {
+    async login({ commit, state,dispatch }, { username, password }) {
 
-        //when everything ok, update inform//get information from google firebase backend
+        //when everything ok, update inform//get information from google this.$this.$firebase backend
         //when username does not compare to the password, return false and reason
-        return firebase
+      
+            // Existing and future Auth states are now persisted in the current
+            // session only. Closing the window would clear any existing state even
+            // if a user forgets to sign out.
+            // ...
+            // New sign-in will be persisted with session persistence.
+            return firebase
             .auth()
             .signInWithEmailAndPassword(username, password)
-            .then(response => {  
-                window.localStorage.setItem("username",username); //cache account information
-                commit("setusername", username);
+            .then(async function ({user}) {  
+                //cache account information
+                let result=await firebase.database().ref('users/'+user.uid).once('value').then((user) => {
+                    commit("setrole", user.val().role);
+                    commit("setupdate", user.val().update);
+                    commit("setusername", username);
+                }).catch(err => {
+                    console.log(err);
+                });
+                commit("setError", null);
+                return result;  
             })
-            .catch(error => {
+            .catch((error) => {
                 commit("setError", error.message);
             });
+       
+       
     },
-
+   
+    async relogin({ commit, state,dispatch }, { }){
+        let user=firebase.auth().currentUser;
+        if (user){
+            commit ('setusername',user.email);
+            return firebase.database().ref('users/'+user.uid).once('value').then((user) => {
+                commit("setrole", user.val().role);
+                commit("setupdate", user.val().update);
+            }).catch(err => {
+                console.log(err);
+            });
+        }
+        else
+        {
+            commit('setrole',[])
+            commit('setupdate',{})
+            commit('setusername',null)
+        }
+        return;
+    },
     logout ({ commit}) {
-        //logout action in firebase, return a promise
+        //logout action in this.$firebase, return a promise
         firebase
         .auth()
         .signOut()
         .then(() => {
-            window.localStorage.removeItem('username');  //delete cached account information
-            commit('setrole',null)
+           
+            commit('setrole',[])
+            commit('setupdate',{})
             commit('setusername',null)
         })
         .catch(error => {
@@ -53,31 +94,60 @@ const actions = {
         })
     },
 
-    regist({ commit, state }, { username, password }) {
-        //get information from google firebase backend
+    async regist({ commit, state }, { username, password }) {
+        //get information from google this.$firebase backend
         //when username does not compare to the password, return false and reason
-        firebase
+        return firebase
             .auth()
             .createUserWithEmailAndPassword(username, password)
-            .then(response => {
-                console.log('true')
-                commit("setusername", username);
+            .then(({user}) => {
                 
-                //初始化DB中的用户信息                
+                commit("setusername", username);
+                commit("setrole", ['default'])      
                 var entry = {
                     username: username,
-                    role: 'user',
+                    role: ['default'],
                     email: username, 
+                    Messagebox:null,
+                    update:{
+                        Researcher:false,
+                        Reviewer:false,
+                        Moderator:false,
+                        Admin:false,
+                    }
+
                 }
-               
-                firebase.database().ref('users').push(entry)
+                
+                firebase.database().ref('users/'+user.uid).set(entry);
+                commit("setError", null);
             })
-            .catch(error => {
-                console.log('false');
+            .catch((error) => {
                 commit("setError", error.message);
             });
+    },
+    async getCommentList({commit}){
+        commit('setCommentListNull');
+        let user=firebase.auth().currentUser;
+        if (user){
+            commit ('setusername',user.email);
+            firebase.database().ref('users/'+user.uid+"/comments").once('value').then((snapshot) => {
+                let doiKey,tempCommitValue;
+                snapshot.forEach((childSnapshot) => {
+                    doiKey=childSnapshot.val().doi.replaceAll(".","'");
+                    firebase.database().ref('doi_repository/' + doiKey + '/comments/'+childSnapshot.key)
+                    .once('value').then((value)=>{
+                        tempCommitValue=value.val();
+                        tempCommitValue.commitKey=value.key;
+                        commit('setCommentList',tempCommitValue);
+                    })
 
-        
+                })
+            }).catch(err => {
+                console.log(err);
+            });
+        }
+        return;
+
     }
 }
 
@@ -92,6 +162,20 @@ const mutations = {
     },
     setError(state, error) {
         state.error = error;
+    },
+    setupdate(state, update) {
+        state.update = update
+    },
+    
+    setCommentList(state,newComment){
+        state.commentList.push(newComment);
+    },
+    setCommentListNull(state){
+        state.commentList=[];
+    },
+
+    setMessageBox(state,Messagebox){
+        state.Messagebox=Messagebox;
     }
 
 }

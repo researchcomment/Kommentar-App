@@ -1,4 +1,6 @@
 import firebase from "firebase/app";
+import store from '../store'
+
 
 // Import needed firebase modules
 import "firebase/auth";
@@ -26,3 +28,7 @@ const firebaseConfig = {
 };
   // Init our firebase app
 firebase.initializeApp(firebaseConfig);
+firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL);
+
+
+

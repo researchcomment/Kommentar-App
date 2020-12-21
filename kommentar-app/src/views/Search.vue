@@ -38,11 +38,15 @@
       <!-- change Pages -->
       <div class="pagesetter" v-if= "(!loading)&&(searchResultList.length != 0)">
         <i class="iconfont icon-zuojiantou" v-show="page>1" @click="gotoPage(page-1,false)"></i>
+        <p class="nootherpage" v-show="page-2<1">...</p>
+        <p class="nootherpage" v-show="page-1<1">...</p>
         <p class="otherpage" v-show="page-2>=1" @click="gotoPage(page-2,false)">{{page-2}}</p>
         <p class="otherpage" v-show="page-1>=1" @click="gotoPage(page-1,false)">{{page-1}}</p>
         <p class="currentpage">{{page}}</p>
         <p class="otherpage" v-show="(resultLength/10)>=(page+1)" @click="gotoPage(page+1,false)">{{page+1}}</p>
         <p class="otherpage" v-show="(resultLength/10)>=(page+2)" @click="gotoPage(page+2,false)">{{page+2}}</p>
+        <p class="notherpage" v-show="(resultLength/10)<(page+1)">...</p>
+        <p class="nootherpage" v-show="(resultLength/10)<(page+2)">...</p>
         <i class="iconfont icon-youjiantou" v-show="(!loading)&&(resultLength/10)>=(page+1)" @click="gotoPage(page+1,false)"></i>
       </div>
 
@@ -151,7 +155,8 @@ export default {
                                                 to:this.page*10,
                                                 date:this.filterCondition.date,
                                                 type:this.filterCondition.selectedType,
-                                                flag:newSearch})   // flag = false , when it should change page, not new search
+                                                flag:newSearch
+                                                })   // flag = false , when it should change page, not new search
         .then((result) => {
           this.searchResultList = result.list;
           this.resultLength=result.length;
@@ -257,6 +262,9 @@ export default {
   color: #00243E;
   cursor: pointer;
 }
+.nootherpage{
+  color: #00243E;
+}
 .otherpage:hover{
   text-decoration: underline;
   color:#00243E
@@ -269,6 +277,9 @@ export default {
 .sorryimg{
   width: 40vw;
   margin: 0 30vw;
+}
+html {
+  overflow-y: scroll;
 }
 
 </style>

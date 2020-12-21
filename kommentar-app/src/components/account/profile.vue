@@ -10,20 +10,41 @@
         <li>
           <span class="iconfont icon-jiaose"></span>
           <div class="texts">
-            Role: {{role}}
+            
           </div>
         </li>
+
+        <!-- Admin -->
         <li v-show="isAdmin" @click="openAdmin">
           <span class="iconfont icon-biaoqiankuozhan_guanli-159"></span>
           <div class="texts">
             Admin
           </div>
         </li>
-        <li>
-          <span class="iconfont icon-youxiang"></span>
+
+        <!-- Reviewer -->
+        <li v-show="isReviewer" @click="openReviewer">
+          <span class="iconfont icon-biaoqiankuozhan_guanli-159"></span>
           <div class="texts">
-            Mailbox
+            Reviewer
           </div>
+        </li>
+
+        <!-- Personal Information -->
+        <li @click="openPersonal('role')">
+          <span class="iconfont icon-biaoqiankuozhan_guanli-159"></span>
+          <div class="texts">
+            Personal_info
+          </div>
+        </li>
+
+        <li  @click="openPersonal('messageBox')">
+         <span class="iconfont icon-youxiang"></span>
+              <div class="texts" >
+                <a-badge :count="Object.keys(Messagebox).length" >
+                  <p >Message</p>
+                </a-badge>
+              </div>
         </li>
         <li @click="logout">
           <span class="iconfont icon-tuichu5"></span>
@@ -32,7 +53,10 @@
           </div>
         </li>
       </ul>
-
+      <!-- {{Messagebox}} -->
+        <!-- <a-badge :count="Object.keys(Messagebox).length" show-zero style="font-size: xx-small;">
+          <a href="#" class="head-example" />
+        </a-badge> -->
       <!-- Logout button
       <button class="btn" @click="logout">Logout</button> -->
   </div>
@@ -47,19 +71,35 @@ export default {
     }
   },
   computed:{
-    role:function(){
+
+    role(){
       return this.$store.state.account.role;
     },
+    Messagebox()
+    {
+      return this.$store.state.account.Messagebox;
+    },
+
     isAdmin(){
-      return true; //!for test
-      if(this.username){
+      if(this.role){
           //check whether the logged user is Admin
           return (this.role.indexOf("Admin"))>-1;
       }
       else{
           return false;
       }
-    }
+    },
+
+    isReviewer(){
+      if(this.role){
+          //check whether the logged user is Admin
+          return (this.role.indexOf("Reviewer"))>-1;
+      }
+      else{
+          return false;
+      }
+    },
+
   },
   methods:{
     close(){
@@ -67,11 +107,69 @@ export default {
     },
     logout(){
       this.$store.dispatch('account/logout');
+      this.$message({
+          type: 'success',
+          message: "Logout successfully. Goodbye!",
+          duration: 1000
+      });
       this.$emit('logout');
+      var router=this.$router.currentRoute.name;
+      if(router=="personal"||router=="admin"||router=="reviewer"){
+        this.$router.push('/');
+      }
+
+      
     },
     openAdmin(){
-      this.$router.push('/Admin');
-    }
+
+      if(this.$router.currentRoute.name!="admin"){
+        this.$router.push('/Admin');
+      }
+      else{
+        this.openNotification();
+      }
+      
+    },
+    openReviewer(){
+ 
+      if(this.$router.currentRoute.name!="reviewer"){
+        this.$router.push('/Review');
+      }
+      else{
+        this.openNotification();
+      }
+    },
+
+    openPersonal(menuKey){
+      var sameRouter=(this.$router.currentRoute.name=="personal");
+      if(sameRouter){
+        sameRouter = sameRouter && (this.$route.query.menu==menuKey);
+      }
+      
+      if(!sameRouter){
+          this.$router.push({path:'/Personal',
+                            query:{
+                              menu:menuKey,
+                            }});
+         
+          //this.$router.push('/Personal');
+        
+      }
+      else{       
+        this.openNotification();
+      }
+    },
+
+    openNotification() {
+      var msg = "You are already on this page";
+      this.$notification["warning"]({
+        message: "Oops",
+        placement:"topLeft",
+        description:msg,
+      });
+    },
+  
+    
   }
 
 }

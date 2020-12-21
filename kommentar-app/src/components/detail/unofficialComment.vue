@@ -75,16 +75,14 @@ export default {
             this.loading=true;
 
             // send request
-            var result = await this.$store.dispatch("commitwork/loadUnOfficialComments", 
+            var result = await this.$store.dispatch("commitwork/loadComments", 
                                                     {doi: this.doi, 
                                                      rankType: 'submittime',
-                                                     username: this.$store.state.account.username})
+                                                     username: this.$store.state.account.username,
+                                                     type:"unofficial"})
                                             .catch(err => {
                                                             console.log(err);
                                                          });
-
-            // !FOR TEST                                             
-            // console.log('finished')
 
             this.commentList = result;
 
@@ -110,6 +108,7 @@ export default {
 .ucomment .ucommitli{
     margin-bottom: 4vh;
     width: 70vw;
+    position: relative;
 }
 .ant-comment-inner{
     padding: 0;
@@ -119,6 +118,10 @@ export default {
 }
 .ant-comment-content-author .ant-comment-content-author-name a{
     font-size: 1.5vw;
+}
+.ant-comment-content-author .ant-comment-content-author-time span{
+    font-size: 1.2vw;
+    line-height: -2vw
 }
 .ant-comment-content-detail p{
     font-size: 1.5vw;
@@ -147,8 +150,8 @@ export default {
     margin-right: 3vw;
 }
 .ucomment .ant-comment-actions{
-    margin-bottom: 4vh;
     padding: 0;
+    margin-bottom: 1vw;
 }
 .ucomment .ant-comment .ant-comment-actions span span{
     font-size: 1.2vw;

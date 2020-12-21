@@ -3,7 +3,7 @@
         <div v-loading.fullscreen.lock="loading">
 
             <!-- Book Cover -->
-            <div v-for="(item, key) in detail" :key="key">
+            <div v-for="(item, index) in detail" v-bind:key="index">
                 <img src="../../pics/book.jpg" align="right"  v-if="item == 'book'" class="workimg">
                 <img src="../../pics/journal-article.jpg" align="right"  v-if="item == 'journal'" class="workimg">
                 <img src="../../pics/proceeding.jpg" align="right"  v-if="item == 'proceedings-article'" class="workimg">
@@ -27,10 +27,10 @@
                     {{key}}: {{item}}
                 </p>
                 </div>
+
                 <div v-if="detail.abstract" v-html="detail.abstract">
                 </div>
             </div>
-
         </div>
     </div>
 </template>
@@ -58,6 +58,7 @@
                 .then((result) => {
                     this.detail = result;
                     this.loading=false;    // close the loading-animation 
+                    this.$emit("setDetail",this.detail)
                 }).catch(err => {
                     console.log(err);
             })
@@ -88,7 +89,7 @@
     .workimg{
         width: 30vw;
         top: 0vh;
-        padding: 1vh;
+        padding: 3vw;
         padding-right: 0;
     }
 </style>
