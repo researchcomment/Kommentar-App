@@ -33,7 +33,7 @@
                         <!-- PID Request -->
                         <a-tag 
                         color="cyan" 
-                        v-if=" !comment.status['PID'] && role.indexOf('Researcher')>-1&&comment.type!='official'" 
+                        v-if=" !comment.status['PID'] && role.includes('Researcher')&&comment.type!='official'" 
                         @click="newRequest('PID',comment)">
                             PID
                         </a-tag>

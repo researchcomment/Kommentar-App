@@ -115,7 +115,7 @@
                 var login = this.$store.state.account.username;
 
                 if(login){
-                    return (this.$store.state.account.role.indexOf("Admin"))>-1; // check whether the logged user is Admin
+                    return this.$store.state.account.role.includes("Admin"); // check whether the logged user is Admin
                 }
                 else{
                     return false; // not logged => not Admin
@@ -204,7 +204,7 @@
             filter(userName){ 
                 //console.log(userName)
                 //return false
-                return userName.indexOf(this.searchText) > -1 ;
+                return userName.includes(this.searchText) ;
             },
 
             getColor(tag){

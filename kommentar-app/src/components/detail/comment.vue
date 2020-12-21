@@ -122,7 +122,7 @@ Vue.use(Antd)
             isResearcher(){
                 var login = this.$store.state.account.role;
                 if(login){
-                    return (this.$store.state.account.role.indexOf("Researcher"))>-1;
+                    return this.$store.state.account.role.includes("Researcher");
                 }
                 return false;
             },
@@ -139,7 +139,7 @@ Vue.use(Antd)
                 var login = this.$store.state.account.role;
 
                 if(login){
-                    return (this.$store.state.account.role.indexOf("Moderator"))>-1; // check whether the logged user is Moderator
+                    return this.$store.state.account.role.includes("Moderator"); // check whether the logged user is Moderator
                 }
                 else{
                     return false; // not logged => not Moderator
