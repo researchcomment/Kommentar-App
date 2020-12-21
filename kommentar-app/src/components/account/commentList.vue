@@ -11,7 +11,7 @@
                     <a-descriptions-item label="type">{{comment.type}}</a-descriptions-item>
                     
                     <a-descriptions-item label="Book Link">
-                        <p @click="seeDetail(comment.doi_nr)">{{getTitle(comment.doi_nr)}}</p>
+                        <p @click="seeDetail(comment.doi_nr)">{{commit.title}}</p>
                     </a-descriptions-item>
 
                     <a-descriptions-item label="Requests in Checking">
@@ -93,6 +93,10 @@
                                 ]
                             }
                 }, 
+                
+             
+                
+            
 
 
 
@@ -113,11 +117,9 @@
                 
                 return  this.$store.state.account.commentList;
             },
+            
 
-            title(doi){
-                console.log(doi)
-                return this.getTitle(doi);
-            }
+            
             
 
         },
@@ -206,16 +208,7 @@
 
             },
 
-            getTitle(){
-                
-                this.$store.dispatch("commitwork/askfordetail", {
-                        doi:doi,
-                    username:this.username,}).then(
-                        (detail)=>{
-                            this.title[detail.doi]= detail.title;
-                        });
-                
-            },
+            
             /**
              * open a new window which shows the details of this book
              */

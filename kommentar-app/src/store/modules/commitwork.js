@@ -125,7 +125,7 @@ const actions = {
     },
 
     //create new Entry in realtime-DB for Editor-Input 
-    async sendFromEditorToDatabase({ commit, state }, { doi, author, content }) {
+    async sendFromEditorToDatabase({ commit, state }, {title, doi, author, content }) {
         //version 2
         //找到userkey
         let userKey = firebase.auth().currentUser.uid;
@@ -144,6 +144,7 @@ const actions = {
                // ["in Review", "ask for PID",...] 
             active:true,    // the Admin can hide the comments
             author:author,
+            title: title,
             content: content,
             likes: 0,
             dislikes: 0,
