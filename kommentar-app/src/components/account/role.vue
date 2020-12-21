@@ -14,7 +14,7 @@
        
 
         <!-- Researcher Card -->
-        <a-card hoverable style="width: 200px" v-if="!role.includes('Researcher') && !update['Researcher']"  @click="updateRole('Researcher')">
+        <a-card hoverable style="width: 250px" v-if="!role.includes('Researcher') && !update['Researcher']"  @click="updateRole('Researcher')">
             <img
             slot="cover"
             alt="example"
@@ -31,87 +31,90 @@
                     <a-icon type="heart" theme="twoTone" two-tone-color="#eb2f96"></a-icon>
                 </span>
             </template>
-
-           
-
-           
+  
         </a-card>
        
 
         <p></p>
 
+
         <!-- Options for the user, who is already a researcher -->
         <div v-show="role.includes('Researcher')">
             
-            <!-- Reviewer Card -->
-            <a-card hoverable style="width: 200px"  v-if="!role.includes('Reviewer') && !update['Reviewer']" @click="updateRole('Reviewer')">
-                <img
-                slot="cover"
-                alt="example"
-                src="https://gw.alipayobjects.com/zos/rmsportal/JiqGstEfoWAOHiTxclqi.png"
-                />
-
-
-                <a-card-meta title="Reviewer" />
-                <b>Authority:</b> allowed to assign a persistent ID for a comment
-
-
-
-                <template slot="actions" class="ant-card-actions" >
-                    <span>
-                        <b>I Want it</b>
-                        <a-icon type="heart" theme="twoTone" two-tone-color="#eb2f96"></a-icon>
-                    </span>
-                </template>
-               
-            </a-card>
-
-            <!-- Moderator Card -->
-            <a-card hoverable style="width: 200px"  v-if="!role.includes('Moderator') && !update['Moderator']"  @click="updateRole('Moderator')">
-                <img
-                slot="cover"
-                alt="example"
-                src="https://gw.alipayobjects.com/zos/rmsportal/JiqGstEfoWAOHiTxclqi.png"
-                />
-
-                <!-- Introduction -->
-                <a-card-meta title="Moderator"></a-card-meta>
-                <b>Authority:</b> allowed to delete or mark “non-binding comment” so that this comment not visible to other users
+            <a-row :gutter="{ xs: 8, sm: 16, md: 24, lg: 32 }">
                 
-                <!-- Action -->
-                <template slot="actions" class="ant-card-actions">
-                    <span>
-                        <b>I Want it</b>
-                        <a-icon type="heart" theme="twoTone" two-tone-color="#eb2f96"></a-icon>
-                    </span>
-                </template>
-                
-                
-                
-            </a-card>
+                <!-- Reviewer Card -->
+                <a-col :span="8"  v-if="!role.includes('Reviewer') && !update['Reviewer']">
+                    
+                    <a-card hoverable style="width: 250px"  @click="updateRole('Reviewer')">
+                        <img
+                        slot="cover"
+                        alt="example"
+                        src="https://gw.alipayobjects.com/zos/rmsportal/JiqGstEfoWAOHiTxclqi.png"
+                        />
 
-            <!-- Admin Card -->
-            <a-card hoverable style="width: 200px"  v-if="!role.includes('Admin') && !update['Admin']"  @click="updateRole('Admin')">
-                <img
-                slot="cover"
-                alt="example"
-                src="https://gw.alipayobjects.com/zos/rmsportal/JiqGstEfoWAOHiTxclqi.png"
-                />
+                        <a-card-meta title="Reviewer" />
+                        <b>Authority:</b> allowed to assign a persistent ID for a comment
 
-                <a-card-meta title="Admin" > </a-card-meta>
+                        <template slot="actions" class="ant-card-actions" >
+                            <span>
+                                <b>I Want it</b>
+                                <a-icon type="heart" theme="twoTone" two-tone-color="#eb2f96"></a-icon>
+                            </span>
+                        </template>
+                    
+                    </a-card>
+                </a-col>
 
-                <b>Authority:</b>
-                    all
-                <b>Characteristics:</b>
-                    User can assign the authorities
+                <!-- Moderator Card -->
+                <a-col :span="8"  v-if="!role.includes('Moderator') && !update['Moderator']">
+                    <a-card hoverable style="width: 250px"   @click="updateRole('Moderator')">
+                        <img
+                        slot="cover"
+                        alt="example"
+                        src="https://gw.alipayobjects.com/zos/rmsportal/JiqGstEfoWAOHiTxclqi.png"
+                        />
 
-                <template slot="actions" class="ant-card-actions">
-                    <span>
-                        <b>I Want it</b>
-                        <a-icon type="heart" theme="twoTone" two-tone-color="#eb2f96"></a-icon>
-                    </span>
-                </template>
-            </a-card>
+                        <!-- Introduction -->
+                        <a-card-meta title="Moderator"></a-card-meta>
+                        <b>Authority:</b> allowed to delete or mark “non-binding comment” so that this comment not visible to other users
+                        
+                        <!-- Action -->
+                        <template slot="actions" class="ant-card-actions">
+                            <span>
+                                <b>I Want it</b>
+                                <a-icon type="heart" theme="twoTone" two-tone-color="#eb2f96"></a-icon>
+                            </span>
+                        </template>
+            
+                    </a-card>
+                </a-col>
+
+                <!-- Admin Card -->
+                <a-col :span="8" v-if="!role.includes('Admin') && !update['Admin']">
+                    <a-card hoverable style="width: 250px"    @click="updateRole('Admin')">
+                        <img
+                        slot="cover"
+                        alt="example"
+                        src="https://gw.alipayobjects.com/zos/rmsportal/JiqGstEfoWAOHiTxclqi.png"
+                        />
+
+                        <a-card-meta title="Admin" > </a-card-meta>
+
+                        <b>Authority:</b>
+                            all
+                        <b>Characteristics:</b>
+                            User can assign the authorities
+
+                        <template slot="actions" class="ant-card-actions">
+                            <span>
+                                <b>I Want it</b>
+                                <a-icon type="heart" theme="twoTone" two-tone-color="#eb2f96"></a-icon>
+                            </span>
+                        </template>
+                    </a-card>
+                </a-col>
+            </a-row>
 
         </div>
 
