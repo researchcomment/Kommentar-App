@@ -21,6 +21,10 @@
             src="https://gw.alipayobjects.com/zos/rmsportal/JiqGstEfoWAOHiTxclqi.png"
             />
 
+             <a-card-meta title="Researcher"/>
+             <b>Authority:</b> allowed to request for a persistent ID for a comment
+             <b>Characteristics:</b> a “Normal User” who verifies his identity.
+
             <template slot="actions" class="ant-card-actions">
                 <span>
                     <b>I Want it</b>
@@ -28,8 +32,9 @@
                 </span>
             </template>
 
-            <a-card-meta title="Researcher" description="what a Researcher can do : balabla">
-            </a-card-meta>
+           
+
+           
         </a-card>
        
 
@@ -45,15 +50,20 @@
                 alt="example"
                 src="https://gw.alipayobjects.com/zos/rmsportal/JiqGstEfoWAOHiTxclqi.png"
                 />
+
+
+                <a-card-meta title="Reviewer" />
+                <b>Authority:</b> allowed to assign a persistent ID for a comment
+
+
+
                 <template slot="actions" class="ant-card-actions" >
                     <span>
                         <b>I Want it</b>
                         <a-icon type="heart" theme="twoTone" two-tone-color="#eb2f96"></a-icon>
                     </span>
                 </template>
-                <a-card-meta title="Reviewer" description="what a Reviewer can do : balabla">
-                
-                </a-card-meta>
+               
             </a-card>
 
             <!-- Moderator Card -->
@@ -63,15 +73,21 @@
                 alt="example"
                 src="https://gw.alipayobjects.com/zos/rmsportal/JiqGstEfoWAOHiTxclqi.png"
                 />
+
+                <!-- Introduction -->
+                <a-card-meta title="Moderator"></a-card-meta>
+                <b>Authority:</b> allowed to delete or mark “non-binding comment” so that this comment not visible to other users
+                
+                <!-- Action -->
                 <template slot="actions" class="ant-card-actions">
                     <span>
                         <b>I Want it</b>
                         <a-icon type="heart" theme="twoTone" two-tone-color="#eb2f96"></a-icon>
                     </span>
                 </template>
-                <a-card-meta title="Moderator" description="what a Moderator can do : balabla">
                 
-                </a-card-meta>
+                
+                
             </a-card>
 
             <!-- Admin Card -->
@@ -81,15 +97,20 @@
                 alt="example"
                 src="https://gw.alipayobjects.com/zos/rmsportal/JiqGstEfoWAOHiTxclqi.png"
                 />
+
+                <a-card-meta title="Admin" > </a-card-meta>
+
+                <b>Authority:</b>
+                    all
+                <b>Characteristics:</b>
+                    User can assign the authorities
+
                 <template slot="actions" class="ant-card-actions">
                     <span>
                         <b>I Want it</b>
                         <a-icon type="heart" theme="twoTone" two-tone-color="#eb2f96"></a-icon>
                     </span>
                 </template>
-                <a-card-meta title="Admin" description="what a Admin can do : balabla">
-                
-                </a-card-meta>
             </a-card>
 
         </div>

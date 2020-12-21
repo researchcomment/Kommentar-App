@@ -45,18 +45,14 @@
                 </a-descriptions>
 
                 <h2>Content</h2>
-                {{index}}
-                {{editorVisibility}}
-                {{editorVisibility[index]}}
-                <p  v-show="!editorVisibility[index]" v-html="comment.content"></p>
-                <div v-show="editorVisibility[index]"> 
+                <p  v-if="!editorVisibility[index]" v-html="comment.content"></p>
+                <div v-if="editorVisibility[index]"> 
                     <quill-editor
                     v-model="templateComment.content"
                     :options="editorOption"
                     >
                     </quill-editor>
                     <a-button @click="editorRequest">Submit</a-button>
-                    <a-button @click="editorVisibility[index]=false">Cancel</a-button>
                 </div>
 
                 <a-button :disabled="comment.type=='official'" icon="edit" @click="openEditor(comment,index)" >Editor</a-button>
@@ -83,11 +79,11 @@
                 pagination: {
                     pageSize: 6,
                 },
-                index:0,
+                
                
                 searchDOI:"",
 
-                editorVisibility:[false,true],
+                editorVisibility:[],
                 editorOption: {    // style for quill-editor
                     placeholder: "Please write down your comment....",
                     modules:{
@@ -135,7 +131,6 @@
                                             .catch(err => {
                                                             console.log(err);
                                                          });
-                this.editorVisibility=new Array(this.commentList.length).fill(false);
 
             },
 
@@ -192,7 +187,7 @@
                         icon: <a-icon type="smile" style="color: #108ee9" />,
                     });  
                     
-                    this.editorVisibility =false;
+                    this.editorVisibility =[];
                     this.getCommentList();
 
                     })
@@ -241,7 +236,8 @@
              */
             openEditor(comment,index){
                 this.templateComment =JSON.parse(JSON.stringify(comment));
-                this.editorVisibility[index]=!this.editorVisibility[index];
+                this.editorVisibility=[];
+                this.editorVisibility[index] = true;
             },
 
             relate(comment){
