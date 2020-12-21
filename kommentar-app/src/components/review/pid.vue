@@ -18,12 +18,12 @@
                 
                 <!-- Detail about this comment -->
                 <a-descriptions  bordered  :column="{ xxl: 4, xl: 3, lg: 3, md: 3, sm: 2, xs: 1 }">
-                    <a-descriptions-item label="Create Date">{{comment.createDate}}</a-descriptions-item>
+                    <a-descriptions-item label="Create Date">{{new Date(Date.parse(comment.createDate)).toLocaleString()}}</a-descriptions-item>
                     <a-descriptions-item label="type">{{comment.type}}</a-descriptions-item>
                     
                     <a-descriptions-item label="Book Link">
                         <p @click="seeDetail(comment.doi_nr)">{{comment.title}}</p>
-                        <a :href="'https://dx.doi.org/'+ comment.doi_nr"  target="_blank">Link Outside</a>
+                        <a :href="'https://dx.doi.org/'+ comment.doi_nr"  target="_blank">{{comment.doi_nr}}</a>
                     </a-descriptions-item>
 
                     <a-descriptions-item label="Visibility">
@@ -129,9 +129,6 @@
              */
             async getCommentList(){
 
-                // open the loading-animation
-                this.loading=true;
-
                 // get CommentList form firebase, the status from these comments is "in Review"               
                 this.$store.dispatch("adminAktion/getCommentListForRequest", 
                                                     {requestType:"PID"})
@@ -147,15 +144,11 @@
                 .catch(err => {
                                 console.log(err);
                               });
-               
-                // close the loading-animation 
-                this.loading=false; 
 
             },
 
             /**
              * Send to the firebase whether the request for PermanentID is passed
-             * 
              */
             replyPID(){
                 var comment = this.templateComment;
@@ -189,17 +182,9 @@
                     flag:agree,
                     comment_content:comment.content,
                 };
-                
-               
-            
-                   
+                    
                 //send Request to firebase  
                 this.$store.dispatch("adminAktion/replyRequest",request).then(()=>{
-                    // Refresh the display, prompting success
-                    var index =  this.commentList.indexOf(comment);
-                    if (index > -1) {
-                        this.commentList.splice(index, 1);
-                    }
                     this.visiblePID = false;
                     this.$notification.open({
                         message: 'Success',

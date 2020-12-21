@@ -6,6 +6,7 @@ import Detail from  '../views/Detail.vue'
 import Admin from  '../views/Admin.vue'
 import Reviewer from  '../views/Reviewer.vue'
 import Personal from  '../views/Personal.vue'
+import MessageBox from  '../views/MessageBox.vue'
 import store from '@/store'
 import firebase from "firebase/app";
 Vue.use(Router)
@@ -49,6 +50,11 @@ const router = new Router({
       path: '/Personal',
       name: 'personal',
       component: Personal
+    },
+    {
+      path: '/MessageBox',
+      name: 'messageBox',
+      component: MessageBox
     },
     {
       path: '*',

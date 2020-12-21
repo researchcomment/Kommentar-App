@@ -4,7 +4,7 @@
       <div class="reg1" @click="dialogFormVisible = true">Register<span class="iconfont icon-zhuce" style="font-size: inherit"></span></div>
      
       <!-- Register Form -->
-      <mt-popup class="popform" style="color:black" v-model="dialogFormVisible" popup-transition="popup-fade">
+      <mt-popup class="popform" style="color:black" v-model="dialogFormVisible" popup-transition="popup-fade"  @keydown.enter.native="confirm">
         
         <!-- Titel -->
         <h3 class="formtitle">Welcome!</h3>

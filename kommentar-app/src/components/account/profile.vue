@@ -38,7 +38,8 @@
           </div>
         </li>
 
-        <li  @click="openPersonal('messageBox')">
+        <!-- MessageBox -->
+        <li  @click="openMessageBox">
          <span class="iconfont icon-youxiang"></span>
               <div class="texts" >
                 <a-badge :count="Object.keys(Messagebox).length" >
@@ -46,6 +47,8 @@
                 </a-badge>
               </div>
         </li>
+
+        <!-- Logout -->
         <li @click="logout">
           <span class="iconfont icon-tuichu5"></span>
           <div class="texts">
@@ -53,12 +56,7 @@
           </div>
         </li>
       </ul>
-      <!-- {{Messagebox}} -->
-        <!-- <a-badge :count="Object.keys(Messagebox).length" show-zero style="font-size: xx-small;">
-          <a href="#" class="head-example" />
-        </a-badge> -->
-      <!-- Logout button
-      <button class="btn" @click="logout">Logout</button> -->
+
   </div>
 </template>
 
@@ -83,7 +81,7 @@ export default {
     isAdmin(){
       if(this.role){
           //check whether the logged user is Admin
-          return (this.role.indexOf("Admin"))>-1;
+          return this.role.includes("Admin");
       }
       else{
           return false;
@@ -93,7 +91,7 @@ export default {
     isReviewer(){
       if(this.role){
           //check whether the logged user is Admin
-          return (this.role.indexOf("Reviewer"))>-1;
+          return this.role.includes("Reviewer");
       }
       else{
           return false;
@@ -118,10 +116,8 @@ export default {
         this.$router.push('/');
       }
 
-      
     },
     openAdmin(){
-
       if(this.$router.currentRoute.name!="admin"){
         this.$router.push('/Admin');
       }
@@ -130,34 +126,36 @@ export default {
       }
       
     },
+    
     openReviewer(){
- 
       if(this.$router.currentRoute.name!="reviewer"){
         this.$router.push('/Review');
       }
       else{
         this.openNotification();
       }
+
     },
 
-    openPersonal(menuKey){
-      var sameRouter=(this.$router.currentRoute.name=="personal");
-      if(sameRouter){
-        sameRouter = sameRouter && (this.$route.query.menu==menuKey);
-      }
-      
-      if(!sameRouter){
-          this.$router.push({path:'/Personal',
-                            query:{
-                              menu:menuKey,
-                            }});
-         
-          //this.$router.push('/Personal');
+    openPersonal(){
+      if(this.$router.currentRoute.name!="personal"){
+          this.$router.push('/Personal');
         
       }
       else{       
         this.openNotification();
       }
+
+    },
+
+    openMessageBox(){
+      if(this.$router.currentRoute.name!="messageBox"){
+        this.$router.push('/MessageBox');
+      }
+      else{
+        this.openNotification();
+      }
+
     },
 
     openNotification() {

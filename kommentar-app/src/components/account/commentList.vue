@@ -1,18 +1,21 @@
 <template>
     <div>
+        <!-- Filter -->
+        <a-input placeholder="DOI...."  v-model="searchDOI"/>
+
         <!-- List of Comments -->
         <a-list item-layout="vertical" size="large" :pagination="pagination" :data-source="commentList">
                  
-            <a-list-item slot="renderItem" slot-scope="comment"  >
+            <a-list-item slot="renderItem" slot-scope="comment,index"  v-show="relate(comment)" >
                 
                 <!-- Detail about this comment -->
                 <a-descriptions  bordered  :column="{ xxl: 4, xl: 3, lg: 3, md: 3, sm: 2, xs: 1 }">
-                    <a-descriptions-item label="Create Date">{{comment.createDate}}</a-descriptions-item>
+                    <a-descriptions-item label="Create Date">{{new Date(Date.parse(comment.createDate)).toLocaleString()}}</a-descriptions-item>
                     <a-descriptions-item label="type">{{comment.type}}</a-descriptions-item>
                     
                     <a-descriptions-item label="Book Link">
                         <p @click="seeDetail(comment.doi_nr)">{{comment.title}}</p>
-                        <a :href="'https://dx.doi.org/'+ comment.doi_nr"  target="_blank">Link Outside</a>
+                        <a :href="'https://dx.doi.org/'+ comment.doi_nr"  target="_blank">{{comment.doi_nr}}</a>
                     </a-descriptions-item>
 
                     <a-descriptions-item label="Requests in Checking">
@@ -33,35 +36,33 @@
                         <!-- PID Request -->
                         <a-tag 
                         color="cyan" 
-                        v-if=" !comment.status['PID'] && role.indexOf('Researcher')>-1&&comment.type!='official'" 
+                        v-if=" !comment.status['PID'] && role.includes('Researcher')&&comment.type!='official'" 
                         @click="newRequest('PID',comment)">
                             PID
                         </a-tag>
                     </a-descriptions-item>
 
-                    
-                    <a-descriptions-item label="Content" >
-                       <p v-html="comment.content"></p>
-                       <a-button :disabled="comment.type=='official'" type="edit" @click="openEditor(comment)">
-                        Editor
-                       </a-button>
-                    </a-descriptions-item>
-
                 </a-descriptions>
+
+                <h2>Content</h2>
+                <p  v-if="!editorVisibility[index]" v-html="comment.content"></p>
+                <div v-if="editorVisibility[index]"> 
+                    <quill-editor
+                    v-model="templateComment.content"
+                    :options="editorOption"
+                    >
+                    </quill-editor>
+                    <a-button @click="editorRequest">Submit</a-button>
+                </div>
+
+                <a-button :disabled="comment.type=='official'" icon="edit" @click="openEditor(comment,index)" >Editor</a-button>
+                <a-icon type="delete" v-if="!(comment.type=='official')" theme="twoTone" two-tone-color="#eb2f96"  @click="deleteComment(comment)" />
+
             </a-list-item>
+            
         </a-list>
 
-        <a-modal 
-            :visible="editorVisibility" 
-            title="Editor" 
-            @ok="editorRequest"
-            @cancel="editorVisibility =false">
-            <quill-editor
-                v-model="templateComment.content"
-                :options="editorOption"
-            >
-            </quill-editor>
-        </a-modal>
+        
 
     </div>
 </template>
@@ -71,15 +72,18 @@
         name:"reviewer",
         data(){
             return{
-                //commentList:[],
+               
                 templateComment:{},
                 title:[],
                
                 pagination: {
                     pageSize: 6,
                 },
+                
+               
+                searchDOI:"",
 
-                editorVisibility:false,
+                editorVisibility:[],
                 editorOption: {    // style for quill-editor
                     placeholder: "Please write down your comment....",
                     modules:{
@@ -183,7 +187,7 @@
                         icon: <a-icon type="smile" style="color: #108ee9" />,
                     });  
                     
-                    this.editorVisibility =false;
+                    this.editorVisibility =[];
                     this.getCommentList();
 
                     })
@@ -191,6 +195,23 @@
                                 console.log(err);
                             });
 
+            },
+
+            /**
+             * send delete Request to firebase
+             */
+            deleteComment(comment){
+                
+                this.templateComment =JSON.parse(JSON.stringify(comment));
+                var request = {
+                    uid:this.templateComment.commitKey,
+                    doi:this.templateComment.doi_nr,
+                }
+                
+                this.$store.dispatch("askFromUser/deleteComment",request).then(()=>{
+                    this.getCommentList();
+                });
+            
             },
 
             
@@ -213,9 +234,21 @@
             /**
              * @param comment - the comment which user wants to edit
              */
-            openEditor(comment){
+            openEditor(comment,index){
                 this.templateComment =JSON.parse(JSON.stringify(comment));
-                this.editorVisibility =true;
+                this.editorVisibility=[];
+                this.editorVisibility[index] = true;
+            },
+
+            relate(comment){
+              
+                if(!this.searchDOI){
+                    return true;
+                }
+                else if( comment.doi_nr.includes(this.searchDOI)){ 
+                    return true
+                }
+                return false;
             }
 
 

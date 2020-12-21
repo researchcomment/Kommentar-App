@@ -62,7 +62,7 @@ function settime(item) {
 
 function check_type(book_type, comparator) {
     var arr = book_type.split("-");
-    return arr.indexOf(comparator) > -1;
+    return arr.includes(comparator);
 }
 
 function cons_returnValue(item_ref) {
@@ -125,9 +125,6 @@ const actions = {
         //version 2
         //找到userkey
         let userKey = firebase.auth().currentUser.uid;
-        var aData = new Date();//utc
-        //uhrzeit, die Zeit von verschiedenen Regionen anzupassen.
-        const value = aData.getFullYear() + "-" + (aData.getMonth() + 1) + "-" + aData.getDate();
         const newComent = {
             //doi is optional
             doi_nr: doi,
@@ -144,7 +141,7 @@ const actions = {
             content: content,
             likes: 0,
             dislikes: 0,
-            createDate: value,
+            createDate: new Date().toString(),
             user_id:userKey,
         }
         let doiKey=doi.replaceAll(".","'");
@@ -164,19 +161,42 @@ const actions = {
 
     //load comments for work from realtime Database
     async loadComments({ commit, state }, { doi, rankType, username,type}) {
-        //rankType: 'submittime', 'onlyfromCurrentUser'
-        let result=[];  
+        //rankType: ['onlyfromCurrentUser',"history","latest"] 
         let doiKey=doi.replaceAll(".","'");
         let commentsRef=firebase.database().ref('doi_repository/' + doiKey + '/comments');
-       
-        
+        let userKey = firebase.auth().currentUser.uid;
         return   commentsRef.orderByChild("type")
             .equalTo(type)
             .once('value')
             .then((snapshot) => {
                 let tmpvalue=snapshot.val();
-                if (tmpvalue)
-                    return tmpvalue;
+                if (tmpvalue){
+                    //keys of current comment
+                    let tmpkeys = Object.keys(tmpvalue)
+                    //then current user filter some of them
+                    if (rankType.includes('onlyfromCurrentUser'))
+                    {
+                        tmpkeys = tmpkeys
+                        .filter((key)=> 
+                            tmpvalue[key].user_id==userKey
+                        )
+                        
+                    } 
+                    //sort with Created Date
+                    let timeFlag=1;
+                    if (rankType.includes("history")) timeFlag=-1;
+                 
+                    let newtmpvalue=tmpkeys.sort((a, b) => { 
+                            //sorted for eldest comment,for newest -1 timeFlag
+                            return timeFlag*(Date.parse(tmpvalue[b].createDate) - Date.parse(tmpvalue[a].createDate)); 
+                        })
+                        .reduce(
+                            ( prev, curr ) =>  Object.assign(prev,
+                                {[curr]:tmpvalue[curr]}),new Object()
+                        );
+                    return newtmpvalue;
+                }
+                    
                 return [];
             }).catch((error) => {
                 //for debug only, will be finished later
