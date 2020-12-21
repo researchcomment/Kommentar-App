@@ -1,4 +1,5 @@
 <template>
+
     <a-comment v-if="comment.active || isModerator ">
         <template slot="actions" >
             <!-- the number of likes -->
@@ -36,18 +37,17 @@
                 <a-icon type="delete" v-if="!(comment.type=='official')" theme="twoTone" two-tone-color="#eb2f96"  @click="deleteComment" />
 
                 <a-button :disabled="comment.type=='official'" type="edit" @click="openEditor()">Editor</a-button>
+                <div v-if="editorVisibility"> 
+                    <quill-editor
+                    v-model="content"
+                    :options="editorOption"
+                    >
+                    </quill-editor>
+                    <a-button @click="editorRequest">Submit</a-button>
+                </div>
+                
 
-                <a-modal 
-            :visible="editorVisibility" 
-            title="Editor" 
-            @ok="editorRequest"
-            @cancel="editorVisibility =false">
-            <quill-editor
-                v-model="content"
-                :options="editorOption"
-            >
-            </quill-editor>
-        </a-modal>
+                
             </div>
 
             <!-- Editing Options for Moderator : hide/unhide the comment -->
@@ -73,15 +73,9 @@
             <!-- time -->
             <a-tooltip slot="datetime" >
                 <span>{{ new Date(Date.parse(comment.createDate)).toLocaleString()}}</span>
-            </a-tooltip>
-
+            </a-tooltip>        
             
-            
-    </a-comment>
-    <!-- cover -->
-
-
-    
+    </a-comment>   
 </template>
 
 <script>
@@ -103,7 +97,7 @@ Vue.use(Antd)
 
                 comment:this.commentFromParent, 
 
-                content:comment.content,
+                content:"",
                 editorVisibility:false,
                 editorOption: {    // style for quill-editor
                     placeholder: "Please write down your comment....",
@@ -265,7 +259,7 @@ Vue.use(Antd)
                     uid:this.comment.key, 
                     doi:this.comment.doi_nr,
                     attribute:"content",
-                    value:this.this.content,
+                    value:this.content,
                 }
                 this.$store.dispatch("askFromUser/setAttribute",request)
                 .then(()=>{
@@ -348,7 +342,7 @@ Vue.use(Antd)
 
             openEditor(){
                 this.content =this.comment.content;
-                this.editorVisibility =true;
+                this.editorVisibility = !this.editorVisibility;
             }
         },
 };
