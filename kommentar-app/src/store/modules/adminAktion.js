@@ -25,7 +25,7 @@ const actions = {
 
     },
     //flag: true agree to update, false regret to update
-    updateRole({ commit, state }, {flag,userKey, toRole }){
+    updateRole({ commit, state }, {flag,userKey,feedback_content, toRole }){
         firebase.database().ref('updateRole/'+toRole).child(userKey).remove();
         firebase.database().ref('users/' + userKey+'/update/'+toRole).set(false);
         if (flag)
@@ -38,6 +38,14 @@ const actions = {
                 firebase.database().ref('users/' + userKey+'/role').set(setroles);
             })
         }
+        if (feedback_content){
+            firebase.database().ref("users/"+userKey+"/Messagebox/"+toRole).set({
+                feedbackContent:feedback_content,
+                toRole:toRole,
+                doi_nr:""
+            }); 
+        }
+        return 1;
     },
     //actions for reviewer
     async getCommentListForRequest({ commit, state },{requestType}){
