@@ -189,10 +189,7 @@
                 this.$store.dispatch("adminAktion/updateRole",{toRole:role,
                                                                  flag:agree,
                                                                     userKey:user.key,});
-                var index = this.userList[role].indexOf(user);
-                if (index > -1) {
-                        this.userList[role].splice(index, 1);
-                }
+                this.getUserList();
             
             },
 

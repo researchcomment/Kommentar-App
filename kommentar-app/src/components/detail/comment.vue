@@ -81,7 +81,7 @@ Vue.use(Antd)
 
     export default {
 
-        props:["commentFromParent", "username","UID"],
+        props:["commentFromParent", "username"],
 
         data() {
             return {
@@ -178,7 +178,7 @@ Vue.use(Antd)
             askForReview(){
 
                 var request = {
-                    uid:this.UID,
+                    uid:this.comment.key,
                     doi:this.comment.doi_nr,
                     requestType:"Review",
                 }
@@ -198,7 +198,7 @@ Vue.use(Antd)
             askForPID(){
                 
                 var request = {
-                    uid:this.UID,
+                    uid:this.comment.key,
                     doi:this.comment.doi_nr,
                     requestType:"PID",
                 }
@@ -218,11 +218,10 @@ Vue.use(Antd)
                 
                 this.deleted =true;
                 var request = {
-                    uid:this.UID,
+                    uid:this.comment.key,
                     doi:this.comment.doi_nr,
                 }
                 
-            
                 this.$store.dispatch("askFromUser/deleteComment",request).then(()=>{
                     this.$emit("refresh");
                 });
@@ -239,7 +238,7 @@ Vue.use(Antd)
                     this.comment.likes += 1;
                        
                     var request = {
-                        uid:this.UID,
+                        uid:this.comment.key,
                         doi:this.comment.doi_nr,
                         attribute:"likes",
                     };
@@ -260,7 +259,7 @@ Vue.use(Antd)
                     this.comment.dislikes += 1;   
                     
                     var request = {
-                        uid:this.UID,
+                        uid:this.comment.key,
                         doi:this.comment.doi_nr,
                         attribute:"dislikes",
                     };
@@ -277,7 +276,7 @@ Vue.use(Antd)
                 this.comment.active = !this.comment.active;
                 
                 var request = {
-                        uid:this.UID,
+                        uid:this.comment.key,
                         doi:this.comment.doi_nr,
                         attribute:"aktive",
                         value:this.comment.active,
