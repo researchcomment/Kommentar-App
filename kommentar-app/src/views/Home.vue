@@ -60,7 +60,7 @@
         margin: 3vh auto;
     }
     .maincontent{
-        min-height: calc(100vh - 5vh);
+        min-height: calc(100vh - 12vh);
     }
 
 </style>

@@ -189,6 +189,10 @@ export default {
   font-size: 3vh;
   display: inline-block;
   vertical-align: middle;
+  width: 25vh;
+  overflow:hidden; 
+  text-overflow:ellipsis;
+  white-space:nowrap;
 }
 
 </style>

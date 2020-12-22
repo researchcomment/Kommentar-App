@@ -1,10 +1,14 @@
 <template>
-    <div>
-       
-        <a-layout id="components-layout-demo-custom-trigger">
+<div>
+    <div class="mainadmin">
+        <div class="box1"></div>
 
-             <!-- Menu -->
-            <a-layout-sider v-model="collapsed" :trigger="null" collapsible>
+        <div class="box2"></div>
+        <a-layout style="display:none">
+        <a-layout-header style="display:none">Header</a-layout-header>
+       <a-layout>
+           <!-- Menu -->
+            <a-layout-sider width="20vw">
 
                 <a-menu theme="dark" mode="inline" v-model="menuKey" >
 
@@ -27,24 +31,19 @@
             </a-layout-sider>
 
             <!-- Contents -->
-            <a-layout>
-                <a-layout-header style="background: #fff; padding: 0">
+            <a-layout-content  width="70vw" style="height:88vh">
+                <div style="background: #fff; padding: 0">
                     
-                    <a-icon
-                    class="trigger"
-                    :type="collapsed ? 'menu-unfold' : 'menu-fold'"
-                    @click="() => (collapsed = !collapsed)"
-                    />
+                    
                     <!-- Titel -->
-                    <span style="margin-top:5vh;margin-left:10vh;font-size:5vh">User Management</span>
+                    <span style="margin-top:2vh;font-size:3vw">User Management</span>
 
-                </a-layout-header>
-
-                <a-layout-content
-                    :style="{ margin: '24px 16px', padding: '24px', background: '#fff', minHeight: '280px' }">
+                </div>
+                <!-- Filter -->
+                <input type="text" style="" v-model="searchText">
+                <div :style="{ margin: '2vh 2vw', padding: '0', background: '#fff',width:'50vw'}">
                     
-                    <!-- Filter -->
-                    <input type="text" style="margin-left:10vh" v-model="searchText">
+                    
                 
                     <!-- Requests -->
                     <a-table  :data-source="userList[menuKey[0]]" rowKey="username"  >
@@ -73,14 +72,23 @@
                          
                     </a-table>
 
-                </a-layout-content>
-            </a-layout>
-        </a-layout>
+                </div>
+            </a-layout-content>
+       </a-layout>
+        
 
-        <div>
-        <bottom></bottom>
-        </div>
-    </div>    
+             
+        
+
+        <a-layout-footer style="display:none">
+        
+        </a-layout-footer>
+    </a-layout>
+    </div>
+    
+    <bottom></bottom>
+</div>
+      
     
     
 </template>
@@ -266,35 +274,54 @@
 
 <style>
 /* searchinput style */
-.usersearch{
-    margin-left:10vh;
+#components-layout-demo-basic {
+  text-align: center;
 }
-/* userlist style */
-.userlists{
-    margin: 10vh;
-    border: 1px solid rgba(0,0,0,.125);
-    padding: 2vh;
-    border-radius: .25rem;
-
+#components-layout-demo-basic .ant-layout-header,
+#components-layout-demo-basic .ant-layout-footer {
+  background: #7dbcea;
+  color: #fff;
 }
-.userlists .mint-checklist .mint-cell .mint-cell-wrapper{
-  cursor: default;
-  background-image: none;
+#components-layout-demo-basic .ant-layout-footer {
+  line-height: 1.5;
 }
-.userlists .mint-checklist .mint-cell{
-  background-image: none;
+#components-layout-demo-basic .ant-layout-sider {
+  background: #3ba0e9;
+  color: #fff;
+  line-height: 120px;
+  min-width: 20vw;
 }
-.combtn{
-    display: block;
-    margin-left: 10vh;
-    margin-bottom: 5vh;
+#components-layout-demo-basic .ant-layout-content {
+  background: rgba(16, 142, 233, 1);
+  color: #fff;
+  min-height: 120px;
+  line-height: 120px;
+  width: 70vw;
 }
-#components-layout-demo-custom-trigger .trigger {
-  font-size: 18px;
-  line-height: 64px;
-  padding: 0 24px;
-  cursor: pointer;
-  transition: color 0.3s;
+#components-layout-demo-basic > .ant-layout {
+  margin-bottom: 48px;
 }
-
+#components-layout-demo-basic > .ant-layout:last-child {
+  margin: 0;
+}
+.mainadmin{
+    min-height: 88vh;
+    font-size: 0;
+    width: 98vw;
+    height: 88vh;
+}
+.box1{
+    width: 30vw;
+    height: 80vh;
+    background-color:red;
+    float: left;
+    vertical-align: top;
+}
+.box2{
+    width: 60vw;
+    height: 80vh;
+    background-color:blue;
+    float: left;
+    vertical-align: top;
+}
 </style>

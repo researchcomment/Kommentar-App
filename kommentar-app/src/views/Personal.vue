@@ -1,13 +1,14 @@
 <template>
     <div>
-        <h1>Personal Information</h1>
+        <div class="main">
+            <h1>Personal Information</h1>
         <p>
-            <b>Name:</b>
+            <b>Name: </b>
             <span>{{username}}</span>
         </p>
         
         <p>
-            <b>Role:</b>
+            <b>Role: </b>
             <a-tag v-for="tag in role" :key="tag" :color="getColor(tag)">{{ tag }}</a-tag>
         </p>
         
@@ -18,6 +19,8 @@
         
         <Role v-show="menu[0]=='role'"></Role>
         <CommentList v-show="menu[0]=='comments'" ></CommentList>
+        </div>
+        <bottom></bottom>
 
     </div>
 </template>
@@ -25,12 +28,13 @@
 <script>
 import Role from "@/components/account/role";
 import CommentList from "@/components/account/commentList";
-
+import bottom from '@/components/footer/bottom'
     export default {
         name: "personal",
         components: {
             Role,
             CommentList,
+            bottom
         },
 
         data(){
@@ -92,6 +96,9 @@ import CommentList from "@/components/account/commentList";
     }
 </script>
 
-<style lang="scss" scoped>
-
+<style>
+.main{
+    margin:3vw;
+    min-height: 88vh;
+}
 </style>
