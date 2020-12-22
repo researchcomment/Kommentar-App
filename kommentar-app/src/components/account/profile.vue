@@ -101,7 +101,7 @@ export default {
       });
       this.$emit('logout');
       let router=this.$router.currentRoute.name;
-      if(router=="personal"||router=="admin"||router=="reviewer"){
+      if(router=="personal"||router=="admin"||router=="review"){
         this.$router.push('/');
       }
 
