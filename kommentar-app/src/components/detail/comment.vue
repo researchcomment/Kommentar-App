@@ -5,7 +5,7 @@
                 <!-- the number of likes -->
                 <span key="comment-basic-like" class="action">
                     <a-tooltip title="Like">
-                    <a-icon type="like" :theme="action === 'liked' ? 'filled' : 'outlined'" @click="like"/>
+                    <a-icon type="like" :theme="action === 'liked' ? 'filled' : 'outlined'" @click="dis_like('like')"/>
                     </a-tooltip>
                     <span style="padding-left: '8px';cursor: 'auto'">
                         {{ comment.likes }}
@@ -18,7 +18,7 @@
                     <a-icon
                         type="dislike"
                         :theme="action === 'disliked' ? 'filled' : 'outlined'"
-                        @click="dislike"
+                        @click="dis_like('dislike')"
                     />
                     </a-tooltip>
                     <span style="padding-left: '8px';cursor: 'auto'">
@@ -30,9 +30,9 @@
                 <!-- Editing Options for Author -->
                 <div v-if = "isAuthor">
                     
-                    <a-button type="dashed" v-if="!(comment.type=='official')" :disabled="inReview" @click="askForReview">Review</a-button>
+                    <a-button type="dashed" v-if="!(comment.type=='official')" :disabled="inReview" @click="askForRequest('Review')">Review</a-button>
 
-                    <a-button type="dashed"  v-if="(isResearcher) && (!(comment.type=='official'))"  :disabled="inRequest" @click="askForPID">Ask For PermanentID</a-button>
+                    <a-button type="dashed"  v-if="(isResearcher) && (!(comment.type=='official'))"  :disabled="inRequest" @click="askForRequest('PID')">Ask For PermanentID</a-button>
 
                     <a-button :disabled="comment.type=='official'" icon="edit" @click="openEditor()">Editor</a-button>
                 
@@ -114,23 +114,7 @@ Vue.use(Antd)
                             }
                 }, 
                
-               //! Sample Comment FOR TEST 
-               /* comment: {
-                    UID:"MAKAVIVZSVSDFSDF",    // UID for comment 
-                    PermanentID:"",    // '' or 'ASDASDAS'
-                    type:"unofficial",    // "official", "unofficial"
-                    status:{
-                        "Review":true,
-                        "PID":false
-                    },  
-                    active:true,    // the Admin can hide the comments
-                    author:this.commentFromParent.author,
-                    content:this.commentFromParent.content,    // the comment is in html form 
-                    createDate: "2020-12-12",
-                    likes: 0,
-                    dislikes: 0,
-                },   
-                */
+             
             };
         },
 
@@ -145,10 +129,7 @@ Vue.use(Antd)
 
             isResearcher(){
                 var login = this.$store.state.account.role;
-                if(login){
-                    return this.$store.state.account.role.includes("Researcher");
-                }
-                return false;
+                return login? login.includes("Researcher"):false;
             },
 
             isAuthor(){
@@ -175,7 +156,6 @@ Vue.use(Antd)
              * @returns {boolean}, true, if the user has already submitted a review request
              */
             inReview(){
-
                 // Duplicate application is prohibited
                 // in Reviewing => disable the Button
                 return this.comment.status["Review"] ;
@@ -197,42 +177,23 @@ Vue.use(Antd)
 
         methods: {
             /**
-             * send review Request to firebase
+             * send review or PID Request to firebase
+             * request:PID/Review
              */
-            askForReview(){
+           
 
-                var request = {
+            askForRequest(request){
+                var result = this.$store.dispatch("askFromUser/askForRequest",{
                     uid:this.comment.key,
                     doi:this.comment.doi_nr,
-                    requestType:"Review",
-                }
-    
-                var result = this.$store.dispatch("askFromUser/askForRequest",request)
-                                                .catch(err => {
-                                                            console.log(err);
-                                                         });
+                    requestType:request,
+                })
+                .catch(err => {
+                    console.log(err);
+                });
                 
-                this.comment.status["Review"]=true;
+                this.comment.status[request]=true;
 
-            },
-
-            /**
-             * ask firebase for PermanentID
-             */
-            askForPID(){
-                
-                var request = {
-                    uid:this.comment.key,
-                    doi:this.comment.doi_nr,
-                    requestType:"PID",
-                }
-                
-                var result = this.$store.dispatch("askFromUser/askForRequest",request)
-                                                .catch(err => {
-                                                            alert.log(err);
-                                                         });
-
-                this.comment.status["PID"]=true;
             },
 
             /**
@@ -241,12 +202,11 @@ Vue.use(Antd)
             deleteComment(){
                 
                 this.deleted =true;
-                var request = {
+                
+                this.$store.dispatch("askFromUser/deleteComment",{
                     uid:this.comment.key,
                     doi:this.comment.doi_nr,
-                }
-                
-                this.$store.dispatch("askFromUser/deleteComment",request).then(()=>{
+                }).then(()=>{
                     this.$emit("refresh");
                 });
             
@@ -256,13 +216,12 @@ Vue.use(Antd)
              * send Editor Request to firebase
              */
             editorRequest(){
-                var request ={
+                this.$store.dispatch("askFromUser/setAttribute",{
                     uid:this.comment.key, 
                     doi:this.comment.doi_nr,
                     attribute:"content",
                     value:this.content,
-                }
-                this.$store.dispatch("askFromUser/setAttribute",request)
+                })
                 .then(()=>{
                    
                    // Refresh the display, prompting success                   
@@ -274,7 +233,6 @@ Vue.use(Antd)
                     });  
                     this.$emit("refresh");
                     this.editorVisibility =false;
-                    
 
                 })
                 .catch(err => {
@@ -284,43 +242,24 @@ Vue.use(Antd)
             },
            
             /**
-             * When the user clicks the like button, send like request to firebase
+             * When the user clicks the like or dislike button, send like or dislike request to firebase
+             * flag:"like"/"dislike"
              */
-            like() {
-                if(!this.alreadySendLikes){
-                    this.action = 'liked';
-                    this.alreadySendLikes =true;    // Can't repeat likes
-                    this.comment.likes += 1;
-                       
-                    var request = {
-                        uid:this.comment.key,
-                        doi:this.comment.doi_nr,
-                        attribute:"likes",
-                    };
 
-                    this.$store.dispatch("askFromUser/setAttribute",request);
-                                              
-                }
-                
-            },
-
-             /**
-             * When the user clicks the like button, send dislike request to firebase
-             */
-            dislike() {
+            dis_like(flag) {
                 if(!this.alreadySendLikes){
-                    this.action = 'disliked';
+                    this.action = flag+"d";
                     this.alreadySendLikes =true;    // Can't repeat dislikes
-                    this.comment.dislikes += 1;   
-                    
-                    var request = {
+                    if (flag=="like")
+                        this.comment.likes += 1;
+                    else
+                        this.comment.dislikes+=1;   
+
+                    this.$store.dispatch("askFromUser/setAttribute",{
                         uid:this.comment.key,
                         doi:this.comment.doi_nr,
-                        attribute:"dislikes",
-                    };
-
-                   this.$store.dispatch("askFromUser/setAttribute",request);
-
+                        attribute:flag+"s",
+                    });
                 }
             },
 

@@ -70,20 +70,12 @@ import CommentList from "@/components/account/commentList";
 
 
             getColor(tag){
-                if(tag=="default"){
-                    return "green";
-                }
-                else if(tag=="Researcher"){
-                    return "blue";
-                }
-                else if(tag=="Moderator"){
-                    return "orange";
-                }
-                else if(tag=="Reviewer"){
-                    return "purple";
-                }
-                else if(tag=="Admin"){
-                    return "red";
+                switch (tag) {
+                    case "Researcher": return "blue";
+                    case "Moderator":return "orange";  
+                    case "Reviewer":return "purple";
+                    case "Admin":return "red";
+                    default:return "green"
                 }
             }
         }
