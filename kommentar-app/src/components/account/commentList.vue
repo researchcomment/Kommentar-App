@@ -236,8 +236,13 @@
              */
             openEditor(comment,index){
                 this.templateComment =JSON.parse(JSON.stringify(comment));
-                this.editorVisibility=[];
-                this.editorVisibility[index] = true;
+                if (this.editorVisibility[index])
+                    this.editorVisibility=[];
+                else
+                {
+                     this.editorVisibility=[];
+                    this.editorVisibility[index] = true;
+                }
             },
 
             relate(comment){
