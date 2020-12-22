@@ -65,7 +65,6 @@
     import bookInfo from "@/components/detail/bookInfo";
     import comment from "@/components/detail/comment"
     import commentEditor from "@/components/detail/commentEditor";
-    import bottom from '@/components/footer/bottom';
     import firebase from 'firebase/app';
 
     export default {

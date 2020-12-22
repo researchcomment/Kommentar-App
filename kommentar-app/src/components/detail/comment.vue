@@ -1,116 +1,105 @@
 <template>
     <div>
-    <a-comment v-if="comment.active || isModerator">
-        <template slot="actions" >
-            <!-- the number of likes -->
-            <span key="comment-basic-like" class="action">
-                <a-tooltip title="Like">
-                <a-icon type="like" :theme="action === 'liked' ? 'filled' : 'outlined'" @click="like"/>
-                </a-tooltip>
-                <span style="padding-left: '8px';cursor: 'auto'">
-                    {{ comment.likes }}
-                </span>
-
-                <!-- the number of dislikes -->
-                <span key="comment-basic-dislike" class="action">
-                    <a-tooltip title="Dislike">
-                    <a-icon
-                        type="dislike"
-                        :theme="action === 'disliked' ? 'filled' : 'outlined'"
-                        @click="dislike"
-                    />
+        <a-comment v-if="comment.active || isModerator">
+            <template slot="actions" >
+                <!-- the number of likes -->
+                <span key="comment-basic-like" class="action">
+                    <a-tooltip title="Like">
+                    <a-icon type="like" :theme="action === 'liked' ? 'filled' : 'outlined'" @click="like" width="1.2vw" height="1.2vw"/>
                     </a-tooltip>
                     <span style="padding-left: '8px';cursor: 'auto'">
-                    {{ comment.dislikes }}
+                        {{ comment.likes }}
                     </span>
                 </span>
-            </span>
-
-            <div v-if = "isModerator"  class="auactions" @click="setVisiblity" style="margin-right:0.7vw">
-                <a-icon type="eye-invisible" v-if="comment.active"/>
-                <a-icon type="eye" v-if="!comment.active"/>
-            </div>
-            <!-- Editing Options for Author -->
-            <div v-if = "isAuthor" class="actionb">
-                <!-- popfirm -->
-                <div id="components-popover-demo-placement">
-                    <div :style="{whiteSpace: 'nowrap'}">
-                        <a-popover placement="bottomLeft" v-model="visible" title="Options" trigger="click">
-                             
-                            <div slot="content" >
-                                <div :class="inReview?'auactionstabu':'auactions'"  @click="askForReview">Ask For Review</div>
-
-                                <div :class="inRequest?'auactionstabu':'auactions'" v-if="(isResearcher) && (!comment.PermanentID)" @click="askForPID">Ask For PermanentID</div>
-
-                                <div class="auactions" @click="deleteComment">Delete <a-icon type="delete" theme="twoTone" two-tone-color="#eb2f96"/></div>
-                                
-                                <!-- Editing Options for Admin : hide/unhide the comment -->
-                                
-                            </div>
-                            <i class="iconfont icon-xiaoxiguanli-quanbux" @click="hide" style="cursor:pointer"></i>
-                        </a-popover>
-                    </div>
-                </div>
-            </div>
-        </template>
-    
-        <!-- the detail of this comment -->
-            
-            <!-- Author -->
-            <!-- <a slot="author">{{comment.author}}</a> -->
-
-
-                <!-- Editing Options for Author -->
-                <!-- <div v-if = "isAuthor">
-                    
-                    <a-button type="dashed" v-if="!(comment.type=='official')" :disabled="inReview" @click="askForReview">Review</a-button>
-
-                    <a-button type="dashed"  v-if="(isResearcher) && (!(comment.type=='official'))"  :disabled="inRequest" @click="askForPID">Ask For PermanentID</a-button>
-
-                    <a-button :disabled="comment.type=='official'" icon="edit" @click="openEditor()">Editor</a-button>
+                    <!-- the number of dislikes -->
+                    <span key="comment-basic-dislike" class="action">
+                        <a-tooltip title="Dislike">
+                        <a-icon
+                            type="dislike"
+                            :theme="action === 'disliked' ? 'filled' : 'outlined'"
+                            @click="dislike"
+                            width="1.2vw" height="1.2vw"
+                        />
+                        </a-tooltip>
+                        <span style="padding-left: '8px';cursor: 'auto'">
+                        {{ comment.dislikes }}
+                        </span>
+                    </span>
                 
-                    <a-icon type="delete" v-if="!(comment.type=='official')" theme="twoTone" two-tone-color="#eb2f96"  @click="deleteComment" />
-               
-                </div> -->
 
                 <!-- Editing Options for Moderator : hide/unhide the comment -->
-                <!-- <div v-if = "isModerator && !(comment.type=='official')">
-                    <a-icon type="eye-invisible" v-if="comment.active" @click="setVisiblity"/>
-                    <a-icon type="eye" v-if="!comment.active" @click="setVisiblity"/>
+                <div v-if = "isModerator"  class="auactions" @click="setVisiblity" style="margin-right:0.7vw">
+                    <a-icon type="eye-invisible" v-if="comment.active"/>
+                    <a-icon type="eye" v-if="!comment.active"/>
                 </div>
-            </template> -->
+
+                <!-- Editing Options for Author -->
+                <div v-if = "isAuthor" class="actionb">
+                    <!-- popfirm -->
+                    <div id="components-popover-demo-placement">
+                        <div :style="{whiteSpace: 'nowrap'}">
+                            <a-popover placement="bottomLeft" v-model="visible" title="Options" trigger="click">
+                                
+                                <div slot="content" >
+                                    <div :class="inReview?'auactionstabu':'auactions'" v-if="!(comment.type=='official')" @click="askForReview">Ask For Review</div>
+
+                                    <div :class="inRequest?'auactionstabu':'auactions'" v-if="(isResearcher) && (!(comment.type=='official'))" @click="askForPID">Ask For PermanentID</div>
+
+                                    <div class="auactions" v-if="!(comment.type=='official')" @click="deleteComment">Delete <a-icon type="delete" theme="twoTone" two-tone-color="#eb2f96"/></div>
+                                    
+                                    <!-- Editing Options for Admin : hide/unhide the comment -->
+                                    
+                                </div>
+                                <i class="iconfont icon-xiaoxiguanli-quanbux" @click="hide" style="cursor:pointer"></i>
+                            </a-popover>
+                        </div>
+                    </div>
+                </div>
+            </template>
         
             <!-- the detail of this comment -->
-                
-                <!-- Author -->
-                <!-- <a slot="author">{{comment.author}}</a> -->
+            
+            <!-- Author -->
+            <a slot="author">{{comment.author}}</a>
 
-                <!-- Author picture -->  
-                <!-- <a-avatar slot="avatar" style="color: #f56a00; backgroundColor: #fde3cf">
-                    <p class="avatarp">{{authorfirst}}</p>
-                </a-avatar> -->
+            <!-- Author picture -->  
+            <a-avatar slot="avatar" style="color: #f56a00; backgroundColor: #fde3cf">
+                <p class="avatarp">{{authorfirst}}</p>
+            </a-avatar>
 
-                <!-- Comment -->
-                <!-- <p slot="content" v-if="!editorVisibility" v-html="comment.content"></p> -->
-
-                <!-- Editor for Comments -->
-                <!-- <div v-if="editorVisibility" slot="content"> 
-                    <quill-editor
-                    v-model="content"
-                    :options="editorOption"
-                    >
-                    </quill-editor>
-                    <a-button @click="editorRequest">Submit</a-button>
-                </div> -->
-                
-                <!-- time -->
-                <!-- <a-tooltip slot="datetime" >
-                    <span>{{ new Date(Date.parse(comment.createDate)).toLocaleString()}}</span>
-                </a-tooltip>         -->
-                
+            <!-- Comment -->
+            <p slot="content" v-if="!editorVisibility" v-html="comment.content" style="display:inline-block;margin-right:0.5vw"></p>
+            <div slot="content" v-if="!editorVisibility" :style="comment.type=='official'?'display:none':'display:inline-block'" @click="openEditor()">
+                <a-icon type="edit" style="cursor:pointer"/>
+            </div>
+            <a-icon slot="content" type="up-circle" style="cursor:pointer" v-if="editorVisibility" @click="closeeditor()"/>
+            <!-- Editor for Comments -->
+            <div v-if="editorVisibility" slot="content" class="littleedit"> 
+                <quill-editor
+                v-model="content"
+                :options="editorOption"
+                >
+                </quill-editor>
+                <button @click="editorRequest">Submit</button>
+            </div>
+            
+            <!-- time -->
+            <a-tooltip slot="datetime" >
+                <span>{{ new Date(Date.parse(comment.createDate)).toLocaleString()}}</span>
+            </a-tooltip>        
+                    
         </a-comment>   
 
-        
+        <div v-bind:style="{
+            width: '100%',
+            height: '100%',
+            position: 'absolute',
+            background: 'rgba(0,0,0,0.6)',
+            opacity: '0.6',
+            bottom: '0',
+            display:cansee,
+        }
+        "></div>
     </div>
 </template>
 
@@ -165,15 +154,7 @@ Vue.use(Antd)
                     dislikes: 0,
                 },   
                 */
-                TheCover:{
-                    width: '100%',
-                    height: '100%',
-	                position: 'absolute',
-	                background: 'rgba(0,0,0,0.6)',
-	                opacity: '0.6',
-                    bottom: '0',
-                    display:'none',
-                },
+                cansee:'none',
             };
         },
 
@@ -380,10 +361,10 @@ Vue.use(Antd)
              */
             setVisiblity(){
                 this.comment.active = !this.comment.active;
-                if(this.$data.TheCover.display=='none'){
-                   this.$data.TheCover.display='block'; 
+                if(cansee='none'){
+                   cansee='block'; 
                 }else{
-                    this.$data.TheCover.display='none'; 
+                    cansee='none'; 
                 }
                 var request = {
                         uid:this.comment.key,
@@ -398,6 +379,9 @@ Vue.use(Antd)
 
             openEditor(){
                 this.content =this.comment.content;
+                this.editorVisibility = !this.editorVisibility;
+            },
+            closeeditor(){
                 this.editorVisibility = !this.editorVisibility;
             }
         },
@@ -430,5 +414,11 @@ Vue.use(Antd)
 }
 .ant-comment{
     z-index: 500;
+}
+.littleedit{
+    margin: 1vh 0;
+}
+.littleedit button{
+    margin-top: 2vh;
 }
 </style>

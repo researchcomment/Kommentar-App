@@ -101,28 +101,32 @@ export default {
     margin-right: 10vw;
 }
 
-.comeditor .quill-editor .ql-toolbar{
+.quill-editor .ql-toolbar{
     padding: 0.5vh;
 }
-.comeditor .quill-editor .ql-toolbar button svg{
+.quill-editor .ql-toolbar button svg{
     width: 2vh;
 }
-.comeditor .quill-editor .ql-toolbar button{
+.quill-editor .ql-toolbar button{
     width: 3.5vh;
     padding: 0.4vh 0.4vh;
+    margin: 0;
 }
-.comeditor .quill-editor .ql-toolbar .ql-formats{
+.quill-editor .ql-toolbar .ql-formats{
     margin-right: 1vh;
 }
-.comeditor .quill-editor .ql-toolbar .ql-formats .ql-size{
+.quill-editor .ql-toolbar .ql-formats .ql-picker-label svg{
+    width:2vh;
+}
+.quill-editor .ql-toolbar .ql-formats .ql-size{
     width: 12vh;
 }
-.comeditor .quill-editor .ql-toolbar .ql-formats .ql-expanded .ql-picker-options{
+.quill-editor .ql-toolbar .ql-formats .ql-expanded .ql-picker-options{
     width: 12vh;
     overflow: scroll;
     height: 12vh;
 }
-.comeditor .quill-editor .ql-container{
+.quill-editor .ql-container{
     height: 20vh;
 }
 </style>

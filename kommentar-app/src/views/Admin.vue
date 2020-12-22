@@ -1,14 +1,10 @@
 <template>
-<div>
     <div class="mainadmin">
-        <div class="box1"></div>
-        <div class="box2"></div>
-        <a-layout>
+    <a-layout>
         <a-layout-header style="display:none">Header</a-layout-header>
-       <a-layout>
+        <a-layout>
            <!-- Menu -->
-            <a-layout-sider width="20vw">
-
+            <a-layout-sider width="20%">
                 <a-menu theme="dark" mode="inline" v-model="menuKey" >
 
                     <a-menu-item key="Researcher">
@@ -30,7 +26,7 @@
             </a-layout-sider>
 
             <!-- Contents -->
-            <a-layout-content  width="70vw" style="height:88vh">
+            <a-layout-content style="height:88vh,overflow:hidden">
                 <div style="background: #fff; padding: 0">
                     
                     
@@ -39,8 +35,7 @@
 
                 </div>
                 <!-- Filter -->
-                <input type="text" style="" v-model="searchText">
-                <div :style="{ margin: '2vh 2vw', padding: '0', background: '#fff',width:'50vw'}">
+                <div :style="{ margin: '2vh 2vw', padding: '0', background: '#fff',width:'78vw'}">
                     
                     
                     <h2>Update to {{menuKey[0]}}</h2>
@@ -75,9 +70,9 @@
                          
                     </a-table>
                 </div>
-                </a-layout-content>
-            </a-layout>
+            </a-layout-content>
         </a-layout>
+    </a-layout>
         
         <!-- Feedback -->
         <a-modal
@@ -94,8 +89,7 @@
         </a-modal>
         
         
-    </div>
-</div>    
+    </div>  
 </template>
 
 <script>
@@ -336,20 +330,9 @@
   margin: 0;
 }
 .mainadmin{
+    width: 99vw;
+    overflow: hidden;
     white-space: nowrap;
-}
-.box1{
-    width: 30vw;
-    height: 130px;
-    background-color:red;
-    display: none;
-    white-space: nowrap;
-}
-.box2{
-    width: 60vw;
-    height: 130px;
-    background-color:blue;
-    display: none;
-    white-space: nowrap;
+    min-height: 88vh;
 }
 </style>

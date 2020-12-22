@@ -110,6 +110,9 @@ export default {
     width: 70vw;
     position: relative;
 }
+.ant-list-item{
+    border: none;
+}
 .ant-comment-inner{
     padding: 0;
 }
@@ -130,9 +133,6 @@ export default {
 .ant-comment-actions{
     margin: 0;
     padding: 0;
-}
-.ant-comment-actions span{
-    font-size: 2vw;
 }
 .ucomment .ant-comment-inner{
     padding: 0;
@@ -155,10 +155,6 @@ export default {
 }
 .ucomment .ant-comment .ant-comment-actions span span{
     font-size: 1.2vw;
-}
-.ucomment .ant-comment-actions i swg{
-    width: 1.2vw;
-    height: 1.2vw;
 }
 .ucomment .ant-comment-content-detail p{
     margin-bottom: 1vh;

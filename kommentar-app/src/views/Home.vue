@@ -14,7 +14,6 @@
 
     </div>
     
-    <bottom></bottom>
 
 </div>
     
@@ -23,13 +22,12 @@
 
 <script>
    import searchBar from '@/components/Search/searchBar'
-   import bottom from '@/components/footer/bottom'
 
     export default {
         name: 'home',
 
         components:{
-            searchBar,bottom
+            searchBar
 
         },
 

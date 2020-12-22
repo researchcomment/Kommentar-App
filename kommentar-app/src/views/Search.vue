@@ -52,7 +52,6 @@
 
     </div>
 
-    <bottom></bottom>
 
   </div>
   

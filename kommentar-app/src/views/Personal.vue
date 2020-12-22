@@ -20,7 +20,6 @@
         <Role v-show="menu[0]=='role'"></Role>
         <CommentList v-show="menu[0]=='comments'" ></CommentList>
         </div>
-        <bottom></bottom>
 
     </div>
 </template>
@@ -28,13 +27,11 @@
 <script>
 import Role from "@/components/account/role";
 import CommentList from "@/components/account/commentList";
-import bottom from '@/components/footer/bottom'
     export default {
         name: "personal",
         components: {
             Role,
             CommentList,
-            bottom
         },
 
         data(){
