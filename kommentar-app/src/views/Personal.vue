@@ -69,7 +69,6 @@ import bottom from '@/components/footer/bottom'
 
         },
         
-
         methods:{
 
 

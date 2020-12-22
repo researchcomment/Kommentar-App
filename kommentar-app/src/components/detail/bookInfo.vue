@@ -18,16 +18,14 @@
             
             <!-- Detail  -->
             <div>
-                <div v-for="(item, index) in detail" v-bind:key="index">
-
-                    <!-- list type at first -->
-                    <p v-if="index=='type'" style="font-size:1.8vw">
-                    {{index}}: {{item}}
-                    </p>
-
-                    <p v-if="(index!='title')&&(item)&&(index!='type')&&(index!='abstract')" style="font-size:1.8vw">
-                    {{index}}: {{item}}
-                    </p>
+             
+                <p style="font-size:1.8vw">
+                    type: {{detail.type}}
+                </p>
+                <div v-for="(item, key) in detail" v-bind:key="key">
+                <p v-if="(key!='title')&&(item)&&(key!='type')&&(key!='abstract')" style="font-size:1.8vw">
+                    {{key}}: {{item}}
+                </p>
                 </div>
 
                 <div v-if="detail.abstract" v-html="detail.abstract">
@@ -60,6 +58,7 @@
                 .then((result) => {
                     this.detail = result;
                     this.loading=false;    // close the loading-animation 
+                    this.$emit("setDetail",this.detail)
                 }).catch(err => {
                     console.log(err);
             })

@@ -17,7 +17,7 @@
 import accounticon from "@/components/account/accounticon";
 import login from "@/components/login/login";
 import register from "@/components/login/register";
-import { Toast } from 'mint-ui';
+
 
 export default {
 

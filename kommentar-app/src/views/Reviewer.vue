@@ -36,7 +36,7 @@ import Feedback from "@/components/review/feedback";
 
                 var role = this.$store.state.account.role;
                 if(role){
-                    return (this.$store.state.account.role.indexOf("Reviewer"))>-1; // check whether the logged user is Admin
+                    return this.$store.state.account.role.includes("Reviewer"); // check whether the logged user is Admin
                 }
                 else{
                     return false; // not logged => not Admin

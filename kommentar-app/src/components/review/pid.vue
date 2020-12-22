@@ -3,7 +3,7 @@
         <!-- List of Comments -->
         <a-list item-layout="vertical" size="large" :pagination="pagination" :data-source="commentList">
                  
-            <a-list-item  v-if="comment.status.indexOf('PID')>-1"  slot="renderItem" slot-scope="comment" >
+            <a-list-item slot="renderItem" slot-scope="comment" >
                 
                 <!-- About Author -->
                 <a-list-item-meta>
@@ -18,11 +18,12 @@
                 
                 <!-- Detail about this comment -->
                 <a-descriptions  bordered  :column="{ xxl: 4, xl: 3, lg: 3, md: 3, sm: 2, xs: 1 }">
-                    <a-descriptions-item label="Create Date">{{comment.createDate}}</a-descriptions-item>
+                    <a-descriptions-item label="Create Date">{{new Date(Date.parse(comment.createDate)).toLocaleString()}}</a-descriptions-item>
                     <a-descriptions-item label="type">{{comment.type}}</a-descriptions-item>
                     
                     <a-descriptions-item label="Book Link">
-                        <p @click="seeDetail(comment.doi_nr)">{{comment.doi_nr}}</p>
+                        <p @click="seeDetail(comment.doi_nr)">{{comment.title}}</p>
+                        <a :href="'https://dx.doi.org/'+ comment.doi_nr"  target="_blank">{{comment.doi_nr}}</a>
                     </a-descriptions-item>
 
                     <a-descriptions-item label="Visibility">
@@ -30,8 +31,16 @@
                         <p v-show="!comment.active">No</p>
                     </a-descriptions-item>
 
+                    <a-descriptions-item label="Likes">
+                        {{comment.likes}}
+                    </a-descriptions-item>
+
+                    <a-descriptions-item label="Disliks">
+                        {{comment.dislikes}}
+                    </a-descriptions-item>
+
                     <a-descriptions-item label="Request">
-                        <a-tag color="purple" @click="visiblePID=true">PID</a-tag>
+                        <a-tag color="purple" @click="openEditor(comment)">PID</a-tag>
                     </a-descriptions-item>
 
                     <a-descriptions-item label="Content">
@@ -41,39 +50,42 @@
                 </a-descriptions>
 
                
-                <!-- Review Options -->
-                <!-- Reply for Permanent ID -->
-                <a-modal
-                    title="Permanent ID"
-                    :visible="visiblePID"
-                    @ok="replyPID(comment)"
-                    @cancel="handleCancel(comment)"
-                    >
-
-                    <b>Original Content</b>
-                    <p v-html="comment.content"></p>
-
-                    <!-- agree or not -->
-                    <a-radio-group v-model="comment.agreePID" default-value="agree">
-                        <a-radio-button value="agree">
-                            Agree <a-icon type="check-square" theme="twoTone" two-tone-color="#52c41a"/>
-                        </a-radio-button>
-                        <a-radio-button value="refuse">
-                            Refuse <a-icon type="close-square" theme="twoTone" two-tone-color="#eb2f96" />
-                        </a-radio-button>
-                    </a-radio-group>
-
-                    <!-- Input -->
-                    <quill-editor
-                        v-model="comment.replyContentPID"
-                        :options="editorOptionPID">
-                    </quill-editor>
-                   
-                </a-modal>
+               
 
             </a-list-item>
         </a-list>
 
+         <!-- Review Options -->
+        <!-- Reply for Permanent ID -->
+        <a-modal
+            title="Permanent ID"
+            :visible="visiblePID"
+            @ok="replyPID"
+            @cancel="handleCancel"
+            >
+
+            <b>Original Content</b>
+            <p v-html="templateComment.content"></p>
+
+            <!-- agree or not -->
+            <a-radio-group v-model="templateComment.agreePID" default-value="agree">
+                <a-radio-button value="agree">
+                    Agree <a-icon type="check-square" theme="twoTone" two-tone-color="#52c41a"/>
+                </a-radio-button>
+                <a-radio-button value="refuse">
+                    Refuse <a-icon type="close-square" theme="twoTone" two-tone-color="#eb2f96" />
+                </a-radio-button>
+            </a-radio-group>
+
+            <!-- Input -->
+            <quill-editor
+                v-model="templateComment.replyContentPID"
+                :options="editorOptionPID">
+            </quill-editor>
+            
+        </a-modal>
+        
+        
     </div>
 </template>
 
@@ -83,11 +95,9 @@
         data(){
             return{
                 commentList:[],
+                templateComment:{},
 
                 pagination: {
-                    onChange: page => {
-                        console.log(page);
-                    },
                     pageSize: 6,
                 },
 
@@ -115,84 +125,79 @@
         methods:{
             
             /**
-             * ! 涉及后端交互 getCommentListInReview() 
              * Request the CommentList, which status has "PID", from background
              */
             async getCommentList(){
 
-                // open the loading-animation
-                this.loading=true;
-
-                // get CommentList form firebase, the status from these comments is "in Review"
-                // TODO:this.$store.....getCommentListInReview("PID");
-                // TODO:this.commentList = result;
-
-
-                // !FOR TEST     
-                var result = await this.$store.dispatch("commitwork/loadComments", 
-                                                    {doi: "10.18034/abcra", 
-                                                     rankType: 'submittime',
-                                                     username: this.$store.state.account.username,
-                                                     type:"unofficial"})
-                                            .catch(err => {
-                                                            console.log(err);
-                                                         });
-                this.commentList = result;
-                for(var comment of this.commentList){
-                    comment.status=["Review","PID"];
-                }
-
-                // close the loading-animation 
-                this.loading=false; 
+                // get CommentList form firebase, the status from these comments is "in Review"               
+                this.$store.dispatch("adminAktion/getCommentListForRequest", 
+                                                    {requestType:"PID"})
+                .then((result)=>{
+                                
+                                this.commentList= Object.keys(result).map((key) => {
+                                    var comment = result[key];
+                                    comment.key=key;
+                                    return comment;
+                                })
+ 
+                                })
+                .catch(err => {
+                                console.log(err);
+                              });
 
             },
 
             /**
-             * ! 涉及后端交互 
-             * ! 接口 replyPID(UID,agree,reason) reason can be empty
              * Send to the firebase whether the request for PermanentID is passed
-             * 
-             * @param agree {boolean}  - true, if the Reviewer is agree
-             * @param comment
              */
-            replyPID(comment){
+            replyPID(){
+                var comment = this.templateComment;
                 var reason = comment.replyContentPID;
                 var agree = !(comment.agreePID=="refuse");
-
-                if(agree){
-                    //TODO this.$store.dispatch("replyPID",this.comment.UID,agree,reason);
-                    // the reason can be empty hier
-                }
-                else{
-
-                    // check if the reason is filled
-                    if(!reason){
-                        this.$error({
+                if((!agree)&&(!reason)){
+                    // check if the reason is filled by disagree
+                    this.$error({
                             title: 'Error message',
                             content: 'Please write down your Reason (Must fill in, if the request is rejected)',
-                        });
-                        return;
-                    }
-                    else{
-                        //TODO this.$store.dispatch("replyPID",this.comment.UID,agree,reason);
-                    }
+                    });
+                    return;
+                }
+                if(!reason){
+                    reason ="";
                 }
 
-                // Refresh the display, prompting success
-                 var index =  this.commentList.indexOf(comment);
-                if (index > -1) {
-                    this.commentList.splice(index, 1);
+                if(agree){
+                    reason = '<h2 style="color:green">Your Request of Permanent ID is accepted</h2>'+ reason;
                 }
-                this.visiblePID = false;
-                this.$notification.open({
-                    message: 'Success',
-                    description:
-                    'Your evaluation has been communicated.',
-                    icon: <a-icon type="smile" style="color: #108ee9" />,
+                else{
+                    reason = '<h2 style="color:red">Your Request of Permanent ID is denied.</h2>'+ reason;
+                }
+
+                var request = {
+                    doi:comment.doi_nr,
+                    comment_uid:comment.key,
+                    user_id:comment.user_id,
+                    requestType:"PID",
+                    feedback_content:reason,
+                    flag:agree,
+                    comment_content:comment.content,
+                };
+                    
+                //send Request to firebase  
+                this.$store.dispatch("adminAktion/replyRequest",request).then(()=>{
+                    this.visiblePID = false;
+                    this.$notification.open({
+                        message: 'Success',
+                        description:
+                        'Your evaluation has been communicated.',
+                        icon: <a-icon type="smile" style="color: #108ee9" />,
+                    });
+
                 });
-            },
 
-           
+                this.getCommentList();
+               
+            },
 
             /**
              * open a new window which shows the details of this book
@@ -215,10 +220,14 @@
              * @param comment
              */
             handleCancel(comment){
-                comment.replyContentPID ="",
-                comment.agreePID = true;
+                this.templateComment = {};
                 this.visiblePID =false;
             },
+
+            openEditor(comment){
+                this.templateComment =JSON.parse(JSON.stringify(comment));
+                this.visiblePID =true;
+            }
 
         }
 

@@ -2,9 +2,8 @@
 <div>
     <div class="mainadmin">
         <div class="box1"></div>
-
         <div class="box2"></div>
-        <a-layout style="display:none">
+        <a-layout>
         <a-layout-header style="display:none">Header</a-layout-header>
        <a-layout>
            <!-- Menu -->
@@ -16,11 +15,11 @@
                         <span>default => Reseacher</span>
                     </a-menu-item>
 
-                    <a-menu-item key="Moderator">
+                    <a-menu-item key="Reviewer">
                         <span>Reseacher => Reviewer</span>
                     </a-menu-item>
 
-                    <a-menu-item key="Reviewer">
+                    <a-menu-item key="Moderator">
                         <span>Reseacher => Moderator</span>
                     </a-menu-item>
                     
@@ -44,9 +43,13 @@
                 <div :style="{ margin: '2vh 2vw', padding: '0', background: '#fff',width:'50vw'}">
                     
                     
+                    <h2>Update to {{menuKey[0]}}</h2>
+
+                    <!-- Filter -->
+                    <input type="text" style="margin-left:10vh" v-model="searchText">
                 
                     <!-- Requests -->
-                    <a-table  :data-source="userList[menuKey[0]]" rowKey="username"  >
+                    <a-table  :data-source="filteredUserList[menuKey[0]]" rowKey="username"  >
                           
                         <!-- User Name -->
                         <a-table-column key="username" title="User Name" data-index="username" />
@@ -64,33 +67,35 @@
                         <a-table-column key="update" title="Update">
                             <template slot-scope="text, user">
                                 <span>
-                                    <a-button type="dashed" icon="check" @click="updateRole(true,user)">Agree</a-button>
-                                    <a-button type="dashed" icon="close" @click="updateRole(false,user)">Refuse</a-button>
+                                    <a-button type="dashed" icon="check" @click="openEditor(true,user)">Agree</a-button>
+                                    <a-button type="dashed" icon="close" @click="openEditor(false,user)">Refuse</a-button>
                                 </span>
                             </template>
                         </a-table-column>
                          
                     </a-table>
-
                 </div>
-            </a-layout-content>
-       </a-layout>
+                </a-layout-content>
+            </a-layout>
+        </a-layout>
         
-
-             
+        <!-- Feedback -->
+        <a-modal
+            :title="tmpUser.username"
+            :visible="visible"
+            @ok="updateRole"
+            @cancel="handleCancel"
+            >
+            <!-- Input -->
+            <quill-editor
+                v-model="reason"
+                :options="editorOption">
+            </quill-editor>
+        </a-modal>
         
-
-        <a-layout-footer style="display:none">
         
-        </a-layout-footer>
-    </a-layout>
     </div>
-    
-    <bottom></bottom>
-</div>
-      
-    
-    
+</div>    
 </template>
 
 <script>
@@ -105,9 +110,24 @@
             return{
                 collapsed: false,
                 menuKey:["Researcher"],
-               
                 searchText:"",
                 userList:{},
+                
+                tmpUser:{},
+                reason:"",
+                agree:true,
+                visible:false,
+                editorOption: {    // style for quill-editor by Review
+                    placeholder: "Write your Reason......   \n(Must fill in, if the request is rejected)",
+                    modules:{
+                        toolbar:[
+                                ['bold', 'italic', 'underline', 'strike'],    // toggled buttons
+                                ['blockquote', ], 
+                                [{ 'color': [] }],   // front color
+                                ]
+                            }
+                }, 
+
                 
                 aftersearch: false,
             }
@@ -123,26 +143,21 @@
                 var login = this.$store.state.account.username;
 
                 if(login){
-                    return (this.$store.state.account.role.indexOf("Admin"))>-1; // check whether the logged user is Admin
+                    return this.$store.state.account.role.includes("Admin"); // check whether the logged user is Admin
                 }
                 else{
                     return false; // not logged => not Admin
                 }
 
             },
-            filterUser(){
-                // if(!this.searchText){
-                //     return this.userList["allUser"];
-                // }
-                // else{
-                //     var list=[];
-                //     for(var user of this.userList["allUser"]){
-                //         if(user.username.indexOf(this.searchText) > -1){
-                //             list.push(user);
-                //         } 
-                //     }
-                //     return list;
-                // }
+            
+            filteredUserList(){
+                return (!this.searchText?this.userList: Object.keys(this.userList).map(key=>(
+                        {[key]:this.userList[key].filter( user =>
+                            user.username.includes(this.searchText))
+                        })
+                    ).reduce( ( prev, curr ) =>  Object.assign(prev,curr),new Object()))
+                
             }
 
         },
@@ -159,17 +174,25 @@
             })  
 
         },
+
         mounted(){
+            
             this.getUserList();
+            
         },
         methods:{
             
             /**
              * Request the userList from background
              */
-            async getUserList(){
-
-                // get userList from DB
+            async getUserList(key){
+                var toRoleList=[];
+                if(!key){
+                    toRoleList=["Researcher","Reviewer","Moderator","Admin"];
+                }
+                else{
+                    toRoleList=[key];
+                }
 
                 this.userList={
                     Researcher:[],
@@ -177,78 +200,78 @@
                     Reviewer:[],
                     Admin:[],
                 };
-
-                this.$store.dispatch("adminAktion/getUserList",{toRole:"Researcher"}).then((result)=>{
-                    if(result){
-                        for(var key in result){
-                            var user = result[key];
-                            user.key=key;
-                            this.userList.Researcher.push(user);
-                        }
-                    }
+                
+                // get userList from DB
+                toRoleList.map((role)=>{
                     
-                }).catch(err => {console.log(err);});
-
-                this.$store.dispatch("adminAktion/getUserList",{toRole:"Reviewer"}).then((result)=>{
-                    for(var key in result){
-                        var user = result[key];
-                        user.key=key;
-                        this.userList.Reviewer.push(user);
-
-                    }
-                }).catch(err => {console.log(err);});
-
-                this.$store.dispatch("adminAktion/getUserList",{toRole:"Moderator"}).then((result)=>{
-                    for(var key in result){
-                        var user = result[key];
-                        user.key=key;
-                        this.userList.Moderator.push(user);
-
-                    }
-                }).catch(err => {
-                                console.log(err);});
-              
+                   this.$store.dispatch("adminAktion/getUserList",{toRole:role}).then((result)=>{
+                        let user ;                   
+                        var list = Object.keys(result).map((key) => {
+                                user = result[key];
+                                user.key=key;
+                                return user;
+                        })
+                        this.userList[role] =list;
+                    }).catch(err => {console.log(err);});
+                   
+                })
+   
                 
-                this.$store.dispatch("adminAktion/getUserList",{toRole:"Admin"}).then((result)=>{
-                    for(var key in result){
-                        var user = result[key];
-                        user.key=key;
-                        this.userList.Admin.push(user);
-
-                    }
-                }).catch(err => {
-                                console.log(err);});
-                
-
             },
 
             /**
              * Request the background to change the role of users
              */
-            updateRole(agree,user){
+            updateRole(){
                 var role=this.menuKey[0];
+                var reason = this.reason;
 
-                this.$store.dispatch("adminAktion/updateRole",{toRole:role,
-                                                                 flag:agree,
-                                                                    userKey:user.key,});
-                var index = this.userList[role].indexOf(user);
-                if (index > -1) {
-                        this.userList[role].splice(index, 1);
+                if((!this.agree)&&(!reason)){
+                    // check if the reason is filled by disagree
+                    this.$error({
+                            title: 'Error message',
+                            content: 'Please write down your Reason (Must fill in, if the request is rejected)',
+                    });
+                    return;
                 }
+                if(!reason){
+                    reason ="";
+                }
+
+                if(this.agree){
+                    reason = '<h2 style="color:green">Your Request of Update-Role is accepted</h2>'+ reason;
+                }
+                else{
+                    reason = '<h2 style="color:red">Your Request of Update-Role is denied.</h2>'+ reason;
+                }
+                
+                var request = {toRole:role,
+                                flag:this.agree,
+                                 userKey:this.tmpUser.key,
+                                  feedback_content:reason,}
             
+                this.$store.dispatch("adminAktion/updateRole",request).then(()=>{
+                    this.handleCancel();
+                    this.getUserList(role);
+                }).catch((err)=>{console.log(err)})
+        
             },
 
+            openEditor(agree,user){
+                this.tmpUser =JSON.parse(JSON.stringify(user));
+                this.visible =true;
+                this.agree=agree;
+            },
 
             /**
-             * Filter user list
-             * 
-             * @param userName - username in the list
-             * @returns boolean   - true, if it related to search text
+             * reset the comment by Cancel
+             * @param comment
              */
-            onFilter(userName){ 
-                console.log(userName)
-                return false
-                // return userName.indexOf(this.searchText) > -1 ;
+            handleCancel(){
+                this.tmpUser = {};
+                this.reason = "";
+                this.agree = true;
+                this.visible =false;
             },
 
             getColor(tag){
@@ -268,6 +291,14 @@
                     return "red";
                 }
             }
+        },
+
+        watch:{
+            menuKey(newValue){
+                this.getUserList(newValue[0]);
+    
+            },
+
         }
     }
 </script>
@@ -305,23 +336,20 @@
   margin: 0;
 }
 .mainadmin{
-    min-height: 88vh;
-    font-size: 0;
-    width: 98vw;
-    height: 88vh;
+    white-space: nowrap;
 }
 .box1{
     width: 30vw;
-    height: 80vh;
+    height: 130px;
     background-color:red;
-    float: left;
-    vertical-align: top;
+    display: none;
+    white-space: nowrap;
 }
 .box2{
     width: 60vw;
-    height: 80vh;
+    height: 130px;
     background-color:blue;
-    float: left;
-    vertical-align: top;
+    display: none;
+    white-space: nowrap;
 }
 </style>

@@ -31,19 +31,24 @@
         </li>
 
         <!-- Personal Information -->
-        <li @click="openPersonal">
+        <li @click="openPersonal('role')">
           <span class="iconfont icon-biaoqiankuozhan_guanli-159"></span>
           <div class="texts">
-            Personal Information
+            Personal_info
           </div>
         </li>
 
-        <li>
-          <span class="iconfont icon-youxiang"></span>
-          <div class="texts">
-            Mailbox
-          </div>
+        <!-- MessageBox -->
+        <li  @click="openMessageBox">
+         <span class="iconfont icon-youxiang"></span>
+              <div class="texts" >
+                <a-badge :count="Object.keys(Messagebox).length" >
+                  <p >Message</p>
+                </a-badge>
+              </div>
         </li>
+
+        <!-- Logout -->
         <li @click="logout">
           <span class="iconfont icon-tuichu5"></span>
           <div class="texts">
@@ -52,8 +57,6 @@
         </li>
       </ul>
 
-      <!-- Logout button
-      <button class="btn" @click="logout">Logout</button> -->
   </div>
 </template>
 
@@ -70,11 +73,15 @@ export default {
     role(){
       return this.$store.state.account.role;
     },
+    Messagebox()
+    {
+      return this.$store.state.account.Messagebox;
+    },
 
     isAdmin(){
       if(this.role){
           //check whether the logged user is Admin
-          return (this.role.indexOf("Admin"))>-1;
+          return this.role.includes("Admin");
       }
       else{
           return false;
@@ -84,7 +91,7 @@ export default {
     isReviewer(){
       if(this.role){
           //check whether the logged user is Admin
-          return (this.role.indexOf("Reviewer"))>-1;
+          return this.role.includes("Reviewer");
       }
       else{
           return false;
@@ -105,12 +112,13 @@ export default {
       });
       this.$emit('logout');
       var router=this.$router.currentRoute.name;
-      if(router != "search" || router != "home"){
-        this.$router.back(-1);
+      if(router=="personal"||router=="admin"||router=="reviewer"){
+        this.$router.push('/');
       }
+
     },
     openAdmin(){
-      if(this.$router.currentRoute.name!="Admin"){
+      if(this.$router.currentRoute.name!="admin"){
         this.$router.push('/Admin');
       }
       else{
@@ -118,21 +126,36 @@ export default {
       }
       
     },
+    
     openReviewer(){
-      if(this.$router.currentRoute.name!="Review"){
+      if(this.$router.currentRoute.name!="reviewer"){
         this.$router.push('/Review');
       }
       else{
         this.openNotification();
       }
+
     },
+
     openPersonal(){
-      if(this.$router.currentRoute.name!="Personal"){
-        this.$router.push('/Personal');
+      if(this.$router.currentRoute.name!="personal"){
+          this.$router.push('/Personal');
+        
+      }
+      else{       
+        this.openNotification();
+      }
+
+    },
+
+    openMessageBox(){
+      if(this.$router.currentRoute.name!="messageBox"){
+        this.$router.push('/MessageBox');
       }
       else{
         this.openNotification();
       }
+
     },
 
     openNotification() {

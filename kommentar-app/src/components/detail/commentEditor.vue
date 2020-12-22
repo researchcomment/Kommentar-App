@@ -27,7 +27,7 @@ import moment from 'moment';
 import { MessageBox } from 'mint-ui';
 
 export default {
-    props:["doi","username"],
+    props:["doi","username","title"],
     data() {
         return {
             rateValue: null,
@@ -52,18 +52,10 @@ export default {
             return this.$refs.quillEditor.quill;
         },
 
-        /*! FOR TEST
-        username: function () {
-                //console.log(firebase.auth().currentUser.uid)
-                return this.$store.state.account.username;
-        },
-        */
-
     },
     methods: {
         
         /**
-         * TODO JJY has changed form of entry
          *  Send the request to the backend to store the comment
          *  It will be called when the submit button is clicked
          */
@@ -77,23 +69,17 @@ export default {
 
             // build request data
             var entry={
-                // doi:this.doi,
-                // username:this.$store.state.account.username,
-                // content:this.content,    // the comment is in html form 
-
-                //TODO JJY has changed form of entry
                 doi:this.doi,
-
                 author:this.$store.state.account.username,
-                 
                 content:this.content,    // the comment is in html form 
-
+                title:this.title
             }
 
             // Send request to backend
             let result=1;
             this.$store.dispatch('commitwork/sendFromEditorToDatabase',entry).then(() => {
                 this.$emit("submit");
+                this.content=null;
             }).catch(err => {
                 console.log(err);
             })

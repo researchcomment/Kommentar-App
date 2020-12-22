@@ -62,7 +62,7 @@ function settime(item) {
 
 function check_type(book_type, comparator) {
     var arr = book_type.split("-");
-    return arr.indexOf(comparator) > -1;
+    return arr.includes(comparator);
 }
 
 function cons_returnValue(item_ref) {
@@ -106,13 +106,8 @@ async function get_detail(doi) {
         let ref = res.data.message;
         let returnValue = null;
         if (ref) {
-            //save current 100 results in items as a list
-            console.log("response endding：" + new Date());
             returnValue = cons_returnValue(ref);
         }
-
-        console.log("results construction endding：" + new Date());
-        console.log(returnValue);
         return returnValue;
     }).catch(err => {
         console.log(err);
@@ -126,14 +121,10 @@ const actions = {
     },
 
     //create new Entry in realtime-DB for Editor-Input 
-    async sendFromEditorToDatabase({ commit, state }, { doi, author, content }) {
+    async sendFromEditorToDatabase({ commit, state }, {title, doi, author, content }) {
         //version 2
         //找到userkey
         let userKey = firebase.auth().currentUser.uid;
-        console.log(userKey)
-        var aData = new Date();//utc
-        //uhrzeit, die Zeit von verschiedenen Regionen anzupassen.
-        const value = aData.getFullYear() + "-" + (aData.getMonth() + 1) + "-" + aData.getDate();
         const newComent = {
             //doi is optional
             doi_nr: doi,
@@ -146,10 +137,12 @@ const actions = {
                // ["in Review", "ask for PID",...] 
             active:true,    // the Admin can hide the comments
             author:author,
+            title: title,
             content: content,
             likes: 0,
             dislikes: 0,
-            createDate: value,
+            createDate: new Date().toString(),
+            user_id:userKey,
         }
         let doiKey=doi.replaceAll(".","'");
         //在doi资料库中生成一个评论的key,并把key加入用户数据的comments项中
@@ -157,7 +150,8 @@ const actions = {
         
         let comments_key = firebase.database().ref('doi_repository/' + doiKey + '/comments').push(newComent).key;
         return firebase.database().ref('users/' + userKey + '/comments/' + comments_key).set({
-            type: 'unofficial'
+            type: 'unofficial',
+            doi: doi
         }).catch((error) => {
             //for debug only, will be finished later
             console.log(error.message);
@@ -167,40 +161,47 @@ const actions = {
 
     //load comments for work from realtime Database
     async loadComments({ commit, state }, { doi, rankType, username,type}) {
-        //rankType: 'submittime', 'onlyfromCurrentUser'
-        let result=[];  
+        //rankType: ['onlyfromCurrentUser',"history","latest"] 
         let doiKey=doi.replaceAll(".","'");
-        result = await firebase
-            .database()
-            .ref('doi_repository/' + doiKey + '/comments')
+        let commentsRef=firebase.database().ref('doi_repository/' + doiKey + '/comments');
+        let userKey = firebase.auth().currentUser.uid;
+        return   commentsRef.orderByChild("type")
+            .equalTo(type)
             .once('value')
             .then((snapshot) => {
-                var commentsList = []
-                var commentsList_CurrentUser = []
-                snapshot.forEach((childSnapshot) => {
-                    if (childSnapshot.val().type === type) {
-                        var value=childSnapshot.val();
-                        value.UID=childSnapshot.key;
-                        commentsList.push(value)
-                        if (childSnapshot.val().usr === username) {
-                            commentsList_CurrentUser.push(value)
-                        }
-                    }
-                })
-                if (rankType === 'onlyfromCurrentUser') {
-                    return commentsList_CurrentUser.slice().reverse();
+                let tmpvalue=snapshot.val();
+                if (tmpvalue){
+                    //keys of current comment
+                    let tmpkeys = Object.keys(tmpvalue)
+                    //then current user filter some of them
+                    if (rankType.includes('onlyfromCurrentUser'))
+                    {
+                        tmpkeys = tmpkeys
+                        .filter((key)=> 
+                            tmpvalue[key].user_id==userKey
+                        )
+                        
+                    } 
+                    //sort with Created Date
+                    let timeFlag=1;
+                    if (rankType.includes("history")) timeFlag=-1;
+                 
+                    let newtmpvalue=tmpkeys.sort((a, b) => { 
+                            //sorted for eldest comment,for newest -1 timeFlag
+                            return timeFlag*(Date.parse(tmpvalue[b].createDate) - Date.parse(tmpvalue[a].createDate)); 
+                        })
+                        .reduce(
+                            ( prev, curr ) =>  Object.assign(prev,
+                                {[curr]:tmpvalue[curr]}),new Object()
+                        );
+                    return newtmpvalue;
                 }
-                else {
-                    return commentsList.slice().reverse();
-                }
+                    
+                return [];
             }).catch((error) => {
                 //for debug only, will be finished later
                 console.log(error.message);
             });
-        
-        return result;
-        
-        
     },
 
    

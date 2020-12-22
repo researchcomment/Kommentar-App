@@ -6,6 +6,7 @@ import Detail from  '../views/Detail.vue'
 import Admin from  '../views/Admin.vue'
 import Reviewer from  '../views/Reviewer.vue'
 import Personal from  '../views/Personal.vue'
+import MessageBox from  '../views/MessageBox.vue'
 import store from '@/store'
 import firebase from "firebase/app";
 Vue.use(Router)
@@ -47,8 +48,13 @@ const router = new Router({
     },
     {
       path: '/Personal',
-      name: 'Personal',
+      name: 'personal',
       component: Personal
+    },
+    {
+      path: '/MessageBox',
+      name: 'messageBox',
+      component: MessageBox
     },
     {
       path: '*',
@@ -68,17 +74,42 @@ router.beforeEach(
   (to, from, next)=> {
  
   firebase.auth().onAuthStateChanged((user) => {
-		if (user) {
 			store.dispatch('account/relogin',{}).then(
-      ()=>{next();}
-      ).catch(err => {
+      ()=>{
+        next();
+        // if (user){
+        //   var MessageBoxRef = firebase.database().ref('users/' + user.uid + '/Messagebox');
+        //   MessageBoxRef.on('value', (snapshot) =>{
+        //     const data = snapshot.val();
+        //     store.commit('account/setMessageBox',data);
+        // });
+        // }
+        firebase.auth().onAuthStateChanged((user)=> {
+          if (!user){
+            store.dispatch('account/relogin',{})
+            store.commit('account/setMessageBox',{});
+          }
+          else{
+            var MessageBoxRef = firebase.database().ref('users/' + user.uid + '/Messagebox');
+            MessageBoxRef.on('value', (snapshot) =>{
+              const data = snapshot.val();
+              if(data){
+                store.commit('account/setMessageBox',data);
+              }
+              else{
+                store.commit('account/setMessageBox',{});
+              }
+              
+          });
+          }
+        })
+      }).catch(err => {
         console.log(err);
       })
-		} else{
-			next()
-		}
-  	});
-
+  });
+   
+    
+      
   // update the login status for new Router
   
 

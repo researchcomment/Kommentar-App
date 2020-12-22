@@ -5,8 +5,8 @@
         <div class="box-card" :href="book.url">
 
             <!-- external link -->
-            <a @click="searchOutside">DOI :{{book.doi}}</a>
-            
+            <a :href="'https://dx.doi.org/'+ book.doi"  target="_blank">DOI :{{book.doi}}</a>
+
             <!-- Titel -->
             <div>
                 <h3 @click="seeDetail()">{{book.title}}</h3>
@@ -48,18 +48,7 @@
 
             },
 
-            /**
-             * open a new window which pointes to an external link
-             */
-            searchOutside(){
 
-                // build external link
-                var url="https://dx.doi.org/"+ this.book.doi;
-
-                //open a new window
-                window.open(url, "_blank");
-
-            },
             
         }
     }

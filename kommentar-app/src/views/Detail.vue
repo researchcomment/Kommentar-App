@@ -1,50 +1,56 @@
 <template>
 <div>
-    <div class="maincontent">
+    <div class="maincontent" v-loading.fullscreen.lock="loading">
         <div class="detailpage">
 
-            <bookInfo :doi="doi"></bookInfo>
+            <bookInfo :doi="doi" @setDetail="setDetail"></bookInfo>
 
-            <!-- officialComment -->
-            <div class="ocomment" v-loading.fullscreen.lock="loading">
+            <!-- Ranking -->
+            <a-icon type="filter"/>
+            <a-checkbox-group v-model="rank" name="Ranking" :options="rankOptions" @change="getComments"/>
+
+
+            <!-- Official Comments -->
+            <div class="ocomment" >
 
                 <!-- Title -->
                 <h2 style="font-size: 2.5vw; color: #76c06b">
                 Official Comments
-                <span style="color: #ababab; font-size: 1.5vw">{{ officialCommentList.length }}</span>
+                <span style="color: #ababab; font-size: 1.5vw">{{ Object.keys(officialCommentList).length }}</span>
                 </h2>
 
                 <!-- List of official Comments -->
-                <ul>
-                <li v-for="item in officialCommentList" v-bind:key="item.id" class="ocommentli">
-                    <div>
-                    <comment :comment="item" :username="username" @refresh="getComments"/>
-                    </div>
-                </li>
+                <ul class="ocommentli">
+                    <a-list item-layout="vertical" size="large" :pagination="paginationOfficial" :data-source="officialCommentList">   
+                        <a-list-item slot="renderItem" slot-scope="comment" >
+                            <comment :commentFromParent="comment" :username="username"  @refresh="getComments"/>
+                        </a-list-item>
+                    </a-list>
                 </ul>
 
             </div>
 
-             <!-- unofficialComment -->
-            <div class="ucomment" v-loading.fullscreen.lock="loading">
+             <!-- Unofficial Comments -->
+            <div class="ucomment">
 
                 <!-- Title -->
                 <h2 style="font-size:2vw;color:#000">
-                    Comments <span style="color:#ABABAB;font-size:1.5vw">{{unofficialCommentList.length}}</span>
+                    Comments <span style="color:#ABABAB;font-size:1.5vw">{{Object.keys(unofficialCommentList).length}}</span>
                 </h2>
                 
-                <!-- List of official Comments -->
-                <ul>
-                    <li v-for="item in unofficialCommentList" v-bind:key="item.id" class="ucommitli">
-                        <div>
-                            <comment :commentFromParent="item"  :username="username" @refresh="getComments"/>
-                        </div>
-                    </li>
+                <!-- List of unofficial Comments -->
+                <ul class="ucommitli">
+                    <a-list item-layout="vertical" size="large" :pagination="paginationUnOfficial" :data-source="unofficialCommentList">   
+                        <a-list-item slot="renderItem" slot-scope="comment" >
+                            <comment :commentFromParent="comment" :username="username"  @refresh="getComments"/>
+
+                        </a-list-item>
+                    </a-list>
                 </ul>
 
             </div>   
 
-            <commentEditor :doi="doi" :username="username" @submit="refresh"></commentEditor>
+            <commentEditor :doi="doi" :username="username" :title="detail.title" @submit="refresh"></commentEditor>
 
         </div>
     </div>
@@ -77,6 +83,18 @@
                 officialCommentList: [],
                 unofficialCommentList: [],
                 loading: false,
+                detail:{},
+                paginationOfficial: {
+                    pageSize: 5,
+                },
+                paginationUnOfficial: {
+                    pageSize: 5,
+                },
+                rank:[],
+                rankOptions:[
+                    { label: 'Only your own comments', value: 'onlyfromCurrentUser' },
+                    { label: 'History', value: 'history' },
+                    ],
             }
         },
 
@@ -96,54 +114,74 @@
             },
 
             username: function () {
-                //console.log(firebase.auth().currentUser.uid)
                 return this.$store.state.account.username;
             },
 
         },
 
 
-        methods:{
-            
-            // refresh the page
-            refresh(){
-                window.location.reload();
-            },
+        methods:{ 
 
             /**
              * Request comment content from the backend
+             * 
              */
             async getComments() {    
             
                 // open the loading-animation 
                 this.loading = true;
-                
+
                 // send request
-                this.officialCommentList = await this.$store.dispatch("commitwork/loadComments", 
+                this.$store.dispatch("commitwork/loadComments", 
                                                     {doi: this.doi, 
-                                                     rankType: 'submittime',
+                                                     rankType:this.rank,    //  rankType:"time",
                                                      username: this.$store.state.account.username,
                                                      type:"official"})
-                                            .catch(err => {
-                                                            console.log(err);
-                                                         });
-               
-                this.unofficialCommentList = await this.$store.dispatch("commitwork/loadComments", 
-                                                    {doi: this.doi, 
-                                                     rankType: 'submittime',
-                                                     username: this.$store.state.account.username,
-                                                     type:"unofficial"})
+                                            .then((result)=>{
+                
+                                               this.officialCommentList= Object.keys(result).map((key) => {
+                                                                            var comment = result[key];
+                                                                            comment.key=key;
+                                                                            return comment;
+                                                                        })
+                                                     })
                                             .catch(err => {
                                                             console.log(err);
                                                          });
 
-            
+               this.$store.dispatch("commitwork/loadComments", 
+                                                    {doi: this.doi, 
+                                                     rankType:this.rank,
+                                                     username: this.$store.state.account.username,
+                                                     type:"unofficial"})
+                                            .then((result)=>{
+                                               
+                                               this.unofficialCommentList= Object.keys(result).map((key) => {
+                                                                            var comment = result[key];
+                                                                            comment.key=key;
+                                                                            return comment;
+                                                                        })
+                                                     })
+                                            .catch(err => {
+                                                            console.log(err);
+                                                         });
 
                 // close the loading-animation 
                 this.loading = false;
 
             },
-        }
+
+            /**
+             * reload the page by submit from editor
+             */
+            refresh(){
+               this.$router.go(0);
+            },
+
+            setDetail(detail){
+                this.detail =detail;
+            }
+        },
         
     }
 </script>

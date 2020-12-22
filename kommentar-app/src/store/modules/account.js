@@ -5,8 +5,10 @@ import firebase from "firebase/app";
 const state = () => ({
     username: null,
     role: null, //list:['default', 'Researcher', 'Reviewer','Moderator','Admin']  from JJY
-    update: null,
-    error: null
+    update: {},
+    error: null,
+    commentList:[],
+    Messagebox:{},
 })
 
 const getters = {
@@ -68,6 +70,12 @@ const actions = {
                 console.log(err);
             });
         }
+        else
+        {
+            commit('setrole',[])
+            commit('setupdate',{})
+            commit('setusername',null)
+        }
         return;
     },
     logout ({ commit}) {
@@ -77,7 +85,8 @@ const actions = {
         .signOut()
         .then(() => {
            
-            commit('setrole',null)
+            commit('setrole',[])
+            commit('setupdate',{})
             commit('setusername',null)
         })
         .catch(error => {
@@ -85,7 +94,7 @@ const actions = {
         })
     },
 
-    regist({ commit, state }, { username, password }) {
+    async regist({ commit, state }, { username, password }) {
         //get information from google this.$firebase backend
         //when username does not compare to the password, return false and reason
         return firebase
@@ -99,7 +108,7 @@ const actions = {
                     username: username,
                     role: ['default'],
                     email: username, 
-                    messagebox:null,
+                    Messagebox:null,
                     update:{
                         Researcher:false,
                         Reviewer:false,
@@ -115,8 +124,30 @@ const actions = {
             .catch((error) => {
                 commit("setError", error.message);
             });
+    },
+    async getCommentList({commit}){
+        commit('setCommentListNull');
+        let user=firebase.auth().currentUser;
+        if (user){
+            commit ('setusername',user.email);
+            firebase.database().ref('users/'+user.uid+"/comments").once('value').then((snapshot) => {
+                let doiKey,tempCommitValue;
+                snapshot.forEach((childSnapshot) => {
+                    doiKey=childSnapshot.val().doi.replaceAll(".","'");
+                    firebase.database().ref('doi_repository/' + doiKey + '/comments/'+childSnapshot.key)
+                    .once('value').then((value)=>{
+                        tempCommitValue=value.val();
+                        tempCommitValue.commitKey=value.key;
+                        commit('setCommentList',tempCommitValue);
+                    })
 
-        
+                })
+            }).catch(err => {
+                console.log(err);
+            });
+        }
+        return;
+
     }
 }
 
@@ -135,6 +166,17 @@ const mutations = {
     setupdate(state, update) {
         state.update = update
     },
+    
+    setCommentList(state,newComment){
+        state.commentList.push(newComment);
+    },
+    setCommentListNull(state){
+        state.commentList=[];
+    },
+
+    setMessageBox(state,Messagebox){
+        state.Messagebox=Messagebox;
+    }
 
 }
 

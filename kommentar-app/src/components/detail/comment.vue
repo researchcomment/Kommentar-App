@@ -10,19 +10,19 @@
                 <span style="padding-left: '8px';cursor: 'auto'">
                     {{ comment.likes }}
                 </span>
-            </span>
 
-            <!-- the number of dislikes -->
-            <span key="comment-basic-dislike" class="action">
-                <a-tooltip title="Dislike">
-                <a-icon
-                    type="dislike"
-                    :theme="action === 'disliked' ? 'filled' : 'outlined'"
-                    @click="dislike"
-                />
-                </a-tooltip>
-                <span style="padding-left: '8px';cursor: 'auto'">
-                {{ comment.dislikes }}
+                <!-- the number of dislikes -->
+                <span key="comment-basic-dislike" class="action">
+                    <a-tooltip title="Dislike">
+                    <a-icon
+                        type="dislike"
+                        :theme="action === 'disliked' ? 'filled' : 'outlined'"
+                        @click="dislike"
+                    />
+                    </a-tooltip>
+                    <span style="padding-left: '8px';cursor: 'auto'">
+                    {{ comment.dislikes }}
+                    </span>
                 </span>
             </span>
 
@@ -57,30 +57,61 @@
         <!-- the detail of this comment -->
             
             <!-- Author -->
-            <a slot="author">{{comment.author}}</a>
+            <!-- <a slot="author">{{comment.author}}</a> -->
 
-            <!-- Author picture -->  
-            <a-avatar slot="avatar" style="color: #f56a00; backgroundColor: #fde3cf">
-                <p class="avatarp">{{authorfirst}}</p>
-            </a-avatar>
 
-            <!-- Comment -->
-            <p slot="content" v-html="comment.content"></p>
-            
-            <!-- time -->
-            <a-tooltip slot="datetime" >
-                <span>{{ comment.createDate}}</span>
-            </a-tooltip>
+                <!-- Editing Options for Author -->
+                <!-- <div v-if = "isAuthor">
+                    
+                    <a-button type="dashed" v-if="!(comment.type=='official')" :disabled="inReview" @click="askForReview">Review</a-button>
 
-            
-            
-    </a-comment>
-    <!-- cover -->
-    <div :style="TheCover">
-                     
-	</div>
-</div>
-    
+                    <a-button type="dashed"  v-if="(isResearcher) && (!(comment.type=='official'))"  :disabled="inRequest" @click="askForPID">Ask For PermanentID</a-button>
+
+                    <a-button :disabled="comment.type=='official'" icon="edit" @click="openEditor()">Editor</a-button>
+                
+                    <a-icon type="delete" v-if="!(comment.type=='official')" theme="twoTone" two-tone-color="#eb2f96"  @click="deleteComment" />
+               
+                </div> -->
+
+                <!-- Editing Options for Moderator : hide/unhide the comment -->
+                <!-- <div v-if = "isModerator && !(comment.type=='official')">
+                    <a-icon type="eye-invisible" v-if="comment.active" @click="setVisiblity"/>
+                    <a-icon type="eye" v-if="!comment.active" @click="setVisiblity"/>
+                </div>
+            </template> -->
+        
+            <!-- the detail of this comment -->
+                
+                <!-- Author -->
+                <!-- <a slot="author">{{comment.author}}</a> -->
+
+                <!-- Author picture -->  
+                <!-- <a-avatar slot="avatar" style="color: #f56a00; backgroundColor: #fde3cf">
+                    <p class="avatarp">{{authorfirst}}</p>
+                </a-avatar> -->
+
+                <!-- Comment -->
+                <!-- <p slot="content" v-if="!editorVisibility" v-html="comment.content"></p> -->
+
+                <!-- Editor for Comments -->
+                <!-- <div v-if="editorVisibility" slot="content"> 
+                    <quill-editor
+                    v-model="content"
+                    :options="editorOption"
+                    >
+                    </quill-editor>
+                    <a-button @click="editorRequest">Submit</a-button>
+                </div> -->
+                
+                <!-- time -->
+                <!-- <a-tooltip slot="datetime" >
+                    <span>{{ new Date(Date.parse(comment.createDate)).toLocaleString()}}</span>
+                </a-tooltip>         -->
+                
+        </a-comment>   
+
+        
+    </div>
 </template>
 
 <script>
@@ -102,6 +133,20 @@ Vue.use(Antd)
                 buttonWidth: 10,
                 visible: false,
                 comment:this.commentFromParent, 
+
+                content:"",
+                editorVisibility:false,
+                editorOption: {    // style for quill-editor
+                    placeholder: "Please write down your comment....",
+                    modules:{
+                        toolbar:[
+                                ['bold', 'italic', 'underline', 'strike'],    // toggled buttons
+                                ['blockquote', 'code-block'], 
+                                // [{ 'size': ['small', false, 'large', 'huge'] }], // front size
+                                [{ 'color': [] }],   // front color
+                                ]
+                            }
+                }, 
                
                //! Sample Comment FOR TEST 
                /* comment: {
@@ -144,7 +189,7 @@ Vue.use(Antd)
             isResearcher(){
                 var login = this.$store.state.account.role;
                 if(login){
-                    return (this.$store.state.account.role.indexOf("Reaseacher"))>-1;
+                    return this.$store.state.account.role.includes("Researcher");
                 }
                 return false;
             },
@@ -161,7 +206,7 @@ Vue.use(Antd)
                 var login = this.$store.state.account.role;
 
                 if(login){
-                    return (this.$store.state.account.role.indexOf("Moderator"))>-1; // check whether the logged user is Moderator
+                    return this.$store.state.account.role.includes("Moderator"); // check whether the logged user is Moderator
                 }
                 else{
                     return false; // not logged => not Moderator
@@ -208,7 +253,7 @@ Vue.use(Antd)
             askForReview(){
 
                 var request = {
-                    uid:this.comment.UID,
+                    uid:this.comment.key,
                     doi:this.comment.doi_nr,
                     requestType:"Review",
                 }
@@ -228,7 +273,7 @@ Vue.use(Antd)
             askForPID(){
                 
                 var request = {
-                    uid:this.comment.UID,
+                    uid:this.comment.key,
                     doi:this.comment.doi_nr,
                     requestType:"PID",
                 }
@@ -245,14 +290,48 @@ Vue.use(Antd)
              * send delete Request to firebase
              */
             deleteComment(){
-
+                
+                this.deleted =true;
                 var request = {
-                    uid:this.comment.UID,
+                    uid:this.comment.key,
                     doi:this.comment.doi_nr,
                 }
+                
+                this.$store.dispatch("askFromUser/deleteComment",request).then(()=>{
+                    this.$emit("refresh");
+                });
             
-                this.$store.dispatch("askFromUser/deleteComment",request);
-                this.$emit("refresh");
+            },
+
+            /**
+             * send Editor Request to firebase
+             */
+            editorRequest(){
+                var request ={
+                    uid:this.comment.key, 
+                    doi:this.comment.doi_nr,
+                    attribute:"content",
+                    value:this.content,
+                }
+                this.$store.dispatch("askFromUser/setAttribute",request)
+                .then(()=>{
+                   
+                   // Refresh the display, prompting success                   
+                    this.$notification.open({
+                        message: 'Success',
+                        description:
+                        'Your Request has been submitted.',
+                        icon: <a-icon type="smile" style="color: #108ee9" />,
+                    });  
+                    this.$emit("refresh");
+                    this.editorVisibility =false;
+                    
+
+                })
+                .catch(err => {
+                                console.log(err);
+                            });
+
             },
            
             /**
@@ -265,7 +344,7 @@ Vue.use(Antd)
                     this.comment.likes += 1;
                        
                     var request = {
-                        uid:this.comment.UID,
+                        uid:this.comment.key,
                         doi:this.comment.doi_nr,
                         attribute:"likes",
                     };
@@ -286,7 +365,7 @@ Vue.use(Antd)
                     this.comment.dislikes += 1;   
                     
                     var request = {
-                        uid:this.comment.UID,
+                        uid:this.comment.key,
                         doi:this.comment.doi_nr,
                         attribute:"dislikes",
                     };
@@ -307,7 +386,7 @@ Vue.use(Antd)
                     this.$data.TheCover.display='none'; 
                 }
                 var request = {
-                        uid:this.comment.UID,
+                        uid:this.comment.key,
                         doi:this.comment.doi_nr,
                         attribute:"aktive",
                         value:this.comment.active,
@@ -315,6 +394,11 @@ Vue.use(Antd)
                 
                 this.$store.dispatch("askFromUser/setAttribute",request);
 
+            },
+
+            openEditor(){
+                this.content =this.comment.content;
+                this.editorVisibility = !this.editorVisibility;
             }
         },
 };

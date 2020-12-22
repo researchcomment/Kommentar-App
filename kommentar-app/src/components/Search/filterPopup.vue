@@ -137,9 +137,6 @@
               // build the two selected Type list together
               this.filterCondition.selectedType =this.selectedType1.concat(this.selectedType2);
               
-              //! FOR TEST 
-              //console.log(this.filterCondition);
-
               // send changed filter Condition to Parent component and require for new search
               this.$emit("filter",this.filterCondition);
 
