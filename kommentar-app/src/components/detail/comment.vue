@@ -28,13 +28,13 @@
             
              
             <!-- Editing Options for Moderator : hide/unhide the comment -->
-                <div v-if = "(isModerator) || !(comment.type=='official')"  class="auactions" @click="setVisiblity" style="margin-right:0.7vw">
+                <div v-if = "(isModerator) && !(comment.type=='official')"  class="auactions" @click="setVisiblity" style="margin-right:0.7vw">
                     <a-icon type="eye-invisible" v-if="comment.active"/>
                     <a-icon type="eye" v-if="!comment.active"/>
                 </div>
 
             <!-- Editing Options for Author -->
-                <div v-if = "isAuthor || !(comment.type=='official')" class="actionb" id="components-popover-demo-placement" :style="{whiteSpace: 'nowrap'}">
+                <div v-if = "isAuthor && !(comment.type=='official')" class="actionb" id="components-popover-demo-placement" :style="{whiteSpace: 'nowrap'}">
                 <!-- popfirm -->
                     <a-popover placement="bottomLeft" v-model="visible" title="Options" trigger="click">
                             
