@@ -26,33 +26,33 @@
                     </span>
                 </span>
             
-                <div  v-if="!(comment.type=='official')" >
+             
             <!-- Editing Options for Moderator : hide/unhide the comment -->
-                    <div v-if = "isModerator"  class="auactions" @click="setVisiblity" style="margin-right:0.7vw">
-                        <a-icon type="eye-invisible" v-if="comment.active"/>
-                        <a-icon type="eye" v-if="!comment.active"/>
-                    </div>
-
-                <!-- Editing Options for Author -->
-                    <div v-if = "isAuthor" class="actionb" id="components-popover-demo-placement" :style="{whiteSpace: 'nowrap'}">
-                    <!-- popfirm -->
-                        <a-popover placement="bottomLeft" v-model="visible" title="Options" trigger="click">
-                                
-                            <div slot="content">
-                                <div :class="inReview?'auactionstabu':'auactions'"  @click="askForRequest('Review')">Ask For Review</div>
-
-                                <div :class="inRequest?'auactionstabu':'auactions'" v-if="isResearcher " @click="askForRequest('PID')">Ask For PermanentID</div>
-
-                                <div class="auactions"  @click="deleteComment">Delete <a-icon type="delete" theme="twoTone" two-tone-color="#eb2f96"/></div>
-                                    
-                                    <!-- Editing Options for Admin : hide/unhide the comment -->
-                                    
-                            </div>
-                            <i class="iconfont icon-xiaoxiguanli-quanbux" @click="hide" style="cursor:pointer"></i>
-                        </a-popover>
-                        
-                    </div>
+                <div v-if = "(isModerator) || !(comment.type=='official')"  class="auactions" @click="setVisiblity" style="margin-right:0.7vw">
+                    <a-icon type="eye-invisible" v-if="comment.active"/>
+                    <a-icon type="eye" v-if="!comment.active"/>
                 </div>
+
+            <!-- Editing Options for Author -->
+                <div v-if = "isAuthor || !(comment.type=='official')" class="actionb" id="components-popover-demo-placement" :style="{whiteSpace: 'nowrap'}">
+                <!-- popfirm -->
+                    <a-popover placement="bottomLeft" v-model="visible" title="Options" trigger="click">
+                            
+                        <div slot="content">
+                            <div :class="inReview?'auactionstabu':'auactions'"  @click="askForRequest('Review')">Ask For Review</div>
+
+                            <div :class="inRequest?'auactionstabu':'auactions'" v-if="isResearcher " @click="askForRequest('PID')">Ask For PermanentID</div>
+
+                            <div class="auactions"  @click="deleteComment">Delete <a-icon type="delete" theme="twoTone" two-tone-color="#eb2f96"/></div>
+                                
+                                <!-- Editing Options for Admin : hide/unhide the comment -->
+                                
+                        </div>
+                        <i class="iconfont icon-xiaoxiguanli-quanbux" @click="hide" style="cursor:pointer"></i>
+                    </a-popover>
+                    
+                </div>
+                
             </template>
         
             <!-- the detail of this comment -->
