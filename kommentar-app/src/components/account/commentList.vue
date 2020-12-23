@@ -202,13 +202,10 @@
              */
             deleteComment(comment){
                 
-                this.templateComment =JSON.parse(JSON.stringify(comment));
-                var request = {
-                    uid:this.templateComment.commitKey,
-                    doi:this.templateComment.doi_nr,
-                }
-                
-                this.$store.dispatch("askFromUser/deleteComment",request).then(()=>{
+                this.$store.dispatch("askFromUser/deleteComment",{
+                    uid:comment.commitKey,
+                    doi:comment.doi_nr,
+                }).then(()=>{
                     this.getCommentList();
                 });
             
@@ -236,19 +233,18 @@
              */
             openEditor(comment,index){
                 this.templateComment =JSON.parse(JSON.stringify(comment));
-                this.editorVisibility=[];
-                this.editorVisibility[index] = true;
+                if (this.editorVisibility[index])
+                    this.editorVisibility=[];
+                else
+                {
+                     this.editorVisibility=[];
+                    this.editorVisibility[index] = true;
+                }
             },
 
             relate(comment){
               
-                if(!this.searchDOI){
-                    return true;
-                }
-                else if( comment.doi_nr.includes(this.searchDOI)){ 
-                    return true
-                }
-                return false;
+                return (!this.searchDOI || comment.doi_nr.includes(this.searchDOI))? true:false;
             }
 
 

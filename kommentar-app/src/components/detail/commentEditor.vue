@@ -44,7 +44,6 @@ export default {
                             [{ 'color': [] }],   // front color
                             ]
                         }} 
-
         };
     },
     computed: {
@@ -67,27 +66,19 @@ export default {
                 return;
             }
 
-            // build request data
-            var entry={
+            // Send request to backend
+            this.$store.dispatch('commitwork/sendFromEditorToDatabase',{
                 doi:this.doi,
                 author:this.$store.state.account.username,
                 content:this.content,    // the comment is in html form 
                 title:this.title
-            }
-
-            // Send request to backend
-            let result=1;
-            this.$store.dispatch('commitwork/sendFromEditorToDatabase',entry).then(() => {
+            }).then(() => {
                 this.$emit("submit");
                 this.content=null;
             }).catch(err => {
                 console.log(err);
             })
-            
         },
-        
-
-
     },
    
 };

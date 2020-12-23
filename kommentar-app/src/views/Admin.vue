@@ -1,7 +1,9 @@
 <template>
     <div class="mainadmin">
-    <a-layout>
-        <a-layout-header style="display:none">Header</a-layout-header>
+    <a-layout style="height:95vh">
+        <a-layout-header style="display:none">
+            
+        </a-layout-header>
         <a-layout>
            <!-- Menu -->
             <a-layout-sider width="20%">
@@ -31,17 +33,20 @@
                     
                     
                     <!-- Titel -->
-                    <span style="margin-top:2vh;font-size:3vw">User Management</span>
+                    <span style="margin-top:2vh;margin-bottom:2vh;font-size:4vw;margin-left:2vw;font-weight:500">User Management</span>
 
                 </div>
                 <!-- Filter -->
-                <div :style="{ margin: '2vh 2vw', padding: '0', background: '#fff',width:'78vw'}">
+                <div :style="{ margin: '2vh 1vw', padding: '0', background: '#fff',width:'76vw'}">
                     
                     
-                    <h2>Update to {{menuKey[0]}}</h2>
+                    <h2 style="margin-top:2vh;margin-bottom:2vh;font-size:2vw;margin-left:1vw;font-weight:500">Update to {{menuKey[0]}}</h2>
 
                     <!-- Filter -->
-                    <input type="text" style="margin-left:10vh" v-model="searchText">
+                    <a-input ref="userNameInput" v-model="searchText" placeholder="Search user">
+                        <a-icon slot="prefix" type="user" />
+                    </a-input>
+                    
                 
                     <!-- Requests -->
                     <a-table  :data-source="filteredUserList[menuKey[0]]" rowKey="username"  >
@@ -319,9 +324,6 @@
 #components-layout-demo-basic .ant-layout-content {
   background: rgba(16, 142, 233, 1);
   color: #fff;
-  min-height: 120px;
-  line-height: 120px;
-  width: 70vw;
 }
 #components-layout-demo-basic > .ant-layout {
   margin-bottom: 48px;
@@ -334,5 +336,10 @@
     overflow: hidden;
     white-space: nowrap;
     min-height: 88vh;
+}
+.ant-input-affix-wrapper{
+    width: 20vw;
+    margin-left: 0.8vw;
+    margin-bottom: 1vw;
 }
 </style>

@@ -77,6 +77,7 @@ export default {
           
           // send request to firebase
           this.signUp(); 
+          this.dialogFormVisible=false;
 
         }
         

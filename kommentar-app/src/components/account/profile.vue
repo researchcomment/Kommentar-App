@@ -15,7 +15,7 @@
         </li>
 
         <!-- Admin -->
-        <li v-show="isAdmin" @click="openAdmin">
+        <li v-show="isAdmin" @click="openRouter('admin')">
           <span class="iconfont icon-biaoqiankuozhan_guanli-159"></span>
           <div class="texts">
             Admin
@@ -23,15 +23,15 @@
         </li>
 
         <!-- Reviewer -->
-        <li v-show="isReviewer" @click="openReviewer">
+        <li v-show="isReviewer" @click="openRouter('review')">
           <span class="iconfont icon-biaoqiankuozhan_guanli-159"></span>
           <div class="texts">
-            Reviewer
+            Review
           </div>
         </li>
 
         <!-- Personal Information -->
-        <li @click="openPersonal('role')">
+        <li  @click="openRouter('personal')">
           <span class="iconfont icon-biaoqiankuozhan_guanli-159"></span>
           <div class="texts">
             Personal_info
@@ -39,7 +39,7 @@
         </li>
 
         <!-- MessageBox -->
-        <li  @click="openMessageBox">
+        <li  @click="openRouter('messageBox')">
          <span class="iconfont icon-youxiang"></span>
               <div class="texts" >
                 <a-badge :count="Object.keys(Messagebox).length" >
@@ -79,23 +79,12 @@ export default {
     },
 
     isAdmin(){
-      if(this.role){
+      return this.role?this.role.includes("Admin"):false;
           //check whether the logged user is Admin
-          return this.role.includes("Admin");
-      }
-      else{
-          return false;
-      }
     },
 
     isReviewer(){
-      if(this.role){
-          //check whether the logged user is Admin
-          return this.role.includes("Reviewer");
-      }
-      else{
-          return false;
-      }
+      return this.role?this.role.includes("Reviewer"):false;
     },
 
   },
@@ -111,51 +100,21 @@ export default {
           duration: 1000
       });
       this.$emit('logout');
-      var router=this.$router.currentRoute.name;
-      if(router=="personal"||router=="admin"||router=="reviewer"){
+      let router=this.$router.currentRoute.name;
+      if(router=="personal"||router=="admin"||router=="review"){
         this.$router.push('/');
       }
 
     },
-    openAdmin(){
-      if(this.$router.currentRoute.name!="admin"){
-        this.$router.push('/Admin');
+   
+    openRouter(router){
+      let dis='/'+(router.charAt(0)).toUpperCase() + router.slice(1);
+      if(this.$router.currentRoute.name!=router){
+        this.$router.push(dis);
       }
       else{
         this.openNotification();
       }
-      
-    },
-    
-    openReviewer(){
-      if(this.$router.currentRoute.name!="reviewer"){
-        this.$router.push('/Review');
-      }
-      else{
-        this.openNotification();
-      }
-
-    },
-
-    openPersonal(){
-      if(this.$router.currentRoute.name!="personal"){
-          this.$router.push('/Personal');
-        
-      }
-      else{       
-        this.openNotification();
-      }
-
-    },
-
-    openMessageBox(){
-      if(this.$router.currentRoute.name!="messageBox"){
-        this.$router.push('/MessageBox');
-      }
-      else{
-        this.openNotification();
-      }
-
     },
 
     openNotification() {

@@ -1,8 +1,8 @@
 <template>
   <div>
-     <Account></Account>
-      <router-view></router-view>
-      <bottom></bottom>
+    <Account></Account>
+    <router-view></router-view>
+    <bottom></bottom>
   </div>
 </template>
 

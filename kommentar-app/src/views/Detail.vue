@@ -3,11 +3,14 @@
     <div class="maincontent" v-loading.fullscreen.lock="loading">
         <div class="detailpage">
 
-            <bookInfo :doi="doi" @setDetail="setDetail"></bookInfo>
+            <bookInfo :doi="doi" @setDetail="setDetail" style="margin-bottom:5vh"></bookInfo>
 
             <!-- Ranking -->
-            <a-icon type="filter"/>
-            <a-checkbox-group v-model="rank" name="Ranking" :options="rankOptions" @change="getComments"/>
+            <div style="margin: 5vh 10vw;">
+                <a-icon type="filter"/>
+                <a-checkbox-group v-model="rank" name="Ranking" :options="rankOptions" @change="getComments"/>
+            </div>
+            
 
 
             <!-- Official Comments -->
@@ -39,7 +42,7 @@
                 </h2>
                 
                 <!-- List of unofficial Comments -->
-                <ul class="ucommitli">
+                <ul class="ucommentli">
                     <a-list item-layout="vertical" size="large" :pagination="paginationUnOfficial" :data-source="unofficialCommentList">   
                         <a-list-item slot="renderItem" slot-scope="comment" >
                             <comment :commentFromParent="comment" :username="username"  @refresh="getComments"/>
@@ -190,12 +193,23 @@
 .ucomment{
     margin: 2vh 10vw;
 }
-.ucomment .ucommitli{
+.ocomment{
+    margin: 2vh 10vw;
+}
+.ocomment .ocommentli{
+    margin-bottom: 4vh;
+    width: 70vw;
+    padding-inline-start: 0;
+}
+.ucomment .ucommentli{
     margin-bottom: 4vh;
     width: 70vw;
 }
 .ucomment .ant-list-item{
     border: none;
+}
+.ant-list-something-after-last-item .ant-spin-container > .ant-list-items > .ant-list-item:last-child{
+    border-bottom: 0;
 }
 .ant-comment-inner{
     padding: 0;
@@ -232,10 +246,6 @@
 .ant-comment-inner .ant-comment-avatar{
     margin-right: 3vw;
 }
-.ant-comment-actions{
-    margin-bottom: 4vh;
-    padding: 0;
-}
 .ant-comment .ant-comment-actions span span{
     font-size: 1.2vw;
 }
@@ -243,8 +253,7 @@
     width: 1.2vw;
     height: 1.2vw;
 }
-.ant-comment-content-detail p{
-    margin-bottom: 1vh;
+.ant-list-pagination{
+    margin-top: 0.8vw;
 }
-
 </style>

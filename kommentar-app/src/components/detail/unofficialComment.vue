@@ -130,34 +130,24 @@ export default {
     font-size: 1.5vw;
     margin-bottom: 0;
 }
-.ant-comment-actions{
-    margin: 0;
+.ant-comment-inner{
     padding: 0;
 }
-.ucomment .ant-comment-inner{
-    padding: 0;
-}
-.ucomment .ant-comment-inner .ant-comment-avatar img{
+.ant-comment-inner .ant-comment-avatar img{
     width: 4.5vw;
     height: 4.5vw;
     margin: 0;
 }
-.ucomment .ant-comment-inner .ant-comment-avatar .ant-avatar{
+.ant-comment-inner .ant-comment-avatar .ant-avatar{
     width: 4.5vw;
     height: 4.5vw;
 }
-.ucomment .ant-comment-inner .ant-comment-avatar{
+.ant-comment-inner .ant-comment-avatar{
     margin-right: 3vw;
 }
-.ucomment .ant-comment-actions{
-    padding: 0;
-    margin-bottom: 1vw;
-}
-.ucomment .ant-comment .ant-comment-actions span span{
+.ant-comment .ant-comment-actions span span{
     font-size: 1.2vw;
 }
-.ucomment .ant-comment-content-detail p{
-    margin-bottom: 1vh;
-}
+
 
 </style>

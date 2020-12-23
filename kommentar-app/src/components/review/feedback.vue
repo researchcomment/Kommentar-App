@@ -26,7 +26,10 @@
                         <a :href="'https://dx.doi.org/'+ comment.doi_nr"  target="_blank">{{comment.doi_nr}}</a>
                     </a-descriptions-item>
 
-                    <a-descriptions-item label="Visibility">
+                    <a-descriptions-item  >
+                        <template slot="label">
+                            <p> Visibility</p>
+                        </template>
                         <p v-show="comment.active">Yes</p>
                         <p v-show="!comment.active">No</p>
                     </a-descriptions-item>

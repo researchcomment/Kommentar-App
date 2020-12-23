@@ -164,7 +164,9 @@ const actions = {
         //rankType: ['onlyfromCurrentUser',"history","latest"] 
         let doiKey=doi.replaceAll(".","'");
         let commentsRef=firebase.database().ref('doi_repository/' + doiKey + '/comments');
-        let userKey = firebase.auth().currentUser.uid;
+        let userKey=null;
+        if (firebase.auth().currentUser)
+            userKey = firebase.auth().currentUser.uid;
         return   commentsRef.orderByChild("type")
             .equalTo(type)
             .once('value')
@@ -174,7 +176,7 @@ const actions = {
                     //keys of current comment
                     let tmpkeys = Object.keys(tmpvalue)
                     //then current user filter some of them
-                    if (rankType.includes('onlyfromCurrentUser'))
+                    if (rankType.includes('onlyfromCurrentUser') && userKey)
                     {
                         tmpkeys = tmpkeys
                         .filter((key)=> 
