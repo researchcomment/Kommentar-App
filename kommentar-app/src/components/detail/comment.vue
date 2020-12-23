@@ -12,49 +12,47 @@
                     </span>
                 </span>
                     <!-- the number of dislikes -->
-                    <span key="comment-basic-dislike" class="action">
-                        <a-tooltip title="Dislike">
-                        <a-icon
-                            type="dislike"
-                            :theme="action === 'disliked' ? 'filled' : 'outlined'"
-                            @click="dis_like('dislike')"
-                            width="1.2vw" height="1.2vw"
-                        />
-                        </a-tooltip>
-                        <span style="padding-left: '8px';cursor: 'auto'">
-                        {{ comment.dislikes }}
-                        </span>
+                <span key="comment-basic-dislike" class="action">
+                    <a-tooltip title="Dislike">
+                    <a-icon
+                        type="dislike"
+                        :theme="action === 'disliked' ? 'filled' : 'outlined'"
+                        @click="dis_like('dislike')"
+                        width="1.2vw" height="1.2vw"
+                    />
+                    </a-tooltip>
+                    <span style="padding-left: '8px';cursor: 'auto'">
+                    {{ comment.dislikes }}
                     </span>
-                
-
-                <!-- Editing Options for Moderator : hide/unhide the comment -->
-                <div v-if = "isModerator"  class="auactions" @click="setVisiblity" style="margin-right:0.7vw">
+                </span>
+            
+             
+            <!-- Editing Options for Moderator : hide/unhide the comment -->
+                <div v-if = "(isModerator) && !(comment.type=='official')"  class="auactions" @click="setVisiblity" style="margin-right:0.7vw">
                     <a-icon type="eye-invisible" v-if="comment.active"/>
                     <a-icon type="eye" v-if="!comment.active"/>
                 </div>
 
-                <!-- Editing Options for Author -->
-                <div v-if = "isAuthor" class="actionb">
-                    <!-- popfirm -->
-                    <div id="components-popover-demo-placement">
-                        <div :style="{whiteSpace: 'nowrap'}">
-                            <a-popover placement="bottomLeft" v-model="visible" title="Options" trigger="click">
+            <!-- Editing Options for Author -->
+                <div v-if = "isAuthor && !(comment.type=='official')" class="actionb" id="components-popover-demo-placement" :style="{whiteSpace: 'nowrap'}">
+                <!-- popfirm -->
+                    <a-popover placement="bottomLeft" v-model="visible" title="Options" trigger="click">
+                            
+                        <div slot="content">
+                            <div :class="inReview?'auactionstabu':'auactions'"  @click="askForRequest('Review')">Ask For Review</div>
+
+                            <div :class="inRequest?'auactionstabu':'auactions'" v-if="isResearcher " @click="askForRequest('PID')">Ask For PermanentID</div>
+
+                            <div class="auactions"  @click="deleteComment">Delete <a-icon type="delete" theme="twoTone" two-tone-color="#eb2f96"/></div>
                                 
-                                <div slot="content" >
-                                    <div :class="inReview?'auactionstabu':'auactions'" v-if="!(comment.type=='official')" @click="askForRequest('Review')">Ask For Review</div>
-
-                                    <div :class="inRequest?'auactionstabu':'auactions'" v-if="(isResearcher) && (!(comment.type=='official'))" @click="askForRequest('PID')">Ask For PermanentID</div>
-
-                                    <div class="auactions" v-if="!(comment.type=='official')" @click="deleteComment">Delete <a-icon type="delete" theme="twoTone" two-tone-color="#eb2f96"/></div>
-                                    
-                                    <!-- Editing Options for Admin : hide/unhide the comment -->
-                                    
-                                </div>
-                                <i class="iconfont icon-xiaoxiguanli-quanbux" @click="hide" style="cursor:pointer"></i>
-                            </a-popover>
+                                <!-- Editing Options for Admin : hide/unhide the comment -->
+                                
                         </div>
-                    </div>
+                        <i class="iconfont icon-xiaoxiguanli-quanbux" @click="hide" style="cursor:pointer"></i>
+                    </a-popover>
+                    
                 </div>
+                
             </template>
         
             <!-- the detail of this comment -->
@@ -87,19 +85,18 @@
             <a-tooltip slot="datetime" >
                 <span>{{ new Date(Date.parse(comment.createDate)).toLocaleString()}}</span>
             </a-tooltip>        
-                    
+            
         </a-comment>   
-
-        <div v-bind:style="{
+        <div  v-if="!comment.active" v-bind:style="{
             width: '100%',
             height: '100%',
             position: 'absolute',
             background: 'rgba(0,0,0,0.6)',
             opacity: '0.6',
             bottom: '0',
-            display: cansee,
-        }">
-        </div>
+            }">
+        </div>        
+        
     </div>
 </template>
 
@@ -298,19 +295,12 @@ Vue.use(Antd)
              */
             setVisiblity(){
                 this.comment.active = !this.comment.active;
-                if(this.cansee=='none'){
-                   this.cansee='block'; 
-                }else{
-                    this.cansee='none'; 
-                }
-                var request = {
+                this.$store.dispatch("askFromUser/setAttribute",{
                         uid:this.comment.key,
                         doi:this.comment.doi_nr,
-                        attribute:"aktive",
+                        attribute:"active",
                         value:this.comment.active,
-                };
-                
-                this.$store.dispatch("askFromUser/setAttribute",request);
+                });
 
             },
 
