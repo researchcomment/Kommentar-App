@@ -7,12 +7,6 @@
         </div>
       </div>
       <ul class="fctlist">
-        <li>
-          <span class="iconfont icon-jiaose"></span>
-          <div class="texts">
-            
-          </div>
-        </li>
 
         <!-- Admin -->
         <li v-show="isAdmin" @click="openRouter('admin')">

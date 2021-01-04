@@ -55,10 +55,8 @@
         <!-- Options for the user, who is already a researcher -->
         <div v-show="role.includes('Researcher')">
             
-            <a-row :gutter="{ xs: 8, sm: 16, md: 24, lg: 32 }">
                 
                 <!-- Reviewer Card -->
-                <a-col :span="8"  v-if="!role.includes('Reviewer') && !update['Reviewer']">
                     
                     <a-card hoverable style="width: 250px"  @click="updateRole('Reviewer')">
                         <img
@@ -78,10 +76,8 @@
                         </template>
                     
                     </a-card>
-                </a-col>
 
                 <!-- Moderator Card -->
-                <a-col :span="8"  v-if="!role.includes('Moderator') && !update['Moderator']">
                     <a-card hoverable style="width: 250px"   @click="updateRole('Moderator')">
                         <img
                         slot="cover"
@@ -102,10 +98,8 @@
                         </template>
             
                     </a-card>
-                </a-col>
 
                 <!-- Admin Card -->
-                <a-col :span="8" v-if="!role.includes('Admin') && !update['Admin']">
                     <a-card hoverable style="width: 250px"    @click="updateRole('Admin')">
                         <img
                         slot="cover"
@@ -127,8 +121,6 @@
                             </span>
                         </template>
                     </a-card>
-                </a-col>
-            </a-row>
 
         </div>
 
@@ -196,9 +188,21 @@ import Antd from 'ant-design-vue'
 }
 .rolelist{
     list-style-type: none;
+    padding: 0;
+}
+.rolelist li{
+    display: inline-block;
 }
 .ant-card{
     display: inline-block;
     margin: 2vw;
+}
+.ant-card .ant-card-body{
+    height: 17vh;
+    padding-left: 2vw;
+    padding-right: 2vw;
+    padding-top: 2vh;
+    padding-bottom: 2vh;
+    overflow-y: scroll;
 }
 </style>

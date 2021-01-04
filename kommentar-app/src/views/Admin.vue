@@ -49,13 +49,13 @@
                     
                 
                     <!-- Requests -->
-                    <a-table  :data-source="filteredUserList[menuKey[0]]" rowKey="username"  >
+                    <a-table  :data-source="filteredUserList[menuKey[0]]" rowKey="username">
                           
                         <!-- User Name -->
-                        <a-table-column key="username" title="User Name" data-index="username" />
+                        <a-table-column key="username" title="User Name" data-index="username" width="10vw"/>
                         
                         <!-- Role -->
-                        <a-table-column key="role" title="Role" data-index="role">
+                        <a-table-column key="role" title="Role" data-index="role" width="10vw">
                             <template slot-scope="role">
                                 <span>
                                     <a-tag v-for="tag in role" :key="tag" :color="getColor(tag)">{{ tag }}</a-tag>
@@ -67,12 +67,11 @@
                         <a-table-column key="update" title="Update">
                             <template slot-scope="text, user">
                                 <span>
-                                    <a-button type="dashed" icon="check" @click="openEditor(true,user)">Agree</a-button>
-                                    <a-button type="dashed" icon="close" @click="openEditor(false,user)">Refuse</a-button>
+                                    <a-button type="dashed" icon="check" @click="openEditor(true,user)" style="display:block;margin-bottom:1vw;padding:0 2vw">Agree</a-button>
+                                    <a-button type="dashed" icon="close" @click="openEditor(false,user)" style="display:block;padding:0 2vw">Refuse</a-button>
                                 </span>
                             </template>
                         </a-table-column>
-                         
                     </a-table>
                 </div>
             </a-layout-content>
@@ -337,9 +336,35 @@
     white-space: nowrap;
     min-height: 88vh;
 }
-.ant-input-affix-wrapper{
-    width: 20vw;
+.mainadmin .ant-input-affix-wrapper{
+    width: 30vw;
     margin-left: 0.8vw;
     margin-bottom: 1vw;
+}
+.mainadmin .ant-table-thead tr th{
+    padding: 2vw;
+}
+.mainadmin .ant-table-thead .ant-table-row-cell-last{
+}
+.mainadmin .ant-table table{
+    width: 76vw;
+}
+.mainadmin .ant-table-tbody tr td{
+    padding: 2vw;
+    
+    
+}
+.mainadmin .ant-table-tbody .ant-table-row-cell-break-word{
+    width: 5vw;
+    white-space:nowrap; 
+    overflow:hidden; 
+    text-overflow:ellipsis;
+}
+.mainadmin .ant-table-tbody .ant-tag{
+    display: block;
+    margin-top: 1vw;
+}
+.mainadmin .ant-table-pagination.ant-pagination{
+    margin: 2vw 1vw;
 }
 </style>
