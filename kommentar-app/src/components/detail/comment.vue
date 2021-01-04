@@ -274,7 +274,11 @@ Vue.use(Antd)
                         'Your Request has been submitted.',
                         icon: <a-icon type="smile" style="color: #108ee9" />,
                     });  
+<<<<<<< HEAD
                     
+=======
+                    this.$emit("refresh");
+>>>>>>> origin/main
                     this.editorVisibility =false;
                     
 
