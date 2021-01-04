@@ -263,10 +263,7 @@ Vue.use(Antd)
                     value:this.content,
                 }
                 this.$store.dispatch("askFromUser/setAttribute",request)
-                .then(()=>{
-
-                   this.$emit("refresh");
-                   
+                .then(()=>{                   
                    // Refresh the display, prompting success                   
                     this.$notification.open({
                         message: 'Success',
@@ -274,14 +271,9 @@ Vue.use(Antd)
                         'Your Request has been submitted.',
                         icon: <a-icon type="smile" style="color: #108ee9" />,
                     });  
-<<<<<<< HEAD
-                    
-=======
-                    this.$emit("refresh");
->>>>>>> origin/main
                     this.editorVisibility =false;
-                    
-
+                    this.$emit("refresh");
+                    this.comment.content=this.content;   
                 })
                 .catch(err => {
                                 console.log(err);
