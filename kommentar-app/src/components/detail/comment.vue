@@ -78,7 +78,7 @@
                 :options="editorOption"
                 >
                 </quill-editor>
-                <button @click="openEditor()" >Submit</button>
+                <button @click="editorRequest" >Submit</button>
             </div>
             
             <!-- time -->
