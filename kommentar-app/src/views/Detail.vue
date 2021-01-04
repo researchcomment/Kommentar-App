@@ -3,11 +3,14 @@
     <div class="maincontent" v-loading.fullscreen.lock="loading">
         <div class="detailpage">
 
-            <bookInfo :doi="doi" @setDetail="setDetail"></bookInfo>
+            <bookInfo :doi="doi" @setDetail="setDetail" style="margin-bottom:5vh"></bookInfo>
 
             <!-- Ranking -->
-            <a-icon type="filter"/>
-            <a-checkbox-group v-model="rank" name="Ranking" :options="rankOptions" @change="getComments"/>
+            <div style="margin: 5vh 10vw;">
+                <a-icon type="filter"/>
+                <a-checkbox-group v-model="rank" name="Ranking" :options="rankOptions" @change="getComments"/>
+            </div>
+            
 
 
             <!-- Official Comments -->
@@ -39,7 +42,7 @@
                 </h2>
                 
                 <!-- List of unofficial Comments -->
-                <ul class="ucommitli">
+                <ul class="ucommentli">
                     <a-list item-layout="vertical" size="large" :pagination="paginationUnOfficial" :data-source="unofficialCommentList">   
                         <a-list-item slot="renderItem" slot-scope="comment" >
                             <comment :commentFromParent="comment" :username="username"  @refresh="getComments"/>
@@ -54,9 +57,6 @@
 
         </div>
     </div>
-    <div>
-    <bottom></bottom>
-    </div>
 </div>
     
 </template>
@@ -65,7 +65,6 @@
     import bookInfo from "@/components/detail/bookInfo";
     import comment from "@/components/detail/comment"
     import commentEditor from "@/components/detail/commentEditor";
-    import bottom from '@/components/footer/bottom';
     import firebase from 'firebase/app';
 
     export default {
@@ -74,7 +73,6 @@
         components:{
             bookInfo,
             commentEditor,
-            bottom,
             comment,
         },
 
@@ -195,9 +193,23 @@
 .ucomment{
     margin: 2vh 10vw;
 }
-.ucomment .ucommitli{
+.ocomment{
+    margin: 2vh 10vw;
+}
+.ocomment .ocommentli{
     margin-bottom: 4vh;
     width: 70vw;
+    padding-inline-start: 0;
+}
+.ucomment .ucommentli{
+    margin-bottom: 4vh;
+    width: 70vw;
+}
+.ucomment .ant-list-item{
+    border: none;
+}
+.ant-list-something-after-last-item .ant-spin-container > .ant-list-items > .ant-list-item:last-child{
+    border-bottom: 0;
 }
 .ant-comment-inner{
     padding: 0;
@@ -210,7 +222,7 @@
 }
 .ant-comment-content-detail p{
     font-size: 1.5vw;
-    margin-bottom: 0;
+    margin: 0;
 }
 .ant-comment-actions{
     margin: 0;
@@ -219,34 +231,29 @@
 .ant-comment-actions span{
     font-size: 2vw;
 }
-.ucomment .ant-comment-inner{
+.ant-comment-inner{
     padding: 0;
 }
-.ucomment .ant-comment-inner .ant-comment-avatar img{
+.ant-comment-inner .ant-comment-avatar img{
     width: 4.5vw;
     height: 4.5vw;
     margin: 0;
 }
-.ucomment .ant-comment-inner .ant-comment-avatar .ant-avatar{
+.ant-comment-inner .ant-comment-avatar .ant-avatar{
     width: 4.5vw;
     height: 4.5vw;
 }
-.ucomment .ant-comment-inner .ant-comment-avatar{
+.ant-comment-inner .ant-comment-avatar{
     margin-right: 3vw;
 }
-.ucomment .ant-comment-actions{
-    margin-bottom: 4vh;
-    padding: 0;
-}
-.ucomment .ant-comment .ant-comment-actions span span{
+.ant-comment .ant-comment-actions span span{
     font-size: 1.2vw;
 }
-.ucomment .ant-comment-actions i swg{
+.ant-comment-actions i swg{
     width: 1.2vw;
     height: 1.2vw;
 }
-.ucomment .ant-comment-content-detail p{
-    margin-bottom: 1vh;
+.ant-list-pagination{
+    margin-top: 0.8vw;
 }
-
 </style>

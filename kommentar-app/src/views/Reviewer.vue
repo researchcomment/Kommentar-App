@@ -22,8 +22,6 @@ import Feedback from "@/components/review/feedback";
         data(){
             return{
                current: ['feedback'],
-
-
             }
         },
 
@@ -33,15 +31,8 @@ import Feedback from "@/components/review/feedback";
              * @returns true, if the current user is Reviewer
              */
             isReviewer(){
-
                 var role = this.$store.state.account.role;
-                if(role){
-                    return this.$store.state.account.role.includes("Reviewer"); // check whether the logged user is Admin
-                }
-                else{
-                    return false; // not logged => not Admin
-                }
-
+                return role? role.includes("Reviewer"):false; // check whether the logged user is Admin
             }
 
         },

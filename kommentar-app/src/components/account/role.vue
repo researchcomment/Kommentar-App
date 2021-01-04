@@ -1,15 +1,29 @@
 <template>
-    <div v-if="username">
+    <div v-if="username" class="rolepage">
 
 
         <!-- Role Request -->
         <h3>Update Role</h3>
         <p>Role-Request in Checking</p>
-        <a-tag v-show="update['Researcher']">Researcher</a-tag>
-        <a-tag v-show="update['Moderator']">Moderator</a-tag>
-        <a-tag v-show="update['Reviewer']">Reviewer</a-tag>
-        <a-tag v-show="update['Admin']">Admin</a-tag>
-
+        <ul class="rolelist">
+            <li>
+                <a-tag v-show="update['Researcher']" class="tags">Researcher</a-tag>
+            </li>
+            <li>
+                <a-tag v-show="update['Moderator']" class="tags">Moderator</a-tag>
+            </li>
+            <li>
+                <a-tag v-show="update['Reviewer']" class="tags">Reviewer</a-tag>
+            </li>
+            <li>
+                <a-tag v-show="update['Admin']" class="tags">Admin</a-tag>
+            </li>
+            
+            
+            
+            
+        </ul>
+        
         <p>I want to be a </p>
        
 
@@ -175,6 +189,16 @@ import Antd from 'ant-design-vue'
     }
 </script>
 
-<style lang="scss" scoped>
-
+<style>
+.rolepage{
+    margin: 2vw;
+    height: auto;
+}
+.rolelist{
+    list-style-type: none;
+}
+.ant-card{
+    display: inline-block;
+    margin: 2vw;
+}
 </style>

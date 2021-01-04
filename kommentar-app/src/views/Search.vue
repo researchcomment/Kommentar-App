@@ -52,7 +52,6 @@
 
     </div>
 
-    <bottom></bottom>
 
   </div>
   
@@ -61,7 +60,6 @@
 <script>
 import searchBar from "@/components/Search/searchBar";
 import searchItem from "@/components/Search/searchItem";
-import bottom from '@/components/footer/bottom';
 import filterPopup from "@/components/Search/filterPopup";
 
 export default {
@@ -71,7 +69,6 @@ export default {
   components: {
     searchBar,
     searchItem,
-    bottom,
     filterPopup
   },
 

@@ -27,4 +27,5 @@ export default {
     margin-right: 2vh;
     margin-bottom: 0;
 }
+
 </style>

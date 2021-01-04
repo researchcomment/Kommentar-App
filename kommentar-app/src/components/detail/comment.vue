@@ -1,82 +1,101 @@
 <template>
-    <div>
-        <a-comment v-if="comment.active || isModerator ">
+    <div style="position:relative">
+        <a-comment v-if="comment.active || isModerator">
             <template slot="actions" >
                 <!-- the number of likes -->
                 <span key="comment-basic-like" class="action">
                     <a-tooltip title="Like">
-                    <a-icon type="like" :theme="action === 'liked' ? 'filled' : 'outlined'" @click="like"/>
+                    <a-icon type="like" :theme="action === 'liked' ? 'filled' : 'outlined'" @click="dis_like('like')"/>
                     </a-tooltip>
                     <span style="padding-left: '8px';cursor: 'auto'">
                         {{ comment.likes }}
                     </span>
                 </span>
-
-                <!-- the number of dislikes -->
+                    <!-- the number of dislikes -->
                 <span key="comment-basic-dislike" class="action">
                     <a-tooltip title="Dislike">
                     <a-icon
                         type="dislike"
                         :theme="action === 'disliked' ? 'filled' : 'outlined'"
-                        @click="dislike"
+                        @click="dis_like('dislike')"
+                        width="1.2vw" height="1.2vw"
                     />
                     </a-tooltip>
                     <span style="padding-left: '8px';cursor: 'auto'">
                     {{ comment.dislikes }}
                     </span>
                 </span>
+            
+             
+            <!-- Editing Options for Moderator : hide/unhide the comment -->
+                <div v-if = "(isModerator) && !(comment.type=='official')"  class="auactions" @click="setVisiblity" style="margin-right:0.7vw">
+                    <a-icon type="eye-invisible" v-if="comment.active"/>
+                    <a-icon type="eye" v-if="!comment.active"/>
+                </div>
 
+            <!-- Editing Options for Author -->
+                <div v-if = "isAuthor && !(comment.type=='official')" class="actionb" id="components-popover-demo-placement" :style="{whiteSpace: 'nowrap'}">
+                <!-- popfirm -->
+                    <a-popover placement="bottomLeft" v-model="visible" title="Options" trigger="click">
+                            
+                        <div slot="content">
+                            <div :class="inReview?'auactionstabu':'auactions'"  @click="askForRequest('Review')">Ask For Review</div>
 
-                <!-- Editing Options for Author -->
-                <div v-if = "isAuthor">
+                            <div :class="inRequest?'auactionstabu':'auactions'" v-if="isResearcher " @click="askForRequest('PID')">Ask For PermanentID</div>
+
+                            <div class="auactions"  @click="deleteComment">Delete <a-icon type="delete" theme="twoTone" two-tone-color="#eb2f96"/></div>
+                                
+                                <!-- Editing Options for Admin : hide/unhide the comment -->
+                                
+                        </div>
+                        <i class="iconfont icon-xiaoxiguanli-quanbux" @click="hide" style="cursor:pointer"></i>
+                    </a-popover>
                     
-                    <a-button type="dashed" v-if="!(comment.type=='official')" :disabled="inReview" @click="askForReview">Review</a-button>
-
-                    <a-button type="dashed"  v-if="(isResearcher) && (!(comment.type=='official'))"  :disabled="inRequest" @click="askForPID">Ask For PermanentID</a-button>
-
-                    <a-button :disabled="comment.type=='official'" icon="edit" @click="openEditor()">Editor</a-button>
+                </div>
                 
-                    <a-icon type="delete" v-if="!(comment.type=='official')" theme="twoTone" two-tone-color="#eb2f96"  @click="deleteComment" />
-               
-                </div>
-
-                <!-- Editing Options for Moderator : hide/unhide the comment -->
-                <div v-if = "isModerator && !(comment.type=='official')">
-                    <a-icon type="eye-invisible" v-if="comment.active" @click="setVisiblity"/>
-                    <a-icon type="eye" v-if="!comment.active" @click="setVisiblity"/>
-                </div>
             </template>
         
             <!-- the detail of this comment -->
-                
-                <!-- Author -->
-                <a slot="author">{{comment.author}}</a>
+            
+            <!-- Author -->
+            <a slot="author">{{comment.author}}</a>
 
-                <!-- Author picture -->  
-                <a-avatar slot="avatar" style="color: #f56a00; backgroundColor: #fde3cf">
-                    <p class="avatarp">{{authorfirst}}</p>
-                </a-avatar>
+            <!-- Author picture -->  
+            <a-avatar slot="avatar" style="color: #f56a00; backgroundColor: #fde3cf">
+                <p class="avatarp">{{authorfirst}}</p>
+            </a-avatar>
 
-                <!-- Comment -->
-                <p slot="content" v-if="!editorVisibility" v-html="comment.content"></p>
-
-                <!-- Editor for Comments -->
-                <div v-if="editorVisibility" slot="content"> 
-                    <quill-editor
-                    v-model="content"
-                    :options="editorOption"
-                    >
-                    </quill-editor>
-                    <a-button @click="editorRequest">Submit</a-button>
-                </div>
-                
-                <!-- time -->
-                <a-tooltip slot="datetime" >
-                    <span>{{ new Date(Date.parse(comment.createDate)).toLocaleString()}}</span>
-                </a-tooltip>        
-                
+            <!-- Comment -->
+            <p slot="content" v-if="!editorVisibility" v-html="comment.content" style="display:inline-block;margin-right:0.5vw"></p>
+            <div slot="content" v-if="!editorVisibility&&isAuthor" :style="comment.type=='official'?'display:none':'display:inline-block'" @click="openEditor()">
+                <a-icon type="edit" style="cursor:pointer"/>
+            </div>
+            <a-icon slot="content" type="up-circle" style="cursor:pointer" v-if="editorVisibility" @click="closeeditor()"/>
+            <!-- Editor for Comments -->
+            <div v-if="editorVisibility" slot="content" class="littleedit"> 
+                <quill-editor
+                v-model="content"
+                :options="editorOption"
+                >
+                </quill-editor>
+                <button @click="editorRequest()" >Submit</button>
+            </div>
+            
+            <!-- time -->
+            <a-tooltip slot="datetime" >
+                <span>{{ new Date(Date.parse(comment.createDate)).toLocaleString()}}</span>
+            </a-tooltip>        
+            
         </a-comment>   
-
+        <div  v-if="!comment.active" v-bind:style="{
+            width: '100%',
+            height: '100%',
+            position: 'absolute',
+            background: 'rgba(0,0,0,0.6)',
+            opacity: '0.6',
+            bottom: '0',
+            }">
+        </div>        
         
     </div>
 </template>
@@ -97,9 +116,10 @@ Vue.use(Antd)
             return {
                 action: null,
                 alreadySendLikes:false,    // Can't repeat likes 
-
+                buttonWidth: 10,
+                visible: false,
                 comment:this.commentFromParent, 
-
+                cansee:'none',
                 content:"",
                 editorVisibility:false,
                 editorOption: {    // style for quill-editor
@@ -114,23 +134,7 @@ Vue.use(Antd)
                             }
                 }, 
                
-               //! Sample Comment FOR TEST 
-               /* comment: {
-                    UID:"MAKAVIVZSVSDFSDF",    // UID for comment 
-                    PermanentID:"",    // '' or 'ASDASDAS'
-                    type:"unofficial",    // "official", "unofficial"
-                    status:{
-                        "Review":true,
-                        "PID":false
-                    },  
-                    active:true,    // the Admin can hide the comments
-                    author:this.commentFromParent.author,
-                    content:this.commentFromParent.content,    // the comment is in html form 
-                    createDate: "2020-12-12",
-                    likes: 0,
-                    dislikes: 0,
-                },   
-                */
+             
             };
         },
 
@@ -145,10 +149,7 @@ Vue.use(Antd)
 
             isResearcher(){
                 var login = this.$store.state.account.role;
-                if(login){
-                    return this.$store.state.account.role.includes("Researcher");
-                }
-                return false;
+                return login? login.includes("Researcher"):false;
             },
 
             isAuthor(){
@@ -175,7 +176,6 @@ Vue.use(Antd)
              * @returns {boolean}, true, if the user has already submitted a review request
              */
             inReview(){
-
                 // Duplicate application is prohibited
                 // in Reviewing => disable the Button
                 return this.comment.status["Review"] ;
@@ -197,42 +197,30 @@ Vue.use(Antd)
 
         methods: {
             /**
+             * 弹窗
+             */
+            hide() {
+                console.log(111);
+                this.visible = false;
+            },
+            /**
+             * ! 涉及后端交互
              * send review Request to firebase
              */
-            askForReview(){
+           
 
-                var request = {
+            askForRequest(request){
+                var result = this.$store.dispatch("askFromUser/askForRequest",{
                     uid:this.comment.key,
                     doi:this.comment.doi_nr,
-                    requestType:"Review",
-                }
-    
-                var result = this.$store.dispatch("askFromUser/askForRequest",request)
-                                                .catch(err => {
-                                                            console.log(err);
-                                                         });
+                    requestType:request,
+                })
+                .catch(err => {
+                    console.log(err);
+                });
                 
-                this.comment.status["Review"]=true;
+                this.comment.status[request]=true;
 
-            },
-
-            /**
-             * ask firebase for PermanentID
-             */
-            askForPID(){
-                
-                var request = {
-                    uid:this.comment.key,
-                    doi:this.comment.doi_nr,
-                    requestType:"PID",
-                }
-                
-                var result = this.$store.dispatch("askFromUser/askForRequest",request)
-                                                .catch(err => {
-                                                            alert.log(err);
-                                                         });
-
-                this.comment.status["PID"]=true;
             },
 
             /**
@@ -241,12 +229,11 @@ Vue.use(Antd)
             deleteComment(){
                 
                 this.deleted =true;
-                var request = {
+                
+                this.$store.dispatch("askFromUser/deleteComment",{
                     uid:this.comment.key,
                     doi:this.comment.doi_nr,
-                }
-                
-                this.$store.dispatch("askFromUser/deleteComment",request).then(()=>{
+                }).then(()=>{
                     this.$emit("refresh");
                 });
             
@@ -256,14 +243,14 @@ Vue.use(Antd)
              * send Editor Request to firebase
              */
             editorRequest(){
-                var request ={
+                this.$store.dispatch("askFromUser/setAttribute",{
                     uid:this.comment.key, 
                     doi:this.comment.doi_nr,
                     attribute:"content",
                     value:this.content,
-                }
-                this.$store.dispatch("askFromUser/setAttribute",request)
-                .then(()=>{                   
+                })
+                .then(()=>{
+                   
                    // Refresh the display, prompting success                   
                     this.$notification.open({
                         message: 'Success',
@@ -271,9 +258,9 @@ Vue.use(Antd)
                         'Your Request has been submitted.',
                         icon: <a-icon type="smile" style="color: #108ee9" />,
                     });  
+                    this.comment.content=this.content;
                     this.editorVisibility =false;
                     this.$emit("refresh");
-                    this.comment.content=this.content;   
                 })
                 .catch(err => {
                                 console.log(err);
@@ -282,43 +269,24 @@ Vue.use(Antd)
             },
            
             /**
-             * When the user clicks the like button, send like request to firebase
+             * When the user clicks the like or dislike button, send like or dislike request to firebase
+             * flag:"like"/"dislike"
              */
-            like() {
-                if(!this.alreadySendLikes){
-                    this.action = 'liked';
-                    this.alreadySendLikes =true;    // Can't repeat likes
-                    this.comment.likes += 1;
-                       
-                    var request = {
-                        uid:this.comment.key,
-                        doi:this.comment.doi_nr,
-                        attribute:"likes",
-                    };
 
-                    this.$store.dispatch("askFromUser/setAttribute",request);
-                                              
-                }
-                
-            },
-
-             /**
-             * When the user clicks the like button, send dislike request to firebase
-             */
-            dislike() {
+            dis_like(flag) {
                 if(!this.alreadySendLikes){
-                    this.action = 'disliked';
+                    this.action = flag+"d";
                     this.alreadySendLikes =true;    // Can't repeat dislikes
-                    this.comment.dislikes += 1;   
-                    
-                    var request = {
+                    if (flag=="like")
+                        this.comment.likes += 1;
+                    else
+                        this.comment.dislikes+=1;   
+
+                    this.$store.dispatch("askFromUser/setAttribute",{
                         uid:this.comment.key,
                         doi:this.comment.doi_nr,
-                        attribute:"dislikes",
-                    };
-
-                   this.$store.dispatch("askFromUser/setAttribute",request);
-
+                        attribute:flag+"s",
+                    });
                 }
             },
 
@@ -327,20 +295,20 @@ Vue.use(Antd)
              */
             setVisiblity(){
                 this.comment.active = !this.comment.active;
-                
-                var request = {
+                this.$store.dispatch("askFromUser/setAttribute",{
                         uid:this.comment.key,
                         doi:this.comment.doi_nr,
-                        attribute:"aktive",
+                        attribute:"active",
                         value:this.comment.active,
-                };
-                
-                this.$store.dispatch("askFromUser/setAttribute",request);
+                });
 
             },
 
             openEditor(){
                 this.content =this.comment.content;
+                this.editorVisibility = !this.editorVisibility;
+            },
+            closeeditor(){
                 this.editorVisibility = !this.editorVisibility;
             }
         },
@@ -373,5 +341,25 @@ Vue.use(Antd)
 }
 .ant-comment{
     z-index: 500;
+}
+.littleedit{
+    margin: 1vh 0;
+}
+.littleedit button{
+    margin-top: 2vh;
+}
+.ant-comment .ant-comment-actions{
+    margin: 0;
+}
+.ant-comment .ant-comment-content .ant-comment-content-detail p{
+    margin-bottom: 0;
+}
+.ant-comment .ant-comment-content .ant-comment-content-detail {
+    margin-bottom: 1vh;
+}
+.ant-comment .ant-comment-content .ant-comment-actions{
+    margin: 0;
+    margin-bottom: 2vw;
+    padding: 0;
 }
 </style>

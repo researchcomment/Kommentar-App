@@ -43,7 +43,7 @@ const router = new Router({
     },
     {
       path: '/Review',
-      name: 'reviewer',
+      name: 'review',
       component: Reviewer
     },
     {
