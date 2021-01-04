@@ -1,11 +1,12 @@
 <template>
-    <div>
-       
-        <a-layout id="components-layout-demo-custom-trigger">
-
-             <!-- Menu -->
-            <a-layout-sider v-model="collapsed" :trigger="null" collapsible>
-
+    <div class="mainadmin">
+    <a-layout style="height:95vh">
+        <a-layout-header style="display:none">
+            
+        </a-layout-header>
+        <a-layout>
+           <!-- Menu -->
+            <a-layout-sider width="20%">
                 <a-menu theme="dark" mode="inline" v-model="menuKey" >
 
                     <a-menu-item key="Researcher">
@@ -27,26 +28,25 @@
             </a-layout-sider>
 
             <!-- Contents -->
-            <a-layout >
-                <a-layout-header style="background: #fff; padding: 0">
+            <a-layout-content style="height:88vh,overflow:hidden">
+                <div style="background: #fff; padding: 0">
                     
-                    <a-icon
-                    class="trigger"
-                    :type="collapsed ? 'menu-unfold' : 'menu-fold'"
-                    @click="() => (collapsed = !collapsed)"
-                    />
+                    
                     <!-- Titel -->
-                    <span style="margin-top:5vh;margin-left:10vh;font-size:5vh">User Management</span>
+                    <span style="margin-top:2vh;margin-bottom:2vh;font-size:4vw;margin-left:2vw;font-weight:500">User Management</span>
 
-                </a-layout-header>
-
-                <a-layout-content
-                    :style="{ margin: '24px 16px', padding: '24px', background: '#fff', minHeight: '280px' }">
+                </div>
+                <!-- Filter -->
+                <div :style="{ margin: '2vh 1vw', padding: '0', background: '#fff',width:'76vw'}">
                     
-                    <h2>Update to {{menuKey[0]}}</h2>
+                    
+                    <h2 style="margin-top:2vh;margin-bottom:2vh;font-size:2vw;margin-left:1vw;font-weight:500">Update to {{menuKey[0]}}</h2>
 
                     <!-- Filter -->
-                    <input type="text" style="margin-left:10vh" v-model="searchText">
+                    <a-input ref="userNameInput" v-model="searchText" placeholder="Search user">
+                        <a-icon slot="prefix" type="user" />
+                    </a-input>
+                    
                 
                     <!-- Requests -->
                     <a-table  :data-source="filteredUserList[menuKey[0]]" rowKey="username"  >
@@ -74,10 +74,10 @@
                         </a-table-column>
                          
                     </a-table>
-
-                </a-layout-content>
-            </a-layout>
+                </div>
+            </a-layout-content>
         </a-layout>
+    </a-layout>
         
         <!-- Feedback -->
         <a-modal
@@ -93,11 +93,8 @@
             </quill-editor>
         </a-modal>
         
-        <div>
-            <bottom></bottom>
-        </div>
-    </div>
-    
+        
+    </div>  
 </template>
 
 <script>
@@ -307,35 +304,42 @@
 
 <style>
 /* searchinput style */
-.usersearch{
-    margin-left:10vh;
+#components-layout-demo-basic {
+  text-align: center;
 }
-/* userlist style */
-.userlists{
-    margin: 10vh;
-    border: 1px solid rgba(0,0,0,.125);
-    padding: 2vh;
-    border-radius: .25rem;
-
+#components-layout-demo-basic .ant-layout-header,
+#components-layout-demo-basic .ant-layout-footer {
+  background: #7dbcea;
+  color: #fff;
 }
-.userlists .mint-checklist .mint-cell .mint-cell-wrapper{
-  cursor: default;
-  background-image: none;
+#components-layout-demo-basic .ant-layout-footer {
+  line-height: 1.5;
 }
-.userlists .mint-checklist .mint-cell{
-  background-image: none;
+#components-layout-demo-basic .ant-layout-sider {
+  background: #3ba0e9;
+  color: #fff;
+  line-height: 120px;
+  min-width: 20vw;
 }
-.combtn{
-    display: block;
-    margin-left: 10vh;
-    margin-bottom: 5vh;
+#components-layout-demo-basic .ant-layout-content {
+  background: rgba(16, 142, 233, 1);
+  color: #fff;
 }
-#components-layout-demo-custom-trigger .trigger {
-  font-size: 18px;
-  line-height: 64px;
-  padding: 0 24px;
-  cursor: pointer;
-  transition: color 0.3s;
+#components-layout-demo-basic > .ant-layout {
+  margin-bottom: 48px;
 }
-
+#components-layout-demo-basic > .ant-layout:last-child {
+  margin: 0;
+}
+.mainadmin{
+    width: 99vw;
+    overflow: hidden;
+    white-space: nowrap;
+    min-height: 88vh;
+}
+.ant-input-affix-wrapper{
+    width: 20vw;
+    margin-left: 0.8vw;
+    margin-bottom: 1vw;
+}
 </style>

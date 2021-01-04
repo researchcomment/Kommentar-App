@@ -10,11 +10,11 @@
                 
                 <!-- Detail about this comment -->
                 <a-descriptions  bordered  :column="{ xxl: 4, xl: 3, lg: 3, md: 3, sm: 2, xs: 1 }">
-                    <a-descriptions-item label="Create Date">{{new Date(Date.parse(comment.createDate)).toLocaleString()}}</a-descriptions-item>
+                    <a-descriptions-item label="Update Date">{{new Date(Date.parse(comment.createDate)).toLocaleString()}}</a-descriptions-item>
                     <a-descriptions-item label="type">{{comment.type}}</a-descriptions-item>
                     
                     <a-descriptions-item label="Book Link">
-                        <p @click="seeDetail(comment.doi_nr)">{{comment.title}}</p>
+                        <p @click="seeDetail(comment.doi_nr)" style="cursor:point">{{comment.title}}</p>
                         <a :href="'https://dx.doi.org/'+ comment.doi_nr"  target="_blank">{{comment.doi_nr}}</a>
                     </a-descriptions-item>
 
@@ -202,13 +202,10 @@
              */
             deleteComment(comment){
                 
-                this.templateComment =JSON.parse(JSON.stringify(comment));
-                var request = {
-                    uid:this.templateComment.commitKey,
-                    doi:this.templateComment.doi_nr,
-                }
-                
-                this.$store.dispatch("askFromUser/deleteComment",request).then(()=>{
+                this.$store.dispatch("askFromUser/deleteComment",{
+                    uid:comment.commitKey,
+                    doi:comment.doi_nr,
+                }).then(()=>{
                     this.getCommentList();
                 });
             
@@ -236,19 +233,18 @@
              */
             openEditor(comment,index){
                 this.templateComment =JSON.parse(JSON.stringify(comment));
-                this.editorVisibility=[];
-                this.editorVisibility[index] = true;
+                if (this.editorVisibility[index])
+                    this.editorVisibility=[];
+                else
+                {
+                     this.editorVisibility=[];
+                    this.editorVisibility[index] = true;
+                }
             },
 
             relate(comment){
               
-                if(!this.searchDOI){
-                    return true;
-                }
-                else if( comment.doi_nr.includes(this.searchDOI)){ 
-                    return true
-                }
-                return false;
+                return (!this.searchDOI || comment.doi_nr.includes(this.searchDOI))? true:false;
             }
 
 

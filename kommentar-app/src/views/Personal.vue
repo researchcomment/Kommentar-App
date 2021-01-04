@@ -1,13 +1,14 @@
 <template>
     <div>
-        <h1>Personal Information</h1>
+        <div class="main">
+            <h1>Personal Information</h1>
         <p>
-            <b>Name:</b>
+            <b>Name: </b>
             <span>{{username}}</span>
         </p>
         
         <p>
-            <b>Role:</b>
+            <b>Role: </b>
             <a-tag v-for="tag in role" :key="tag" :color="getColor(tag)">{{ tag }}</a-tag>
         </p>
         
@@ -18,7 +19,7 @@
         
         <Role v-show="menu[0]=='role'"></Role>
         <CommentList v-show="menu[0]=='comments'" ></CommentList>
-        
+        </div>
 
     </div>
 </template>
@@ -26,7 +27,6 @@
 <script>
 import Role from "@/components/account/role";
 import CommentList from "@/components/account/commentList";
-
     export default {
         name: "personal",
         components: {
@@ -70,20 +70,12 @@ import CommentList from "@/components/account/commentList";
 
 
             getColor(tag){
-                if(tag=="default"){
-                    return "green";
-                }
-                else if(tag=="Researcher"){
-                    return "blue";
-                }
-                else if(tag=="Moderator"){
-                    return "orange";
-                }
-                else if(tag=="Reviewer"){
-                    return "purple";
-                }
-                else if(tag=="Admin"){
-                    return "red";
+                switch (tag) {
+                    case "Researcher": return "blue";
+                    case "Moderator":return "orange";  
+                    case "Reviewer":return "purple";
+                    case "Admin":return "red";
+                    default:return "green"
                 }
             }
         }
@@ -92,6 +84,9 @@ import CommentList from "@/components/account/commentList";
     }
 </script>
 
-<style lang="scss" scoped>
-
+<style>
+.main{
+    margin:3vw;
+    min-height: 88vh;
+}
 </style>
