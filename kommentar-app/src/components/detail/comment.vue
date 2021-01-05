@@ -78,7 +78,11 @@
                 :options="editorOption"
                 >
                 </quill-editor>
+<<<<<<< HEAD
                 <button @click="editorRequest" >Submit</button>
+=======
+                <button @click="editorRequest()" >Submit</button>
+>>>>>>> origin/main
             </div>
             
             <!-- time -->
@@ -258,9 +262,9 @@ Vue.use(Antd)
                         'Your Request has been submitted.',
                         icon: <a-icon type="smile" style="color: #108ee9" />,
                     });  
-                    this.$emit("refresh");
+                    this.comment.content=this.content;
                     this.editorVisibility =false;
-
+                    this.$emit("refresh");
                 })
                 .catch(err => {
                                 console.log(err);
