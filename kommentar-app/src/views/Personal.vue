@@ -9,7 +9,7 @@
         
         <p>
             <b>Role: </b>
-            <a-tag v-for="tag in role" :key="tag" :color="getColor(tag)">{{ tag }}</a-tag>
+            <a-tag v-for="tag in role" :key="tag" :color="getColor(tag)" style="margin:1vw 0.5vw">{{ tag }}</a-tag>
         </p>
         
         <a-menu v-model="menu" mode="horizontal">

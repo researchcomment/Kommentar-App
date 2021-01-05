@@ -1,7 +1,8 @@
 <template>
     <div>
         <!-- Filter -->
-        <a-input placeholder="DOI...."  v-model="searchDOI"/>
+        <h4 style="font-size:2vw;margin-top:1vh">Search Your Comment With DOI:</h4>
+        <a-input placeholder="DOI...."  v-model="searchDOI" style="width:40%;margin-top:0"/>
 
         <!-- List of Comments -->
         <a-list item-layout="vertical" size="large" :pagination="pagination" :data-source="commentList">
@@ -23,7 +24,7 @@
                         <a-tag  v-if="comment.status['PID']">PID</a-tag>
                     </a-descriptions-item>
 
-                    <a-descriptions-item label="New Request">
+                    <a-descriptions-item label="New Request" span=2>
                         
                         <!-- Review Request -->
                         <a-tag 
@@ -41,11 +42,24 @@
                             PID
                         </a-tag>
                     </a-descriptions-item>
+                    <a-descriptions-item label="Content" span=3>
+                        <p v-if="!editorVisibility[index]" v-html="comment.content"></p>
+                        <div v-if="editorVisibility[index]"> 
+                            <quill-editor
+                            v-model="templateComment.content"
+                            :options="editorOption"
+                            >
+                            </quill-editor>
+                            <a-button @click="editorRequest">Submit</a-button>
+                        </div>
 
+                        <a-button :disabled="comment.type=='official'" icon="edit" @click="openEditor(comment,index)" >Editor</a-button>
+                        <a-icon type="delete" v-if="!(comment.type=='official')" theme="twoTone" two-tone-color="#eb2f96"  @click="deleteComment(comment)" />
+                    </a-descriptions-item>
                 </a-descriptions>
 
-                <h2>Content</h2>
-                <p  v-if="!editorVisibility[index]" v-html="comment.content"></p>
+                <!-- <h2>Content</h2>
+                <p v-if="!editorVisibility[index]" v-html="comment.content"></p>
                 <div v-if="editorVisibility[index]"> 
                     <quill-editor
                     v-model="templateComment.content"
@@ -56,7 +70,7 @@
                 </div>
 
                 <a-button :disabled="comment.type=='official'" icon="edit" @click="openEditor(comment,index)" >Editor</a-button>
-                <a-icon type="delete" v-if="!(comment.type=='official')" theme="twoTone" two-tone-color="#eb2f96"  @click="deleteComment(comment)" />
+                <a-icon type="delete" v-if="!(comment.type=='official')" theme="twoTone" two-tone-color="#eb2f96"  @click="deleteComment(comment)" /> -->
 
             </a-list-item>
             
