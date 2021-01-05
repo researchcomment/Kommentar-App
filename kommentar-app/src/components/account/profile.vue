@@ -3,14 +3,14 @@
       <!-- Personal information -->
       <div @click="close" class="topbar">
         <div class="content">
-          <span class="iconfont icon-yonghu"></span>{{username}}
+          <a class="iconfont icon-yonghu"></a>{{username}}
         </div>
       </div>
       <ul class="fctlist">
 
         <!-- Admin -->
         <li v-show="isAdmin" @click="openRouter('admin')">
-          <span class="iconfont icon-biaoqiankuozhan_guanli-159"></span>
+          <i class="iconfont icon-biaoqiankuozhan_guanli-159"></i>
           <div class="texts">
             Admin
           </div>
@@ -18,7 +18,7 @@
 
         <!-- Reviewer -->
         <li v-show="isReviewer" @click="openRouter('review')">
-          <span class="iconfont icon-biaoqiankuozhan_guanli-159"></span>
+          <i class="iconfont icon-biaoqiankuozhan_guanli-159"></i>
           <div class="texts">
             Review
           </div>
@@ -26,7 +26,7 @@
 
         <!-- Personal Information -->
         <li  @click="openRouter('personal')">
-          <span class="iconfont icon-biaoqiankuozhan_guanli-159"></span>
+          <i class="iconfont icon-biaoqiankuozhan_guanli-159"></i>
           <div class="texts">
             Personal_info
           </div>
@@ -34,17 +34,18 @@
 
         <!-- MessageBox -->
         <li  @click="openRouter('messageBox')">
-         <span class="iconfont icon-youxiang"></span>
-              <div class="texts" >
-                <a-badge :count="Object.keys(Messagebox).length" >
-                  <p >Message</p>
-                </a-badge>
+          <i class="iconfont icon-youxiang"></i>
+            <a-badge :count="Object.keys(Messagebox).length" :color="volcano">
+              <div class="texts">
+                Message
               </div>
+            </a-badge>
+            
         </li>
 
         <!-- Logout -->
         <li @click="logout">
-          <span class="iconfont icon-tuichu5"></span>
+          <i class="iconfont icon-tuichu5"></i>
           <div class="texts">
             Logout
           </div>
@@ -152,7 +153,7 @@ export default {
   margin-right: auto;
   text-align: left;
 }
-.fctlist span{
+.fctlist i{
   font-size: 4vh;
   color:#76C06B;
   margin-left: 10px;
@@ -165,10 +166,6 @@ export default {
   font-size: 3vh;
   display: inline-block;
   vertical-align: middle;
-  width: 25vh;
-  overflow:hidden; 
-  text-overflow:ellipsis;
-  white-space:nowrap;
 }
 
 </style>

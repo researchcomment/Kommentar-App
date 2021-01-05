@@ -15,7 +15,7 @@
                     <a-descriptions-item label="type">{{comment.type}}</a-descriptions-item>
                     
                     <a-descriptions-item label="Book Link">
-                        <p @click="seeDetail(comment.doi_nr)" style="cursor:point">{{comment.title}}</p>
+                        <p @click="seeDetail(comment.doi_nr)" style="cursor:pointer;color:#1890ff">{{comment.title}}</p>
                         <a :href="'https://dx.doi.org/'+ comment.doi_nr"  target="_blank">{{comment.doi_nr}}</a>
                     </a-descriptions-item>
 
@@ -52,7 +52,7 @@
                             </quill-editor>
                             <a-button @click="editorRequest">Submit</a-button>
                         </div>
-
+                        <a-icon/>
                         <a-button :disabled="comment.type=='official'" icon="edit" @click="openEditor(comment,index)" >Editor</a-button>
                         <a-icon type="delete" v-if="!(comment.type=='official')" theme="twoTone" two-tone-color="#eb2f96"  @click="deleteComment(comment)" />
                     </a-descriptions-item>
