@@ -78,11 +78,7 @@
                 :options="editorOption"
                 >
                 </quill-editor>
-<<<<<<< HEAD
-                <button @click="editorRequest" >Submit</button>
-=======
                 <button @click="editorRequest()" >Submit</button>
->>>>>>> origin/main
             </div>
             
             <!-- time -->
