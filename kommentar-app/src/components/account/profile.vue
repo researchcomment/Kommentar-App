@@ -68,8 +68,8 @@ export default {
     role(){
       return this.$store.state.account.role;
     },
-    Messagebox()
-    {
+    
+    Messagebox(){
       return this.$store.state.account.Messagebox;
     },
 

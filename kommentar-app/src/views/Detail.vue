@@ -5,15 +5,21 @@
 
             <bookInfo :doi="doi" @setDetail="setDetail" style="margin-bottom:5vh"></bookInfo>
 
+
             <!-- Ranking/Filter -->
             <div style="margin: 5vh 10vw;">
                 <span @click="filterVisibility=!filterVisibility"><a-icon type="filter"/>  SORT BY</span>
-                <div v-show="filterVisibility">
-                    <p></p>
-                    <a-checkbox-group v-model="rank" name="Ranking" :options="rankOptions" @change="getComments"/>
-                    <p></p>
-                    <a-radio-group v-model="rankLike" :options="rankLikeOptions" default-value="latest"  @change="getComments" />
-                </div>
+               
+                <a-popover v-model="filterVisibility" placement="bottomLeft">
+                    <template slot="content">
+                        <div >
+                            <p></p>
+                            <a-checkbox v-model="filter" @change="getComments"> Only your own comments </a-checkbox>
+                            <p></p>
+                            <a-radio-group v-model="rank" :options="rankOptions" defaultValue="latest"  @change="getComments" />
+                        </div>
+                    </template>
+                </a-popover>
             </div>
 
             <!-- Official Comments -->
@@ -93,15 +99,15 @@
                 },
 
                 filterVisibility:false,
-                rank:[],
-                rankLike:[],
+                
+                filter:false,
+
+                rank:"latest",
                 rankOptions:[
-                    { label: 'Only your own comments', value: 'onlyfromCurrentUser' },
-                ],
-                rankLikeOptions:[
                     { label: 'Like', value: 'like' },
+                    { label: 'Dislike', value: 'dislike' },
                     { label: 'Latest', value: 'latest' },
-                    { label: 'History', value: 'history' },
+                    { label: 'History', value: 'history' }
                     ],
             }
         },
@@ -135,8 +141,13 @@
              */
             async getComments() { 
 
-                var rank = this.rank.concat(this.rankLike);
-            
+                var rank = [this.rank];
+                
+                if(this.filter){
+                    rank.push("onlyfromCurrentUser");
+                }
+                console.log(rank);
+
                 // open the loading-animation 
                 this.loading = true;
 
@@ -160,7 +171,7 @@
 
                this.$store.dispatch("commitwork/loadComments", 
                                                     {doi: this.doi, 
-                                                     rankType:this.rank,
+                                                     rankType:rank,
                                                      username: this.$store.state.account.username,
                                                      type:"unofficial"})
                                             .then((result)=>{
@@ -177,6 +188,8 @@
 
                 // close the loading-animation 
                 this.loading = false;
+
+               
 
             },
 

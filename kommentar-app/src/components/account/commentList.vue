@@ -30,7 +30,7 @@
                         <p @click="requestCancel('PID',comment)"  v-if="comment.status['PID']">
                             <a-tag >PID</a-tag>
                         </p>
-                        
+
                         <p v-if="comment.status['PID']||comment.status['Review']"> (Click to cancel)</p>
                         
                     </a-descriptions-item>
@@ -53,7 +53,7 @@
                     </a-descriptions-item>
                     
                     <a-descriptions-item label="Content" span=3>
-                        <p v-if="!editorVisibility[index]" v-html="comment.content"></p>
+                        <p v-if="!editorVisibility[index]" v-html="comment.content" class="ql-editor"></p>
                         <div v-if="editorVisibility[index]"> 
                             <quill-editor
                             v-model="templateComment.content"
@@ -102,9 +102,8 @@
                     modules:{
                         toolbar:[
                                 ['bold', 'italic', 'underline', 'strike'],    // toggled buttons
-                                ['blockquote', 'code-block'], 
-                                // [{ 'size': ['small', false, 'large', 'huge'] }], // front size
-                                [{ 'color': [] }],   // front color
+                                [{ 'font': [] }],  
+                                [{ 'color': [] }],   // font color
                                 ]
                             }
                 }, 

@@ -3,17 +3,6 @@ import axios from 'axios';
 import worklist from './worklist';
 
 const state = () => ({
-    /*
-    title: null,
-    author: null,
-    editor: null,
-    chair: null,
-    translator: null,
-    contributor: null,
-    bibliographic: null,
-    affiliation: null,
-    doi: null,
-    */
 
     commit_private: {
         data: [],
@@ -52,7 +41,6 @@ function settime(item) {
         if (datet) {
             //return datet[0] ? datet[1] ? datet[2] ? new Date(datet[0], datet[1], datet[2]) :
             //new Date(datet[0], datet[1]) : new Date(new Date().setFullYear(datet[0])) : null
-            //注：new Date() 只传年份，会自动转换为毫秒数
             return datet[0] ? datet[1] ? datet[0] + "-" + datet[1] : datet[0] : null;
         }
         //return new Date(datet[0], datet[1], datet[2]);
@@ -145,7 +133,6 @@ const actions = {
             user_id:userKey,
         }
         let doiKey=doi.replaceAll(".","'");
-        //在doi资料库中生成一个评论的key,并把key加入用户数据的comments项中
         //replace . as ' to use in key, it too slow to check all the database to find out the current doi
         
         let comments_key = firebase.database().ref('doi_repository/' + doiKey + '/comments').push(newComent).key;
@@ -168,7 +155,7 @@ const actions = {
      * @param doi
      * @param rankType
      *      Complete works : ['onlyfromCurrentUser',"history","latest","like"] 
-     *      "like" and "latest" and "history" will not appear at the same time
+     *      "like", "dislike", "latest" and "history" will not appear at the same time
      * @param username
      * @param type  - Type from comments - "official" or "unofficial"
      */

@@ -20,13 +20,13 @@
                             </a-descriptions-item>
                             
                             <a-descriptions-item label="Comments" >
-                            <p v-html="item.commentContent"></p>
+                            <p v-html="item.commentContent" class="ql-editor"></p>
                             </a-descriptions-item>
 
                         </a-descriptions>
                     
                         <b>Feedback:</b>
-                        <p v-html="item.feedbackContent"></p>
+                        <p v-html="item.feedbackContent" class="ql-editor"></p>
                        
                    </div>
 
@@ -35,7 +35,7 @@
                         <h2>Your Request about Update Role to {{item.toRole}}</h2>
                         <br>
                         <b>Feedback:</b>
-                        <p v-html="item.feedbackContent"></p>                       
+                        <p v-html="item.feedbackContent" class="ql-editor"></p>                       
                    </div>
                     
                 </a-card>

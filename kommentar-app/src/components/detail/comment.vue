@@ -2,38 +2,40 @@
     <div style="position:relative">
         <a-comment v-if="comment.active || isModerator">
             <template slot="actions" >
+                
                 <!-- the number of likes -->
                 <span key="comment-basic-like" class="action">
                     <a-tooltip title="Like">
-                    <a-icon type="like" :theme="action === 'liked' ? 'filled' : 'outlined'" @click="dis_like('like')"/>
+                        <a-icon type="like" :theme="action === 'liked' ? 'filled' : 'outlined'" @click="dis_like('like')"/>
                     </a-tooltip>
                     <span style="padding-left: '8px';cursor: 'auto'">
                         {{ comment.likes }}
                     </span>
                 </span>
-                    <!-- the number of dislikes -->
+                
+                <!-- the number of dislikes -->
                 <span key="comment-basic-dislike" class="action">
                     <a-tooltip title="Dislike">
-                    <a-icon
-                        type="dislike"
-                        :theme="action === 'disliked' ? 'filled' : 'outlined'"
-                        @click="dis_like('dislike')"
-                        width="1.2vw" height="1.2vw"
-                    />
+                        <a-icon
+                            type="dislike"
+                            :theme="action === 'disliked' ? 'filled' : 'outlined'"
+                            @click="dis_like('dislike')"
+                            width="1.2vw" height="1.2vw"
+                        />
                     </a-tooltip>
                     <span style="padding-left: '8px';cursor: 'auto'">
-                    {{ comment.dislikes }}
+                        {{ comment.dislikes }}
                     </span>
                 </span>
             
              
-            <!-- Editing Options for Moderator : hide/unhide the comment -->
+                <!-- Editing Options for Moderator : hide/unhide the comment -->
                 <div v-if = "(isModerator) && !(comment.type=='official')"  class="auactions" @click="setVisiblity" style="margin-right:0.7vw">
                     <a-icon type="eye-invisible" v-if="comment.active"/>
                     <a-icon type="eye" v-if="!comment.active"/>
                 </div>
 
-            <!-- Editing Options for Author -->
+                <!-- Editing Options for Author -->
                 <div v-if = "isAuthor && !(comment.type=='official')" class="actionb" id="components-popover-demo-placement" :style="{whiteSpace: 'nowrap'}">
                 <!-- popfirm -->
                     <a-popover placement="bottomLeft" v-model="visible" title="Options" trigger="click">
@@ -41,12 +43,10 @@
                         <div slot="content">
                             <div :class="inReview?'auactionstabu':'auactions'"  @click="askForRequest('Review')">Ask For Review</div>
 
-                            <div :class="inRequest?'auactionstabu':'auactions'" v-if="isResearcher " @click="askForRequest('PID')">Ask For PermanentID</div>
+                            <div :class="inRequest?'auactionstabu':'auactions'" v-if="isResearcher" @click="askForRequest('PID')">Make it Public</div>
 
                             <div class="auactions"  @click="deleteComment">Delete <a-icon type="delete" theme="twoTone" two-tone-color="#eb2f96"/></div>
-                                
-                                <!-- Editing Options for Admin : hide/unhide the comment -->
-                                
+  
                         </div>
                         <i class="iconfont icon-xiaoxiguanli-quanbux" @click="hide" style="cursor:pointer"></i>
                     </a-popover>
@@ -66,7 +66,7 @@
             </a-avatar>
 
             <!-- Comment -->
-            <p slot="content" v-if="!editorVisibility" v-html="comment.content" style="display:inline-block;margin-right:0.5vw"></p>
+            <p slot="content" v-if="!editorVisibility" v-html="comment.content" class="ql-editor" style="display:inline-block;margin-right:0.5vw"></p>
             <div slot="content" v-if="!editorVisibility&&isAuthor" :style="comment.type=='official'?'display:none':'display:inline-block'" @click="openEditor()">
                 <a-icon type="edit" style="cursor:pointer"/>
             </div>
@@ -127,9 +127,8 @@ Vue.use(Antd)
                     modules:{
                         toolbar:[
                                 ['bold', 'italic', 'underline', 'strike'],    // toggled buttons
-                                ['blockquote', 'code-block'], 
-                                // [{ 'size': ['small', false, 'large', 'huge'] }], // front size
-                                [{ 'color': [] }],   // front color
+                                [{ 'font': [] }],  
+                                [{ 'color': [] }],   // font color
                                 ]
                             }
                 }, 
@@ -176,21 +175,14 @@ Vue.use(Antd)
              * @returns {boolean}, true, if the user has already submitted a review request
              */
             inReview(){
-                // Duplicate application is prohibited
-                // in Reviewing => disable the Button
                 return this.comment.status["Review"] ;
-
             },
 
             /**
              * @returns {boolean}, true, if the user has already submitted a request for PID
              */
             inRequest(){
-                
-                // Duplicate application is prohibited
-                // already requested => disable the Button
-                return this.comment.status["PID"];
-                
+                return this.comment.status["PID"]; 
             },
 
         },
@@ -208,7 +200,11 @@ Vue.use(Antd)
              * send review Request to firebase
              */
             askForRequest(request){
-                var result = this.$store.dispatch("askFromUser/askForRequest",{
+                
+                var requestName = this.comment.status[request]?    // inReview/inRequest  => cancel the Reqeust
+                    "askFromUser/askForRequestCancel":"askFromUser/askForRequest";
+                
+                var result = this.$store.dispatch(requestName,{
                     uid:this.comment.key,
                     doi:this.comment.doi_nr,
                     requestType:request,
@@ -217,8 +213,7 @@ Vue.use(Antd)
                     console.log(err);
                 });
                 
-                this.comment.status[request]=true;
-
+                this.comment.status[request]=!this.comment.status[request];
             },
 
             /**
@@ -329,7 +324,6 @@ Vue.use(Antd)
     height: 5vh;
 }
 .auactionstabu{
-    pointer-events: none;
     height: 5vh;
     text-decoration: line-through;
 }

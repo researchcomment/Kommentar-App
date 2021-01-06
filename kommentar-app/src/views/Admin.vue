@@ -120,8 +120,7 @@
                     modules:{
                         toolbar:[
                                 ['bold', 'italic', 'underline', 'strike'],    // toggled buttons
-                                ['blockquote', ], 
-                                [{ 'color': [] }],   // front color
+                                [{ 'color': [] }],   // font color
                                 ]
                             }
                 }, 

@@ -39,9 +39,9 @@ export default {
                 modules:{
                     toolbar:[
                             ['bold', 'italic', 'underline', 'strike'],    // toggled buttons
-                            ['blockquote', 'code-block'], 
-                            // [{ 'size': ['small', false, 'large', 'huge'] }], // front size
-                            [{ 'color': [] }],   // front color
+                            [{ 'font': [] }], 
+                            [{ 'color': [] }],   // font color
+                             
                             ]
                         }} 
         };
