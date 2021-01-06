@@ -7,7 +7,7 @@
         <a-layout>
            <!-- Menu -->
             <a-layout-sider width="20%">
-                <a-menu theme="dark" mode="inline" v-model="menuKey" >
+                <a-menu theme="dark" mode="inline" v-model="menuKey">
 
                     <a-menu-item key="Researcher">
                         <span>default => Reseacher</span>
@@ -344,10 +344,12 @@
 .mainadmin .ant-table-thead tr th{
     padding: 2vw;
 }
-.mainadmin .ant-table-thead .ant-table-row-cell-last{
+.mainadmin .ant-table-body{
+    overflow-x: scroll;
 }
 .mainadmin .ant-table table{
     width: 76vw;
+    
 }
 .mainadmin .ant-table-tbody tr td{
     padding: 2vw;

@@ -99,5 +99,6 @@ body{
   color: #fff;
   margin-left: 2vh;
   cursor: pointer;
+  height: 7vh;
 }
 </style>
