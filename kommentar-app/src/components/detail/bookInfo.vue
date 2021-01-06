@@ -68,15 +68,6 @@
 </script>
 
 <style>
-    .details h2{
-        font-size: 4vh;
-    }
-     .details h3{
-        font-size: 3vh;
-    }
-    .details p{
-        font-size: 2.5vh;
-    }
     .details{
         margin-top: 5vh;
         margin-left: 10vw;
@@ -87,7 +78,7 @@
         word-break: break-all;
     }
     .workimg{
-        width: 30vw;
+        height: 20vw;
         top: 0vh;
         padding: 3vw;
         padding-right: 0;

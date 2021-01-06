@@ -87,7 +87,25 @@ export default {
       * Submit registration information to firebase
       */
       signUp(){
-        this.$store.dispatch('account/regist',this.form);
+        this.$store.dispatch('account/regist',this.form).then(()=>{
+          var error=this.$store.state.account.error;
+          
+          if(error){
+              this.$message({         
+                  type: 'error',
+                  message: error,
+                  duration: 3000
+              });
+          }
+          else{
+              this.$message({         
+                  type: 'success',
+                  message: "You have registered successfully. Welcome!",
+                  duration: 1000
+              });
+
+          }
+        })
       }
     }
 

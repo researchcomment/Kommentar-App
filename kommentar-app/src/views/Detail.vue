@@ -231,6 +231,11 @@
 }
 .ucomment .ant-list-item{
     border: none;
+    padding: 0;
+    margin-bottom: 2vw;
+}
+.ocommentli .ant-list-item{
+    border-bottom: none;
 }
 .ant-list-something-after-last-item .ant-spin-container > .ant-list-items > .ant-list-item:last-child{
     border-bottom: 0;

@@ -3,7 +3,10 @@
     <!-- <el-popover placement="bottom" trigger="click" v-model="visible">
       Your Account
     </el-popover> -->
-    <div class="iconyonghu" @click="popout"><span class="iconfont icon-yonghu"></span>{{username}}</div>
+    <a-badge :count="Object.keys(Messagebox).length" dot>
+      <div class="iconyonghu" @click="popout"><span class="iconfont icon-yonghu"></span>{{username}}</div>
+    </a-badge>
+    
     <mt-popup class="pop" v-model="visible" position="right" slot="reference">
          
         <profile class="prof" @logout="logout" :username="username"></profile>
@@ -25,6 +28,12 @@ export default {
     return {
       visible: false,
     };
+  },
+  computed:{
+    Messagebox()
+    {
+      return this.$store.state.account.Messagebox;
+    },
   },
   methods: {
     logout() {

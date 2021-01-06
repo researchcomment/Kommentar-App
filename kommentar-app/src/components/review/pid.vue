@@ -167,10 +167,10 @@
                 }
 
                 if(agree){
-                    reason = '<h2 style="color:green">Your Request of Permanent ID is accepted</h2>'+ reason;
+                    reason = '<h3 style="color:green">Your Request of Permanent ID is accepted</h2>'+ reason;
                 }
                 else{
-                    reason = '<h2 style="color:red">Your Request of Permanent ID is denied.</h2>'+ reason;
+                    reason = '<h3 style="color:red">Your Request of Permanent ID is denied.</h2>'+ reason;
                 }
 
                 var request = {

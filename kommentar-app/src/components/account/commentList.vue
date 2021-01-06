@@ -22,14 +22,14 @@
                     <a-descriptions-item label="Requests in Checking">
                         
                         <!-- Cancel Review Request -->
-                        <p @click="requestCancel('Review',comment)"   v-if="comment.status['Review']">
+                        <span  @click="requestCancel('Review',comment)"   v-if="comment.status['Review']">
                             <a-tag>Review</a-tag>
-                        </p>
+                        </span >
                         
                         <!-- Cancel PID Request -->
-                        <p @click="requestCancel('PID',comment)"  v-if="comment.status['PID']">
+                        <span  @click="requestCancel('PID',comment)"  v-if="comment.status['PID']">
                             <a-tag >PID</a-tag>
-                        </p>
+                        </span>
 
                         <p v-if="comment.status['PID']||comment.status['Review']"> (Click to cancel)</p>
                         
@@ -38,17 +38,17 @@
                     <a-descriptions-item label="New Request" span=2>
                         
                         <!-- Review Request -->
-                        <p v-if="!comment.status['Review']&&comment.type!='official'"  @click="newRequest('Review',comment)">
+                        <span v-if="!comment.status['Review']&&comment.type!='official'"  @click="newRequest('Review',comment)">
                             <a-tag color="cyan" >Review</a-tag>
-                        </p>
+                        </span >
                         
 
                         <!-- PID Request -->
-                        <p 
+                        <span  
                         v-if=" !comment.status['PID'] && role.includes('Researcher')&&comment.type!='official'" 
                         @click="newRequest('PID',comment)">
                             <a-tag color="cyan" >PID</a-tag>
-                        </p>
+                        </span >
                         
                     </a-descriptions-item>
                     
@@ -62,7 +62,7 @@
                             </quill-editor>
                             <a-button @click="editorRequest">Submit</a-button>
                         </div>
-                        <a-icon/>
+                        
                         <a-button :disabled="comment.type=='official'" icon="edit" @click="openEditor(comment,index)" >Editor</a-button>
                         <a-icon type="delete" v-if="!(comment.type=='official')" theme="twoTone" two-tone-color="#eb2f96"  @click="deleteComment(comment)" />
                     </a-descriptions-item>
@@ -169,7 +169,8 @@
                             'Your Request has been submitted.',
                             icon: <a-icon type="smile" style="color: #108ee9" />,
                         });  
-                        this.getCommentList();
+                        comment.status[request.requestType]=!comment.status[request.requestType];
+                        //this.getCommentList();
 
                     })
                 .catch(err => {
@@ -200,7 +201,8 @@
                             'Your Request has been submitted.',
                             icon: <a-icon type="smile" style="color: #108ee9" />,
                         });  
-                        this.getCommentList();
+                        comment.status[request.requestType]=!comment.status[request.requestType];
+                        //this.getCommentList();
 
                     })
                 .catch(err => {
@@ -280,7 +282,7 @@
                     this.editorVisibility=[];
                 else
                 {
-                     this.editorVisibility=[];
+                    this.editorVisibility=[];
                     this.editorVisibility[index] = true;
                 }
             },

@@ -151,8 +151,6 @@ import Antd from 'ant-design-vue'
     
         methods:{
 
-
-
             /**
              * send role request according to the click action 
              * @param role - the role which the user selects

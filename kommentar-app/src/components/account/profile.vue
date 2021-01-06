@@ -3,7 +3,7 @@
       <!-- Personal information -->
       <div @click="close" class="topbar">
         <div class="content">
-          <a class="iconfont icon-yonghu"></a>{{username}}
+          <i class="iconfont icon-yonghu"></i>{{username}}
         </div>
       </div>
       <ul class="fctlist">
@@ -149,7 +149,7 @@ export default {
   cursor: pointer;
 }
 .topbar .content{
-  margin-left: 4vh;
+  margin-left: 2vh;
   margin-right: auto;
   text-align: left;
 }
