@@ -149,7 +149,7 @@ export default {
   cursor: pointer;
 }
 .topbar .content{
-  margin-left: 4vh;
+  margin-left: 2vh;
   margin-right: auto;
   text-align: left;
 }
