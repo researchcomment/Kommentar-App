@@ -168,15 +168,27 @@
                         feedback_content:feedBack,
                         comment_content:comment.content,
                     };
-                    this.$store.dispatch("adminAktion/replyRequest",request).then(()=>{
-                        // Refresh the display, prompting success
+                    this.$store.dispatch("adminAktion/replyRequest",request).then((error)=>{
+                        
                         this.visibleFeedback = false;
-                        this.$notification.open({
-                            message: 'Success',
-                            description:
-                            'Your Feedback has been communicated.',
-                            icon: <a-icon type="smile" style="color: #108ee9" />,
-                        });   
+                        if(error){
+                            this.$notification.open({
+                                message: 'Warning',
+                                description:error,
+                                icon: <a-icon type="alert" style="color: #ff6666" />,
+                            });  
+                        }
+                        else{
+                            this.$notification.open({
+                                message: 'Success',
+                                description:
+                                'Your Feedback has been communicated.',
+                                icon: <a-icon type="smile" style="color: #108ee9" />,
+                            }); 
+
+                        }
+                        
+                          
 
                     });    
                   

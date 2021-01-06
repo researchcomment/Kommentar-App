@@ -31,7 +31,7 @@
                             <a-tag >PID</a-tag>
                         </span>
 
-                        <p v-if="comment.status['PID']||comment.status['Review']"> (Click to cancel)</p>
+                        <span v-if="comment.status['PID']||comment.status['Review']"> (Click to cancel)</span>
                         
                     </a-descriptions-item>
 

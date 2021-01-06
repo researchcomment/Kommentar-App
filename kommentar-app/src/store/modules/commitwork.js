@@ -154,19 +154,18 @@ const actions = {
      * 
      * @param doi
      * @param rankType
-     *      Complete works : ['onlyfromCurrentUser',"history","latest","like"] 
+     *      Complete works : ['onlyfromCurrentUser',"history","latest","like","dislike"] 
      *      "like", "dislike", "latest" and "history" will not appear at the same time
      * @param username
      * @param type  - Type from comments - "official" or "unofficial"
      */
     async loadComments({ commit, state }, { doi, rankType, username,type}) {
-
         let doiKey=doi.replaceAll(".","'");
         let commentsRef=firebase.database().ref('doi_repository/' + doiKey + '/comments');
         let userKey=null;
         if (firebase.auth().currentUser)
             userKey = firebase.auth().currentUser.uid;
-        return   commentsRef.orderByChild("type")
+        return commentsRef.orderByChild("type")
             .equalTo(type)
             .once('value')
             .then((snapshot) => {
@@ -183,15 +182,32 @@ const actions = {
                         )
                         
                     } 
-                    //sort with Created Date
-                    let timeFlag=1;
-                    if (rankType.includes("history")) timeFlag=-1;
-                 
-                    let newtmpvalue=tmpkeys.sort((a, b) => { 
-                            //sorted for eldest comment,for newest -1 timeFlag
-                            return timeFlag*(Date.parse(tmpvalue[b].createDate) - Date.parse(tmpvalue[a].createDate)); 
+                    if (rankType.includes("like"))
+                    {
+                        //sort with likes 
+                        tmpkeys=tmpkeys.sort((a, b) => { 
+                            return tmpvalue[b].likes - tmpvalue[a].likes; 
                         })
-                        .reduce(
+                    }
+                    if (rankType.includes("dislike"))
+                    {
+                        //sort with dislikes 
+                        tmpkeys=tmpkeys.sort((a, b) => { 
+                            return tmpvalue[b].dislikes - tmpvalue[a].dislikes; 
+                        })
+                    }
+                    if (rankType.includes("history") || rankType.includes("latest"))
+                    {
+                        //sort with Created Date history for oldest, latest for newest
+                        let timeFlag=1;
+                        if (rankType.includes("history")) timeFlag=-1;
+                        
+                        tmpkeys=tmpkeys.sort((a, b) => { 
+                                //sorted for eldest comment,for newest -1 timeFlag
+                                return timeFlag*(Date.parse(tmpvalue[b].createDate) - Date.parse(tmpvalue[a].createDate)); 
+                            })
+                    }
+                    let newtmpvalue=tmpkeys.reduce(
                             ( prev, curr ) =>  Object.assign(prev,
                                 {[curr]:tmpvalue[curr]}),new Object()
                         );

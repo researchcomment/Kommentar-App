@@ -88,6 +88,7 @@ export default {
       */
       signUp(){
         this.$store.dispatch('account/regist',this.form).then(()=>{
+          
           var error=this.$store.state.account.error;
           
           if(error){
@@ -101,7 +102,7 @@ export default {
               this.$message({         
                   type: 'success',
                   message: "You have registered successfully. Welcome!",
-                  duration: 1000
+                  duration: 3000
               });
 
           }
