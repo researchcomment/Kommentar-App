@@ -58,11 +58,7 @@
                 
                 <!-- Reviewer Card -->
                     
-<<<<<<< HEAD
                     <a-card hoverable style="width: 250px" v-if="!role.includes('Reviewer') && !update['Reviewer']"  @click="updateRole('Reviewer')">
-=======
-                    <a-card hoverable style="width: 250px" v-if="!role.includes('Researcher') && !update['Researcher']" @click="updateRole('Reviewer')">
->>>>>>> origin/jjy_szj/release
                         <img
                         slot="cover"
                         alt="example"
@@ -82,11 +78,7 @@
                     </a-card>
 
                 <!-- Moderator Card -->
-<<<<<<< HEAD
                     <a-card hoverable style="width: 250px" v-if="!role.includes('Moderator') && !update['Moderator']"  @click="updateRole('Moderator')">
-=======
-                    <a-card hoverable style="width: 250px" v-if="!role.includes('Researcher') && !update['Researcher']"  @click="updateRole('Moderator')">
->>>>>>> origin/jjy_szj/release
                         <img
                         slot="cover"
                         alt="example"
@@ -108,11 +100,7 @@
                     </a-card>
 
                 <!-- Admin Card -->
-<<<<<<< HEAD
                     <a-card hoverable style="width: 250px" v-if="!role.includes('Admin') && !update['Admin']"   @click="updateRole('Admin')">
-=======
-                    <a-card hoverable style="width: 250px" v-if="!role.includes('Researcher') && !update['Researcher']" @click="updateRole('Admin')">
->>>>>>> origin/jjy_szj/release
                         <img
                         slot="cover"
                         alt="example"
