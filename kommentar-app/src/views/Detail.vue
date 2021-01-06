@@ -12,7 +12,7 @@
                     <p></p>
                     <a-checkbox-group v-model="rank" name="Ranking" :options="rankOptions" @change="getComments"/>
                     <p></p>
-                    <a-radio-group v-model="rankLike" :options="rankLikeOptions" @change="getComments" />
+                    <a-radio-group v-model="rankLike" :options="rankLikeOptions" default-value="latest"  @change="getComments" />
                 </div>
             </div>
 
@@ -97,11 +97,11 @@
                 rankLike:[],
                 rankOptions:[
                     { label: 'Only your own comments', value: 'onlyfromCurrentUser' },
-                    { label: 'History', value: 'history' },
-                    ],
+                ],
                 rankLikeOptions:[
                     { label: 'Like', value: 'like' },
-                    { label: 'Dislike', value: 'dislike' }
+                    { label: 'Latest', value: 'latest' },
+                    { label: 'History', value: 'history' },
                     ],
             }
         },
