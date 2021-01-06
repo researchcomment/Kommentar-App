@@ -3,17 +3,6 @@ import axios from 'axios';
 import worklist from './worklist';
 
 const state = () => ({
-    /*
-    title: null,
-    author: null,
-    editor: null,
-    chair: null,
-    translator: null,
-    contributor: null,
-    bibliographic: null,
-    affiliation: null,
-    doi: null,
-    */
 
     commit_private: {
         data: [],
@@ -52,7 +41,6 @@ function settime(item) {
         if (datet) {
             //return datet[0] ? datet[1] ? datet[2] ? new Date(datet[0], datet[1], datet[2]) :
             //new Date(datet[0], datet[1]) : new Date(new Date().setFullYear(datet[0])) : null
-            //注：new Date() 只传年份，会自动转换为毫秒数
             return datet[0] ? datet[1] ? datet[0] + "-" + datet[1] : datet[0] : null;
         }
         //return new Date(datet[0], datet[1], datet[2]);
@@ -145,7 +133,6 @@ const actions = {
             user_id:userKey,
         }
         let doiKey=doi.replaceAll(".","'");
-        //在doi资料库中生成一个评论的key,并把key加入用户数据的comments项中
         //replace . as ' to use in key, it too slow to check all the database to find out the current doi
         
         let comments_key = firebase.database().ref('doi_repository/' + doiKey + '/comments').push(newComent).key;
@@ -159,15 +146,27 @@ const actions = {
            
     },
 
-    //load comments for work from realtime Database
+    //
+
+
+    /**
+     * load comments for work from realtime Database
+     * 
+     * @param doi
+     * @param rankType
+     *      Complete works : ['onlyfromCurrentUser',"history","latest","like","dislike"] 
+     *      "like", "dislike", "latest" and "history" will not appear at the same time
+     * @param username
+     * @param type  - Type from comments - "official" or "unofficial"
+     */
     async loadComments({ commit, state }, { doi, rankType, username,type}) {
-        //rankType: ['onlyfromCurrentUser',"history","latest"] 
+       
         let doiKey=doi.replaceAll(".","'");
         let commentsRef=firebase.database().ref('doi_repository/' + doiKey + '/comments');
         let userKey=null;
         if (firebase.auth().currentUser)
             userKey = firebase.auth().currentUser.uid;
-        return   commentsRef.orderByChild("type")
+        return commentsRef.orderByChild("type")
             .equalTo(type)
             .once('value')
             .then((snapshot) => {
@@ -184,15 +183,32 @@ const actions = {
                         )
                         
                     } 
-                    //sort with Created Date
-                    let timeFlag=1;
-                    if (rankType.includes("history")) timeFlag=-1;
-                 
-                    let newtmpvalue=tmpkeys.sort((a, b) => { 
-                            //sorted for eldest comment,for newest -1 timeFlag
-                            return timeFlag*(Date.parse(tmpvalue[b].createDate) - Date.parse(tmpvalue[a].createDate)); 
+                    if (rankType.includes("like"))
+                    {
+                        //sort with likes 
+                        tmpkeys=tmpkeys.sort((a, b) => { 
+                            return tmpvalue[b].likes - tmpvalue[a].likes; 
                         })
-                        .reduce(
+                    }
+                    if (rankType.includes("dislike"))
+                    {
+                        //sort with dislikes 
+                        tmpkeys=tmpkeys.sort((a, b) => { 
+                            return tmpvalue[b].dislikes - tmpvalue[a].dislikes; 
+                        })
+                    }
+                    if (rankType.includes("history") || rankType.includes("latest"))
+                    {
+                        //sort with Created Date history for oldest, latest for newest
+                        let timeFlag=1;
+                        if (rankType.includes("history")) timeFlag=-1;
+                        
+                        tmpkeys=tmpkeys.sort((a, b) => { 
+                                //sorted for eldest comment,for newest -1 timeFlag
+                                return timeFlag*(Date.parse(tmpvalue[b].createDate) - Date.parse(tmpvalue[a].createDate)); 
+                            })
+                    }
+                    let newtmpvalue=tmpkeys.reduce(
                             ( prev, curr ) =>  Object.assign(prev,
                                 {[curr]:tmpvalue[curr]}),new Object()
                         );

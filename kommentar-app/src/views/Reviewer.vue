@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="main">
         <a-menu v-model="current" mode="horizontal">
             <a-menu-item key="feedback"> <a-icon type="mail" />Feedback </a-menu-item>
             <a-menu-item key="pid" > <a-icon type="appstore" />PID </a-menu-item>

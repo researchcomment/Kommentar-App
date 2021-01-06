@@ -7,7 +7,7 @@
         <a-layout>
            <!-- Menu -->
             <a-layout-sider width="20%">
-                <a-menu theme="dark" mode="inline" v-model="menuKey" >
+                <a-menu theme="dark" mode="inline" v-model="menuKey">
 
                     <a-menu-item key="Researcher">
                         <span>default => Reseacher</span>
@@ -49,13 +49,13 @@
                     
                 
                     <!-- Requests -->
-                    <a-table  :data-source="filteredUserList[menuKey[0]]" rowKey="username"  >
+                    <a-table  :data-source="filteredUserList[menuKey[0]]" rowKey="username">
                           
                         <!-- User Name -->
-                        <a-table-column key="username" title="User Name" data-index="username" />
+                        <a-table-column key="username" title="User Name" data-index="username" width="10vw"/>
                         
                         <!-- Role -->
-                        <a-table-column key="role" title="Role" data-index="role">
+                        <a-table-column key="role" title="Role" data-index="role" width="10vw">
                             <template slot-scope="role">
                                 <span>
                                     <a-tag v-for="tag in role" :key="tag" :color="getColor(tag)">{{ tag }}</a-tag>
@@ -67,12 +67,11 @@
                         <a-table-column key="update" title="Update">
                             <template slot-scope="text, user">
                                 <span>
-                                    <a-button type="dashed" icon="check" @click="openEditor(true,user)">Agree</a-button>
-                                    <a-button type="dashed" icon="close" @click="openEditor(false,user)">Refuse</a-button>
+                                    <a-button type="dashed" icon="check" @click="openEditor(true,user)" style="display:block;margin-bottom:1vw;padding:0 2vw">Agree</a-button>
+                                    <a-button type="dashed" icon="close" @click="openEditor(false,user)" style="display:block;padding:0 2vw">Refuse</a-button>
                                 </span>
                             </template>
                         </a-table-column>
-                         
                     </a-table>
                 </div>
             </a-layout-content>
@@ -121,8 +120,7 @@
                     modules:{
                         toolbar:[
                                 ['bold', 'italic', 'underline', 'strike'],    // toggled buttons
-                                ['blockquote', ], 
-                                [{ 'color': [] }],   // front color
+                                [{ 'color': [] }],   // font color
                                 ]
                             }
                 }, 
@@ -238,10 +236,10 @@
                 }
 
                 if(this.agree){
-                    reason = '<h2 style="color:green">Your Request of Update-Role is accepted</h2>'+ reason;
+                    reason = '<h3 style="color:green">Your Request of Update-Role is accepted</h2>'+ reason;
                 }
                 else{
-                    reason = '<h2 style="color:red">Your Request of Update-Role is denied.</h2>'+ reason;
+                    reason = '<h3 style="color:red">Your Request of Update-Role is denied.</h2>'+ reason;
                 }
                 
                 var request = {toRole:role,
@@ -249,7 +247,23 @@
                                  userKey:this.tmpUser.key,
                                   feedback_content:reason,}
             
-                this.$store.dispatch("adminAktion/updateRole",request).then(()=>{
+                this.$store.dispatch("adminAktion/updateRole",request).then((error)=>{
+                    if(error){
+                        this.$notification.open({
+                            message: 'Warning',
+                            description:error,
+                            icon: <a-icon type="alert" style="color: #ff6666" />,
+                        });  
+                    }
+                    else{
+                        this.$notification.open({
+                            message: 'Success',
+                            description:
+                            'Your evaluation has been communicated.',
+                            icon: <a-icon type="smile" style="color: #108ee9" />,
+                        }); 
+
+                    }
                     this.handleCancel();
                     this.getUserList(role);
                 }).catch((err)=>{console.log(err)})
@@ -337,9 +351,37 @@
     white-space: nowrap;
     min-height: 88vh;
 }
-.ant-input-affix-wrapper{
-    width: 20vw;
+.mainadmin .ant-input-affix-wrapper{
+    width: 30vw;
     margin-left: 0.8vw;
     margin-bottom: 1vw;
+}
+.mainadmin .ant-table-thead tr th{
+    padding: 2vw;
+}
+.mainadmin .ant-table-body{
+    overflow-x: scroll;
+}
+.mainadmin .ant-table table{
+    width: 76vw;
+    
+}
+.mainadmin .ant-table-tbody tr td{
+    padding: 2vw;
+    
+    
+}
+.mainadmin .ant-table-tbody .ant-table-row-cell-break-word{
+    width: 5vw;
+    white-space:nowrap; 
+    overflow:hidden; 
+    text-overflow:ellipsis;
+}
+.mainadmin .ant-table-tbody .ant-tag{
+    display: block;
+    margin-top: 1vw;
+}
+.mainadmin .ant-table-pagination.ant-pagination{
+    margin: 2vw 1vw;
 }
 </style>

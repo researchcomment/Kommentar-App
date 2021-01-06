@@ -76,7 +76,7 @@ body{
   position:relative;
   float: right;
   width: auto;
-  height: 50px;
+  height: 7vh;
   margin-right: 2vh;
 }
 
@@ -99,5 +99,6 @@ body{
   color: #fff;
   margin-left: 2vh;
   cursor: pointer;
+  height: 7vh;
 }
 </style>

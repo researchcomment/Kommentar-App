@@ -10,9 +10,9 @@
         <h3 class="formtitle">Welcome!</h3>
 
         <!-- Form Body -->
-        <mt-field class="fieldarea" label="Username" placeholder="Enter your E-Mail" v-model="form.username"></mt-field>
-        <mt-field class="fieldarea" label="Password" placeholder="Enter a password" v-model="form.password"></mt-field>
-        <mt-field class="fieldarea" label="Confirm Password" placeholder="Comfirm your password"  v-model="form.passwordComfirm"></mt-field>
+        <mt-field class="fieldarea" label="Username" placeholder="Enter your E-Mail" v-model="form.username"/>
+        <mt-field class="fieldarea" label="Password" placeholder="Enter a password" v-model="form.password"/>
+        <mt-field class="fieldarea" label="Confirm Password" placeholder="Comfirm your password"  v-model="form.passwordComfirm"/>
         <span style="color:red;margin-left:6%;" v-show="passwordNotMatch">Does not match password</span>
         
         <!-- Button -->
@@ -87,7 +87,26 @@ export default {
       * Submit registration information to firebase
       */
       signUp(){
-        this.$store.dispatch('account/regist',this.form);
+        this.$store.dispatch('account/regist',this.form).then(()=>{
+          
+          var error=this.$store.state.account.error;
+          
+          if(error){
+              this.$message({         
+                  type: 'error',
+                  message: error,
+                  duration: 3000
+              });
+          }
+          else{
+              this.$message({         
+                  type: 'success',
+                  message: "You have registered successfully. Welcome!",
+                  duration: 3000
+              });
+
+          }
+        })
       }
     }
 

@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="fb">
         <!-- List of Comments -->
         <a-list item-layout="vertical" size="large" :pagination="pagination" :data-source="commentList" >
                  
@@ -8,12 +8,12 @@
                 <!-- About Author -->
                 <a-list-item-meta>
                     <!-- Author -->
-                    <a slot="title">{{ comment.author }}</a>
+                    <div slot="title">{{ comment.author }}</div>
                     
                     <!-- Author picture -->  
                     <a-avatar slot="avatar" style="color: #f56a00; backgroundColor: #fde3cf">
-                        <p class="avatarp">{{comment.author[0]}}</p>
-                     </a-avatar>     
+                        <p>{{comment.author[0]}}</p>
+                    </a-avatar>     
                 </a-list-item-meta>
                 
                 <!-- Detail about this comment -->
@@ -22,7 +22,7 @@
                     <a-descriptions-item label="type">{{comment.type}}</a-descriptions-item>
                     
                     <a-descriptions-item label="Book Link">
-                        <p @click="seeDetail(comment.doi_nr)">{{comment.title}}</p>
+                        <p style="cursor:pointer;color:#1890ff" @click="seeDetail(comment.doi_nr)">{{comment.title}}</p>
                         <a :href="'https://dx.doi.org/'+ comment.doi_nr"  target="_blank">{{comment.doi_nr}}</a>
                     </a-descriptions-item>
 
@@ -43,11 +43,11 @@
                     </a-descriptions-item>
 
                     <a-descriptions-item label="Request">
-                        <a-tag color="cyan" @click="openEditor(comment)">Review</a-tag>
+                        <a-tag style="cursor:pointer" color="cyan" @click="openEditor(comment)">Review</a-tag>
                     </a-descriptions-item>
 
                     <a-descriptions-item label="Content">
-                       <p v-html="comment.content"></p>
+                       <p v-html="comment.content" class="ql-editor"></p>
                     </a-descriptions-item>
 
                 </a-descriptions>
@@ -68,7 +68,7 @@
             @cancel="handleCancel"
             >
             <b>Original Content</b>
-            <p v-html="templateComment.content"></p>
+            <p v-html="templateComment.content" class="ql-editor"></p>
 
             <!-- Input -->
             <quill-editor
@@ -99,8 +99,8 @@
                     modules:{
                         toolbar:[
                                 ['bold', 'italic', 'underline', 'strike'],    // toggled buttons
-                                ['blockquote', ], 
-                                [{ 'color': [] }],   // front color
+                                [{ 'font': [] }],  
+                                [{ 'color': [] }],   // font color
                                 ]
                             }
                 }, 
@@ -168,15 +168,27 @@
                         feedback_content:feedBack,
                         comment_content:comment.content,
                     };
-                    this.$store.dispatch("adminAktion/replyRequest",request).then(()=>{
-                        // Refresh the display, prompting success
+                    this.$store.dispatch("adminAktion/replyRequest",request).then((error)=>{
+                        
                         this.visibleFeedback = false;
-                        this.$notification.open({
-                            message: 'Success',
-                            description:
-                            'Your Feedback has been communicated.',
-                            icon: <a-icon type="smile" style="color: #108ee9" />,
-                        });   
+                        if(error){
+                            this.$notification.open({
+                                message: 'Warning',
+                                description:error,
+                                icon: <a-icon type="alert" style="color: #ff6666" />,
+                            });  
+                        }
+                        else{
+                            this.$notification.open({
+                                message: 'Success',
+                                description:
+                                'Your Feedback has been communicated.',
+                                icon: <a-icon type="smile" style="color: #108ee9" />,
+                            }); 
+
+                        }
+                        
+                          
 
                     });    
                   
@@ -222,8 +234,8 @@
 </script>
 
 <style>
-.avatarp{
-    font-size: 2.5vw;
-    line-height: 4.4vw;
+.fb .ant-list-item-meta-avatar .ant-avatar-string p{
+    font-size: 16px;
+    line-height: 30px;
 }
 </style>

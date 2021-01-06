@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="mainmess">
 
         <div v-if="Object.keys(Messagebox).length==0"> Your have no Message</div>
         <div v-for="(item,key) in Messagebox" v-bind:key="key" style="background:#ECECEC; padding:10px">
@@ -15,18 +15,18 @@
                        <h2>Your Request for FeedBack</h2>
                         <a-descriptions  title="Comment Info" :column="1" >
                         
-                            <a-descriptions-item label="Book Link">
-                                <p @click="seeDetail(item.doi_nr)">{{item.doi_nr}}</p>
+                            <a-descriptions-item label="Go to this Book">
+                                <p @click="seeDetail(item.doi_nr)" style="color:#76C06B;cursor:pointer;text-decoration: underline">{{item.doi_nr}}</p>
                             </a-descriptions-item>
                             
-                            <a-descriptions-item label="Comments" >
-                            <p v-html="item.commentContent"></p>
+                            <a-descriptions-item label="Your Comments" >
+                            <p v-html="item.commentContent"  class="ql-editor"></p>
                             </a-descriptions-item>
 
                         </a-descriptions>
                     
                         <b>Feedback:</b>
-                        <p v-html="item.feedbackContent"></p>
+                        <p v-html="item.feedbackContent" class="ql-editor"></p>
                        
                    </div>
 
@@ -35,7 +35,7 @@
                         <h2>Your Request about Update Role to {{item.toRole}}</h2>
                         <br>
                         <b>Feedback:</b>
-                        <p v-html="item.feedbackContent"></p>                       
+                        <p v-html="item.feedbackContent" class="ql-editor"></p>                       
                    </div>
                     
                 </a-card>
@@ -86,6 +86,13 @@
     }
 </script>
 
-<style lang="scss" scoped>
-
+<style>
+.mainmess{
+    min-height: 88vh;
+    background-color: #ECECEC;
+}
+.mainmess .ant-card-body{
+    height: auto;
+    overflow: hidden;
+}
 </style>

@@ -3,7 +3,7 @@
 
         <div class="login1" @click="dialogFormVisible=true">
             Login
-            <span class="iconfont icon-denglu" style="font-size: inherit"></span>
+            <span class="iconfont icon-denglu" style="font-size: inherit"/>
         </div>
 
         <!-- Login Form -->
