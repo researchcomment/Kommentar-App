@@ -3,7 +3,7 @@
       <!-- Personal information -->
       <div @click="close" class="topbar">
         <div class="content">
-          <a class="iconfont icon-yonghu"></a>{{username}}
+          <i class="iconfont icon-yonghu"></i>{{username}}
         </div>
       </div>
       <ul class="fctlist">
