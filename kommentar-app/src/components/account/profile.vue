@@ -35,7 +35,7 @@
         <!-- MessageBox -->
         <li  @click="openRouter('messageBox')">
           <i class="iconfont icon-youxiang"></i>
-            <a-badge :count="Object.keys(Messagebox).length" :color="volcano">
+            <a-badge :count="Object.keys(Messagebox).length">
               <div class="texts">
                 Message
               </div>
