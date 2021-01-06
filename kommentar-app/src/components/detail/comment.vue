@@ -203,12 +203,10 @@ Vue.use(Antd)
                 console.log(111);
                 this.visible = false;
             },
+            
             /**
-             * ! 涉及后端交互
              * send review Request to firebase
              */
-           
-
             askForRequest(request){
                 var result = this.$store.dispatch("askFromUser/askForRequest",{
                     uid:this.comment.key,
@@ -270,9 +268,8 @@ Vue.use(Antd)
            
             /**
              * When the user clicks the like or dislike button, send like or dislike request to firebase
-             * flag:"like"/"dislike"
+             * @param: flag  -"like"/"dislike"
              */
-
             dis_like(flag) {
                 if(!this.alreadySendLikes){
                     this.action = flag+"d";

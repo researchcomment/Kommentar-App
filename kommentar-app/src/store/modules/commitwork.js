@@ -159,9 +159,22 @@ const actions = {
            
     },
 
-    //load comments for work from realtime Database
+    //
+
+
+    /**
+     * load comments for work from realtime Database
+     * 
+     * @param doi
+     * @param rankType
+     *      Complete works : ['onlyfromCurrentUser',"history","latest","dislike","like"] 
+     *      "like" and "dislike" will not appear at the same time
+     *      "history" and "latest" will not appear at the same time  
+     * @param username
+     * @param type  - Type from comments - "official" or "unofficial"
+     */
     async loadComments({ commit, state }, { doi, rankType, username,type}) {
-        //rankType: ['onlyfromCurrentUser',"history","latest"] 
+
         let doiKey=doi.replaceAll(".","'");
         let commentsRef=firebase.database().ref('doi_repository/' + doiKey + '/comments');
         let userKey=null;

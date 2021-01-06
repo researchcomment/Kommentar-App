@@ -5,13 +5,16 @@
 
             <bookInfo :doi="doi" @setDetail="setDetail" style="margin-bottom:5vh"></bookInfo>
 
-            <!-- Ranking -->
+            <!-- Ranking/Filter -->
             <div style="margin: 5vh 10vw;">
-                <a-icon type="filter"/>
-                <a-checkbox-group v-model="rank" name="Ranking" :options="rankOptions" @change="getComments"/>
+                <span @click="filterVisibility=!filterVisibility"><a-icon type="filter"/>  SORT BY</span>
+                <div v-show="filterVisibility">
+                    <p></p>
+                    <a-checkbox-group v-model="rank" name="Ranking" :options="rankOptions" @change="getComments"/>
+                    <p></p>
+                    <a-radio-group v-model="rankLike" :options="rankLikeOptions" @change="getComments" />
+                </div>
             </div>
-            
-
 
             <!-- Official Comments -->
             <div class="ocomment" >
@@ -88,10 +91,17 @@
                 paginationUnOfficial: {
                     pageSize: 5,
                 },
+
+                filterVisibility:false,
                 rank:[],
+                rankLike:[],
                 rankOptions:[
                     { label: 'Only your own comments', value: 'onlyfromCurrentUser' },
                     { label: 'History', value: 'history' },
+                    ],
+                rankLikeOptions:[
+                    { label: 'Like', value: 'like' },
+                    { label: 'Dislike', value: 'dislike' }
                     ],
             }
         },
@@ -122,9 +132,10 @@
 
             /**
              * Request comment content from the backend
-             * 
              */
-            async getComments() {    
+            async getComments() { 
+
+                var rank = this.rank.concat(this.rankLike);
             
                 // open the loading-animation 
                 this.loading = true;
@@ -132,7 +143,7 @@
                 // send request
                 this.$store.dispatch("commitwork/loadComments", 
                                                     {doi: this.doi, 
-                                                     rankType:this.rank,    //  rankType:"time",
+                                                     rankType:rank,    //  rankType:["like",...],
                                                      username: this.$store.state.account.username,
                                                      type:"official"})
                                             .then((result)=>{
