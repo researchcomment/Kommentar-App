@@ -184,14 +184,25 @@
                 };
                     
                 //send Request to firebase  
-                this.$store.dispatch("adminAktion/replyRequest",request).then(()=>{
+                this.$store.dispatch("adminAktion/replyRequest",request).then((error)=>{
                     this.visiblePID = false;
-                    this.$notification.open({
-                        message: 'Success',
-                        description:
-                        'Your evaluation has been communicated.',
-                        icon: <a-icon type="smile" style="color: #108ee9" />,
-                    });
+                    if(error){
+                            this.$notification.open({
+                                message: 'Warning',
+                                description:error,
+                                icon: <a-icon type="alert" style="color: #ff6666" />,
+                            });  
+                    }
+                    else{
+                        this.$notification.open({
+                            message: 'Success',
+                            description:
+                            'Your evaluation has been communicated.',
+                            icon: <a-icon type="smile" style="color: #108ee9" />,
+                        });
+
+                    }
+                    
 
                 });
 
