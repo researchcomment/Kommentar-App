@@ -50,7 +50,7 @@ const actions = {
                 }
             }
             else 
-                return "This UpdateRequest is already answered by another Moderator, your operation is failed"
+                return "This UpdateRequest is already answered by another App-Admin, your operation is failed"
         }).catch((error) => {
             //for debug only, will be finished later
             console.log(error.message);
