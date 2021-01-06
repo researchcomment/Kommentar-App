@@ -7,7 +7,6 @@ const state = () => ({
 
 const getters = {}
 const actions = {
-    
 
     //requestType is Review/PID
     async askForRequest({ commit, state,dispatch }, { uid,doi, requestType }) {
@@ -30,6 +29,16 @@ const actions = {
             console.log(error.message);
         });      
     },
+    async askForRequestCancel({ commit, state,dispatch }, { uid,doi, requestType }) {
+        let doiKey=doi.replaceAll(".","'");
+        firebase.database().ref(requestType).child(uid).remove();
+        dispatch('setAttribute',{
+            uid:uid, 
+            doi:doi ,
+            attribute:"status/"+requestType,
+            value:false
+        });
+    },
     deleteComment({ commit, state }, { uid,doi }){
         let doiKey=doi.replaceAll(".","'");
         firebase.database().ref('doi_repository/' + doiKey + '/comments').child(uid).remove();
@@ -48,15 +57,13 @@ const actions = {
             setvalue=await firebase.database().ref('doi_repository/' + doiKey + '/comments/' + uid+"/"+attribute)
             .once('value')
             .then((valuedb) => {
-                
                 return valuedb.val()+1;
-               
             })
         }
-        firebase.database().ref('doi_repository/' + doiKey + '/comments/' + uid+"/"+attribute).set(setvalue);
         if (attribute=="content")
             firebase.database().ref('doi_repository/' + doiKey + '/comments/' + uid+"/createDate").set(new Date().toString());
-        let tempnode=firebase.database().ref('Review/'+uid).once('value')
+        firebase.database().ref('doi_repository/' + doiKey + '/comments/' + uid+"/"+attribute).set(setvalue);
+        firebase.database().ref('Review/'+uid).once('value')
         .then((info) => {
             if (info.val())
             {
@@ -68,7 +75,7 @@ const actions = {
             //for debug only, will be finished later
             console.log(error.message);
         });
-        tempnode=firebase.database().ref('PID/'+uid).once('value')
+        firebase.database().ref('PID/'+uid).once('value')
         .then((info) => {
             if (info.val())
             {
@@ -99,18 +106,17 @@ const actions = {
             console.log(error.message);
         });  
     },
+    async updateRoleCancel({ commit, state }, { toRole }){
+        let userKey = firebase.auth().currentUser.uid;
+        firebase.database().ref('updateRole/'+toRole).child(userKey).remove();
+        firebase.database().ref('users/' + userKey+'/update/'+toRole).set(false);
+    },
     deleteMessageFromBox({},{message_id}){
         let userKey = firebase.auth().currentUser.uid;
         firebase.database().ref('users/' + userKey+'/Messagebox').child(message_id).remove();
-    }
+    },
 
 
-
-
-    //load comments for work from realtime Database
-   
-
-   
 }
 
 const mutations = {
