@@ -8,12 +8,9 @@
     </a-badge>
     
     <mt-popup class="pop" v-model="visible" position="right" slot="reference">
-         
         <profile class="prof" @logout="logout" :username="username"></profile>
     </mt-popup>
     <!-- <profile class="prof" v-show="visible" @logout="logout"></profile> -->
-        
-    
   </div>
 </template>
 

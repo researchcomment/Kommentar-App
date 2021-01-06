@@ -3,14 +3,14 @@
       <!-- Personal information -->
       <div @click="close" class="topbar">
         <div class="content">
-          <i class="iconfont icon-yonghu"></i>{{username}}
+          <a class="iconfont icon-yonghu"/>{{username}}
         </div>
       </div>
       <ul class="fctlist">
 
         <!-- Admin -->
         <li v-show="isAdmin" @click="openRouter('admin')">
-          <i class="iconfont icon-biaoqiankuozhan_guanli-159"></i>
+          <i class="iconfont icon-biaoqiankuozhan_guanli-159"/>
           <div class="texts">
             Admin
           </div>
@@ -18,7 +18,7 @@
 
         <!-- Reviewer -->
         <li v-show="isReviewer" @click="openRouter('review')">
-          <i class="iconfont icon-biaoqiankuozhan_guanli-159"></i>
+          <i class="iconfont icon-biaoqiankuozhan_guanli-159"/>
           <div class="texts">
             Review
           </div>
@@ -26,7 +26,7 @@
 
         <!-- Personal Information -->
         <li  @click="openRouter('personal')">
-          <i class="iconfont icon-biaoqiankuozhan_guanli-159"></i>
+          <i class="iconfont icon-biaoqiankuozhan_guanli-159"/>
           <div class="texts">
             Personal_info
           </div>
@@ -34,18 +34,15 @@
 
         <!-- MessageBox -->
         <li  @click="openRouter('messageBox')">
-          <i class="iconfont icon-youxiang"></i>
-            <a-badge :count="Object.keys(Messagebox).length">
-              <div class="texts">
+          <i class="iconfont icon-youxiang" />
+            <a-badge :count="Object.keys(Messagebox).length" class="texts">
                 Message
-              </div>
             </a-badge>
-            
         </li>
 
         <!-- Logout -->
         <li @click="logout">
-          <i class="iconfont icon-tuichu5"></i>
+          <i class="iconfont icon-tuichu5"/>
           <div class="texts">
             Logout
           </div>
@@ -60,7 +57,6 @@ export default {
   props:["username"],
   data(){
     return{
-
     }
   },
   computed:{
@@ -68,8 +64,8 @@ export default {
     role(){
       return this.$store.state.account.role;
     },
-    
-    Messagebox(){
+    Messagebox()
+    {
       return this.$store.state.account.Messagebox;
     },
 
@@ -149,7 +145,7 @@ export default {
   cursor: pointer;
 }
 .topbar .content{
-  margin-left: 2vh;
+  margin-left: 4vh;
   margin-right: auto;
   text-align: left;
 }

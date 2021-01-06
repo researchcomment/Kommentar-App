@@ -6,21 +6,16 @@
 
         <!-- List of Comments -->
         <a-list item-layout="vertical" size="large" :pagination="pagination" :data-source="commentList">
-                 
             <a-list-item slot="renderItem" slot-scope="comment,index"  v-show="relate(comment)" >
-                
                 <!-- Detail about this comment -->
                 <a-descriptions  bordered  :column="{ xxl: 4, xl: 3, lg: 3, md: 3, sm: 2, xs: 1 }">
                     <a-descriptions-item label="Update Date">{{new Date(Date.parse(comment.createDate)).toLocaleString()}}</a-descriptions-item>
                     <a-descriptions-item label="type">{{comment.type}}</a-descriptions-item>
-                    
                     <a-descriptions-item label="Book Link">
                         <p @click="seeDetail(comment.doi_nr)" style="cursor:pointer;color:#1890ff">{{comment.title}}</p>
                         <a :href="'https://dx.doi.org/'+ comment.doi_nr"  target="_blank">{{comment.doi_nr}}</a>
                     </a-descriptions-item>
-
                     <a-descriptions-item label="Requests in Checking">
-                        
                         <!-- Cancel Review Request -->
                         <span  @click="requestCancel('Review',comment)"   v-if="comment.status['Review']">
                             <a-tag>Review</a-tag>
@@ -71,9 +66,6 @@
             </a-list-item>
             
         </a-list>
-
-        
-
     </div>
 </template>
 
@@ -92,8 +84,6 @@
                 pagination: {
                     pageSize: 6,
                 },
-                
-               
                 searchDOI:"",
 
                 editorVisibility:[],
@@ -145,8 +135,6 @@
                                                          });
 
             },
-
-            
             /**
              * Send request to the firebase
              * @param request - "Review" or "PID"
