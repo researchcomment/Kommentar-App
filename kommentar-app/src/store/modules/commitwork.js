@@ -160,6 +160,7 @@ const actions = {
      * @param type  - Type from comments - "official" or "unofficial"
      */
     async loadComments({ commit, state }, { doi, rankType, username,type}) {
+       
         let doiKey=doi.replaceAll(".","'");
         let commentsRef=firebase.database().ref('doi_repository/' + doiKey + '/comments');
         let userKey=null;

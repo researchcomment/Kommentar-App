@@ -25,26 +25,37 @@ const actions = {
 
     },
     //flag: true agree to update, false regret to update
-    updateRole({ commit, state }, {flag,userKey,feedback_content, toRole }){
-        firebase.database().ref('updateRole/'+toRole).child(userKey).remove();
-        firebase.database().ref('users/' + userKey+'/update/'+toRole).set(false);
-        if (flag)
-        {
-            firebase.database().ref('users/' + userKey+'/role')
-            .once('value')
-            .then((roles)=>{
-                let setroles=roles.val();
-                setroles.push(toRole);
-                firebase.database().ref('users/' + userKey+'/role').set(setroles);
-            })
-        }
-        if (feedback_content){
-            firebase.database().ref("users/"+userKey+"/Messagebox/"+toRole).set({
-                feedbackContent:feedback_content,
-                toRole:toRole,
-            }); 
-        }
-        return 1;
+    async updateRole({ commit, state }, {flag,userKey,feedback_content, toRole }){
+        return firebase.database().ref('updateRole/'+toRole+"/"+userKey).once('value')
+        .then((info) => {
+            if (info.val())
+            {
+                firebase.database().ref('updateRole/'+toRole).child(userKey).remove();
+                firebase.database().ref('users/' + userKey+'/update/'+toRole).set(false);
+                if (flag)
+                {
+                    firebase.database().ref('users/' + userKey+'/role')
+                    .once('value')
+                    .then((roles)=>{
+                        let setroles=roles.val();
+                        setroles.push(toRole);
+                        firebase.database().ref('users/' + userKey+'/role').set(setroles);
+                    })
+                }
+                if (feedback_content){
+                    firebase.database().ref("users/"+userKey+"/Messagebox/"+toRole).set({
+                        feedbackContent:feedback_content,
+                        toRole:toRole,
+                    }); 
+                }
+            }
+            else 
+                return "This UpdateRequest is already answered by another App-Admin, your operation is failed"
+        }).catch((error) => {
+            //for debug only, will be finished later
+            console.log(error.message);
+        }); 
+
     },
     //actions for reviewer
     async getCommentListForRequest({ commit, state },{requestType}){

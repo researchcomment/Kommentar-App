@@ -35,7 +35,7 @@
                         
                     </a-descriptions-item>
 
-                    <a-descriptions-item label="New Request" span=2>
+                    <a-descriptions-item label="New Request">
                         
                         <!-- Review Request -->
                         <span v-if="!comment.status['Review']&&comment.type!='official'"  @click="newRequest('Review',comment)">
