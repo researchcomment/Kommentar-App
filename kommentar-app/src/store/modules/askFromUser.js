@@ -7,6 +7,7 @@ const state = () => ({
 
 const getters = {}
 const actions = {
+
     //requestType is Review/PID
     async askForRequest({ commit, state,dispatch }, { uid,doi, requestType }) {
         let doiKey=doi.replaceAll(".","'");
@@ -60,7 +61,7 @@ const actions = {
             })
         }
         if (attribute=="content")
-            setvalue=new Date().toString();
+            firebase.database().ref('doi_repository/' + doiKey + '/comments/' + uid+"/createDate").set(new Date().toString());
         firebase.database().ref('doi_repository/' + doiKey + '/comments/' + uid+"/"+attribute).set(setvalue);
         firebase.database().ref('Review/'+uid).once('value')
         .then((info) => {
