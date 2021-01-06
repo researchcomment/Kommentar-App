@@ -5,13 +5,22 @@
 
             <bookInfo :doi="doi" @setDetail="setDetail" style="margin-bottom:5vh"></bookInfo>
 
-            <!-- Ranking -->
-            <div style="margin: 5vh 10vw;">
-                <a-icon type="filter"/>
-                <a-checkbox-group v-model="rank" name="Ranking" :options="rankOptions" @change="getComments"/>
-            </div>
-            
 
+            <!-- Ranking/Filter -->
+            <div style="margin: 5vh 10vw;">
+                <span @click="filterVisibility=!filterVisibility"><a-icon type="filter"/>  SORT BY</span>
+               
+                <a-popover v-model="filterVisibility" placement="bottomLeft">
+                    <template slot="content">
+                        <div >
+                            <p></p>
+                            <a-checkbox v-model="filter" @change="getComments"> Only your own comments </a-checkbox>
+                            <p></p>
+                            <a-radio-group v-model="rank" :options="rankOptions" defaultValue="latest"  @change="getComments" />
+                        </div>
+                    </template>
+                </a-popover>
+            </div>
 
             <!-- Official Comments -->
             <div class="ocomment" >
@@ -88,10 +97,17 @@
                 paginationUnOfficial: {
                     pageSize: 5,
                 },
-                rank:[],
+
+                filterVisibility:false,
+                
+                filter:false,
+
+                rank:"latest",
                 rankOptions:[
-                    { label: 'Only your own comments', value: 'onlyfromCurrentUser' },
-                    { label: 'History', value: 'history' },
+                    { label: 'Like', value: 'like' },
+                    { label: 'Dislike', value: 'dislike' },
+                    { label: 'Latest', value: 'latest' },
+                    { label: 'History', value: 'history' }
                     ],
             }
         },
@@ -122,17 +138,23 @@
 
             /**
              * Request comment content from the backend
-             * 
              */
-            async getComments() {    
-            
+            async getComments() { 
+
+                var rank = [this.rank];
+                
+                if(this.filter){
+                    rank.push("onlyfromCurrentUser");
+                }
+                console.log(rank);
+
                 // open the loading-animation 
                 this.loading = true;
 
                 // send request
                 this.$store.dispatch("commitwork/loadComments", 
                                                     {doi: this.doi, 
-                                                     rankType:this.rank,    //  rankType:"time",
+                                                     rankType:rank,    //  rankType:["like",...],
                                                      username: this.$store.state.account.username,
                                                      type:"official"})
                                             .then((result)=>{
@@ -149,7 +171,7 @@
 
                this.$store.dispatch("commitwork/loadComments", 
                                                     {doi: this.doi, 
-                                                     rankType:this.rank,
+                                                     rankType:rank,
                                                      username: this.$store.state.account.username,
                                                      type:"unofficial"})
                                             .then((result)=>{
@@ -166,6 +188,8 @@
 
                 // close the loading-animation 
                 this.loading = false;
+
+               
 
             },
 

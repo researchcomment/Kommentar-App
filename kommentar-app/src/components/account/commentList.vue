@@ -20,30 +20,40 @@
                     </a-descriptions-item>
 
                     <a-descriptions-item label="Requests in Checking">
-                        <a-tag  v-if="comment.status['Review']">Review</a-tag>
-                        <a-tag  v-if="comment.status['PID']">PID</a-tag>
+                        
+                        <!-- Cancel Review Request -->
+                        <p @click="requestCancel('Review',comment)"   v-if="comment.status['Review']">
+                            <a-tag>Review</a-tag>
+                        </p>
+                        
+                        <!-- Cancel PID Request -->
+                        <p @click="requestCancel('PID',comment)"  v-if="comment.status['PID']">
+                            <a-tag >PID</a-tag>
+                        </p>
+
+                        <p v-if="comment.status['PID']||comment.status['Review']"> (Click to cancel)</p>
+                        
                     </a-descriptions-item>
 
                     <a-descriptions-item label="New Request" span=2>
                         
                         <!-- Review Request -->
-                        <a-tag 
-                        color="cyan" 
-                        v-if="!comment.status['Review']&&comment.type!='official'"  
-                        @click="newRequest('Review',comment)">
-                        Review
-                        </a-tag>
+                        <p v-if="!comment.status['Review']&&comment.type!='official'"  @click="newRequest('Review',comment)">
+                            <a-tag color="cyan" >Review</a-tag>
+                        </p>
+                        
 
                         <!-- PID Request -->
-                        <a-tag 
-                        color="cyan" 
+                        <p 
                         v-if=" !comment.status['PID'] && role.includes('Researcher')&&comment.type!='official'" 
                         @click="newRequest('PID',comment)">
-                            PID
-                        </a-tag>
+                            <a-tag color="cyan" >PID</a-tag>
+                        </p>
+                        
                     </a-descriptions-item>
+                    
                     <a-descriptions-item label="Content" span=3>
-                        <p v-if="!editorVisibility[index]" v-html="comment.content"></p>
+                        <p v-if="!editorVisibility[index]" v-html="comment.content" class="ql-editor"></p>
                         <div v-if="editorVisibility[index]"> 
                             <quill-editor
                             v-model="templateComment.content"
@@ -58,20 +68,6 @@
                     </a-descriptions-item>
                 </a-descriptions>
 
-                <!-- <h2>Content</h2>
-                <p v-if="!editorVisibility[index]" v-html="comment.content"></p>
-                <div v-if="editorVisibility[index]"> 
-                    <quill-editor
-                    v-model="templateComment.content"
-                    :options="editorOption"
-                    >
-                    </quill-editor>
-                    <a-button @click="editorRequest">Submit</a-button>
-                </div>
-
-                <a-button :disabled="comment.type=='official'" icon="edit" @click="openEditor(comment,index)" >Editor</a-button>
-                <a-icon type="delete" v-if="!(comment.type=='official')" theme="twoTone" two-tone-color="#eb2f96"  @click="deleteComment(comment)" /> -->
-
             </a-list-item>
             
         </a-list>
@@ -82,8 +78,11 @@
 </template>
 
 <script>
+ 
     export default {
         name:"reviewer",
+
+
         data(){
             return{
                
@@ -103,9 +102,8 @@
                     modules:{
                         toolbar:[
                                 ['bold', 'italic', 'underline', 'strike'],    // toggled buttons
-                                ['blockquote', 'code-block'], 
-                                // [{ 'size': ['small', false, 'large', 'huge'] }], // front size
-                                [{ 'color': [] }],   // front color
+                                [{ 'font': [] }],  
+                                [{ 'color': [] }],   // font color
                                 ]
                             }
                 }, 
@@ -162,6 +160,37 @@
                 }
                
                 this.$store.dispatch("askFromUser/askForRequest",request)
+                .then(()=>{
+                    
+                    // Refresh the display, prompting success                    
+                        this.$notification.open({
+                            message: 'Success',
+                            description:
+                            'Your Request has been submitted.',
+                            icon: <a-icon type="smile" style="color: #108ee9" />,
+                        });  
+                        this.getCommentList();
+
+                    })
+                .catch(err => {
+                                console.log(err);
+                            });
+ 
+            },
+
+             /**
+             * Send request to the firebase
+             * @param request - "Review" or "PID"
+             * @param comment
+             */
+            requestCancel(request,comment){
+                var request ={
+                    uid:comment.commitKey,
+                    doi:comment.doi_nr, 
+                    requestType:request,
+                }
+               
+                this.$store.dispatch("askFromUser/askForRequestCancel",request)
                 .then(()=>{
                     
                     // Refresh the display, prompting success                    
@@ -257,7 +286,6 @@
             },
 
             relate(comment){
-              
                 return (!this.searchDOI || comment.doi_nr.includes(this.searchDOI))? true:false;
             }
 
