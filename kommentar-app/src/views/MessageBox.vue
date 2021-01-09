@@ -2,7 +2,7 @@
     <div class="mainmess">
 
         <div v-if="Object.keys(Messagebox).length==0"> Your have no Message</div>
-        <div v-for="(item,key) in Messagebox" v-bind:key="key" style="background:#ECECEC; padding:10px">
+        <div v-for="(item,key) in Messagebox" v-bind:key="key" style="background:#ECECEC; padding:5vw">
 
                 <a-card  title="Message" >
                     
@@ -94,5 +94,9 @@
 .mainmess .ant-card-body{
     height: auto;
     overflow: hidden;
+}
+.mainmess .ant-card{
+    width: 90vw;
+    margin: 0;
 }
 </style>

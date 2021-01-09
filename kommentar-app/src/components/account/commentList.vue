@@ -55,11 +55,11 @@
                             :options="editorOption"
                             >
                             </quill-editor>
-                            <a-button @click="editorRequest">Submit</a-button>
+                            <a-button @click="editorRequest" style="margin-top:1vh">Submit</a-button>
                         </div>
                         
-                        <a-button :disabled="comment.type=='official'" icon="edit" @click="openEditor(comment,index)" >Editor</a-button>
-                        <a-icon type="delete" v-if="!(comment.type=='official')" theme="twoTone" two-tone-color="#eb2f96"  @click="deleteComment(comment)" />
+                        <a-button :disabled="comment.type=='official'" icon="edit" @click="openEditor(comment,index)" style="margin-top:1vh;margin-right:1vw">Editor</a-button>
+                        <a-button v-if="!(comment.type=='official')" @click="deleteComment(comment)" icon="delete" style="margin-top:1vh">Delete</a-button>
                     </a-descriptions-item>
                 </a-descriptions>
 

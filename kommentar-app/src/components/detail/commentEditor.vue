@@ -95,6 +95,7 @@ export default {
 .quill-editor .ql-toolbar{
     padding: 0.5vh;
 }
+
 .quill-editor .ql-toolbar button svg{
     width: 2vh;
 }

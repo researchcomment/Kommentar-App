@@ -75,12 +75,22 @@
     font-size:2vh;
     border-radius: 23px;
     height: 4.7vh;
+    line-height: 4.7vh;
 }
 .el-input i{
     cursor: pointer;
     line-height: 4.9vh;
 }
-
-
-
+.input-search .el-input__inner:focus{
+    border-color: #00243E;
+}
+.input-search .el-input__inner:hover{
+    border-color: #00243E;
+}
+.input-search .el-input__inner:active{
+    border-color: #00243E;
+}
+.input-search .el-input__inner:visited{
+    border-color: #00243E;
+}
 </style>
