@@ -7,15 +7,13 @@
 
 
             <!-- Ranking/Filter -->
-            <div style="margin: 5vh 10vw;">
-                <span @click="filterVisibility=!filterVisibility"><a-icon type="filter"/>  SORT BY</span>
+            <div style="margin:0 10vw">
+                <div @click="filterVisibility=!filterVisibility" class="commentfilter"><a-icon type="filter"/><h3>SORT COMMENTS BY</h3></div>
                
                 <a-popover v-model="filterVisibility" placement="bottomLeft">
                     <template slot="content">
-                        <div >
-                            <p></p>
+                        <div>
                             <a-checkbox v-model="filter" @change="getComments"> Only your own comments </a-checkbox>
-                            <p></p>
                             <a-radio-group v-model="rank" :options="rankOptions" defaultValue="latest"  @change="getComments" />
                         </div>
                     </template>
@@ -26,9 +24,9 @@
             <div class="ocomment" >
 
                 <!-- Title -->
-                <h2 style="font-size: 2.5vw; color: #76c06b">
+                <h2 style="font-size: 1.5em; color: #76c06b">
                 Official Comments
-                <span style="color: #ababab; font-size: 1.5vw">{{ Object.keys(officialCommentList).length }}</span>
+                <span style="color: #ababab; font-size: 0.8em">{{ Object.keys(officialCommentList).length }}</span>
                 </h2>
 
                 <!-- List of official Comments -->
@@ -46,8 +44,8 @@
             <div class="ucomment">
 
                 <!-- Title -->
-                <h2 style="font-size:2vw;color:#000">
-                    Comments <span style="color:#ABABAB;font-size:1.5vw">{{Object.keys(unofficialCommentList).length}}</span>
+                <h2 style="font-size:1.5em;color:#000">
+                    Comments <span style="color:#ABABAB;font-size:0.8em">{{Object.keys(unofficialCommentList).length}}</span>
                 </h2>
                 
                 <!-- List of unofficial Comments -->
@@ -247,18 +245,18 @@
     border-bottom: 1px solid #EBEEF3;
 }
 .ant-comment-content-author .ant-comment-content-author-name a{
-    font-size: 1.5vw;
+    font-size: 1em;
+}
+.ant-comment-content-author .ant-comment-content-author-time span{
+    font-size: 1em;
 }
 .ant-comment-content-detail p{
-    font-size: 1.5vw;
+    font-size: 1em;
     margin: 0;
 }
 .ant-comment-actions{
     margin: 0;
     padding: 0;
-}
-.ant-comment-actions span{
-    font-size: 2vw;
 }
 .ant-comment-inner{
     padding: 0;
@@ -275,14 +273,40 @@
 .ant-comment-inner .ant-comment-avatar{
     margin-right: 3vw;
 }
-.ant-comment .ant-comment-actions span span{
-    font-size: 1.2vw;
+.ant-comment .ant-comment-actions .action{
+    font-size: 0.8em;
 }
 .ant-comment-actions i swg{
-    width: 1.2vw;
-    height: 1.2vw;
+    width: 0.8em;
+    height: 0.8em;
 }
 .ant-list-pagination{
     margin-top: 0.8vw;
+}
+.commentfilter{
+    cursor: pointer;
+    color: #00243E;
+    margin-bottom: 2vh;
+    
+}
+.commentfilter h3{
+    display: inline-block;
+    font-size: 1em;
+}
+/* .commentfilter .anticon svg{
+    height: 2vw;
+    width: 2vw;
+} */
+.ant-pagination-item-active{
+    border-color: #00243E;
+}
+.ant-pagination-item-active:hover{
+    border-color: #00243E;
+}
+.ant-pagination-item-active a{
+    color: #00243E;
+}
+.ant-pagination-item-active a:hover{
+    color: #00243E;
 }
 </style>

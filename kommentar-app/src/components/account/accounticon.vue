@@ -54,6 +54,5 @@ export default {
 .pop {
     height: 100%;
     width: 35vh;
-
 }
 </style>
