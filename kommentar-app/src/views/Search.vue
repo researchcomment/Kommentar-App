@@ -12,9 +12,9 @@
         
         <!-- Filterung -->
         <div class="filter"  v-show="!loading">
-          <div>find {{resultLength}} results</div>
+          <div style="display:inline-block">find {{resultLength}} results</div>
           <filterPopup 
-            ref="filterPopup" 
+            ref="filterPopup"  style="display:inline-block"
             :oldFilterCondition="filterCondition"
             @filter="filter"  >
           </filterPopup>

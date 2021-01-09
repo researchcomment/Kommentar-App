@@ -46,9 +46,12 @@
                             <div :class="inRequest?'auactionstabu':'auactions'" v-if="isResearcher" @click="askForRequest('PID')">Make it Public</div>
 
                             <div class="auactions"  @click="deleteComment">Delete <a-icon type="delete" theme="twoTone" two-tone-color="#eb2f96"/></div>
-  
+
+                            <div slot="content" v-if="!editorVisibility&&isAuthor&&(comment.type!='official')" @click="openEditor()" style="cursor:pointer">
+                                Editor <a-icon type="edit"/>
+                            </div>
                         </div>
-                        <i class="iconfont icon-xiaoxiguanli-quanbux" @click="hide" style="cursor:pointer"></i>
+                        <i class="iconfont icon-xiaoxiguanli-quanbux" @click="hide" style="cursor:pointer;font-size:0.8em"></i>
                     </a-popover>
                     
                 </div>
@@ -66,10 +69,8 @@
             </a-avatar>
 
             <!-- Comment -->
-            <p slot="content" v-if="!editorVisibility" v-html="comment.content" class="ql-editor" style="display:inline-block;margin-right:0.5vw"></p>
-            <div slot="content" v-if="!editorVisibility&&isAuthor" :style="comment.type=='official'?'display:none':'display:inline-block'" @click="openEditor()">
-                <a-icon type="edit" style="cursor:pointer"/>
-            </div>
+            <p slot="content" v-if="!editorVisibility" v-html="comment.content" class="ql-editor" style="margin-right:0.5vw"></p>
+            
             <a-icon slot="content" type="up-circle" style="cursor:pointer" v-if="editorVisibility" @click="closeeditor()"/>
             <!-- Editor for Comments -->
             <div v-if="editorVisibility" slot="content" class="littleedit"> 
@@ -351,6 +352,9 @@ Vue.use(Antd)
 .ant-comment .ant-comment-content .ant-comment-actions{
     margin: 0;
     margin-bottom: 2vw;
+    padding: 0;
+}
+.ant-comment .ant-comment-content-detail .ql-editor{
     padding: 0;
 }
 </style>

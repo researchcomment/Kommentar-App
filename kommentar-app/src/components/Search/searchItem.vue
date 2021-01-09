@@ -69,8 +69,8 @@
     text-decoration: underline;
     color: #76C06B;
 }
-.box-card a:link {color:#76C06B}      /* 未访问链接*/
-.box-card a:visited {color:#76C06B}  /* 已访问链接 */
+.box-card a:link {color:#76C06B}      
+.box-card a:visited {color:#76C06B} 
 
 .box-card h3{
     margin: 1vh auto;
