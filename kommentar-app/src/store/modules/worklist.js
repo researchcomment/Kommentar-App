@@ -109,6 +109,10 @@ const actions = {
         //set the information to the state,filter it into title author and doi(may changed from google firebase side)
         //commit('setlist',list)
         //give the first 10 information(Todo), can reuse changepage
+        //from and to are index the page showed is [from,to)   
+        //date is {from(javsscript.date),to(javascript.date)} 
+        //type includes which kind of works will be searched https://api.crossref.org/types
+        //flag decide whether it is new search
         
         let pagefrom = 0;
         let pageto = 10;

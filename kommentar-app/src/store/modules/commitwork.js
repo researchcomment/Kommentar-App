@@ -4,14 +4,6 @@ import worklist from './worklist';
 
 const state = () => ({
 
-    commit_private: {
-        data: [],
-        length: 0
-    },
-    commit_public: {
-        data: [],
-        length: 0
-    }
 })
 
 const url = "https://api.crossref.org/works/";
@@ -55,7 +47,7 @@ function check_type(book_type, comparator) {
 
 function cons_returnValue(item_ref) {
     //actural reference of result list from crossref
-    //construct info which needed to be return  
+    //construct info which format needed to be return  
     item_ref.domain = item_ref["content-domain"].domain ? item_ref["content-domain"].domain[0] : null;
   
     let returnValue = {};
@@ -102,14 +94,14 @@ async function get_detail(doi) {
     });
 }
 const actions = {
-    async askfordetail({ commit, state, rootState }, { doi, username }) {
+    async askfordetail({}, { doi}) {
         //give the first 5 commit of each part, can reuse changepage
         let returnValue = await get_detail(doi);
         return returnValue;
     },
 
     //create new Entry in realtime-DB for Editor-Input 
-    async sendFromEditorToDatabase({ commit, state }, {title, doi, author, content }) {
+    async sendFromEditorToDatabase({}, {title, doi, author, content }) {
         //version 2
         //找到userkey
         let userKey = firebase.auth().currentUser.uid;
@@ -159,7 +151,7 @@ const actions = {
      * @param username
      * @param type  - Type from comments - "official" or "unofficial"
      */
-    async loadComments({ commit, state }, { doi, rankType, username,type}) {
+    async loadComments({}, { doi, rankType,type}) {
        
         let doiKey=doi.replaceAll(".","'");
         let commentsRef=firebase.database().ref('doi_repository/' + doiKey + '/comments');
