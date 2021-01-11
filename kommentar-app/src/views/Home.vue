@@ -13,7 +13,7 @@
                     <h4>let ideas fly</h4>
                 </div>
                 
-                </div>
+            </div>
 
             <!-- Search Bar -->
             <searchBar class="searchbar"></searchBar>
@@ -60,7 +60,7 @@
     }
     .logo{
         margin: 0 auto;
-        text-align: center;
+        width: 70vw;
     }
     .logo h3{
         font-size: 6vw;
