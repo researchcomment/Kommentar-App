@@ -9,7 +9,7 @@ const getters = {}
 const actions = {
 
     //requestType is Review/PID
-    async askForRequest({ commit, state,dispatch }, { uid,doi, requestType }) {
+    async askForRequest({ dispatch }, { uid,doi, requestType }) {
         let doiKey=doi.replaceAll(".","'");
         return firebase.database().ref('doi_repository/' + doiKey + '/comments/' + uid)
         .once('value')
@@ -29,7 +29,7 @@ const actions = {
             console.log(error.message);
         });      
     },
-    async askForRequestCancel({ commit, state,dispatch }, { uid,doi, requestType }) {
+    async askForRequestCancel({ dispatch }, { uid,doi, requestType }) {
         let doiKey=doi.replaceAll(".","'");
         firebase.database().ref(requestType).child(uid).remove();
         dispatch('setAttribute',{
@@ -39,7 +39,7 @@ const actions = {
             value:false
         });
     },
-    deleteComment({ commit, state }, { uid,doi }){
+    deleteComment({}, { uid,doi }){
         let doiKey=doi.replaceAll(".","'");
         firebase.database().ref('doi_repository/' + doiKey + '/comments').child(uid).remove();
         let userKey = firebase.auth().currentUser.uid;
@@ -49,7 +49,7 @@ const actions = {
         
     },
 
-    async setAttribute({ commit, state }, { uid, doi ,attribute,value  }){
+    async setAttribute({ }, { uid, doi ,attribute,value  }){
         let doiKey=doi.replaceAll(".","'");
         let setvalue=value;
         if ((attribute=="likes") || (attribute=="dislikes"))
@@ -89,7 +89,7 @@ const actions = {
         });
     },
 
-    async updateRole({ commit, state }, { toRole }){
+    async updateRole({}, { toRole }){
         let userKey = firebase.auth().currentUser.uid;
         return firebase.database().ref('users/' + userKey)
         .once('value')
@@ -106,17 +106,17 @@ const actions = {
             console.log(error.message);
         });  
     },
-    async updateRoleCancel({ commit, state }, { toRole }){
+    async updateRoleCancel({ }, { toRole }){
         let userKey = firebase.auth().currentUser.uid;
         firebase.database().ref('updateRole/'+toRole).child(userKey).remove();
         firebase.database().ref('users/' + userKey+'/update/'+toRole).set(false);
     },
+    //message_id: one of ['Researcher', 'Reviewer','Moderator','Admin'] for UpdatedateMessage
+    //comment_id for commentrequestMessage
     deleteMessageFromBox({},{message_id}){
         let userKey = firebase.auth().currentUser.uid;
         firebase.database().ref('users/' + userKey+'/Messagebox').child(message_id).remove();
     },
-
-
 }
 
 const mutations = {

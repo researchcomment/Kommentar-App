@@ -193,7 +193,6 @@ Vue.use(Antd)
              * 弹窗
              */
             hide() {
-                console.log(111);
                 this.visible = false;
             },
             
