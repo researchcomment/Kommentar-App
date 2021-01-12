@@ -2,7 +2,7 @@
     <div v-if="username" class="rolepage">
 
         <!-- Role Request -->
-        <h3>Update Role</h3>
+        <h3>Upgrade Role</h3>
 
         <div v-if="allRole">
             You have all Roles!

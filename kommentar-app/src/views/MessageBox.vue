@@ -13,18 +13,13 @@
                    <!-- Message about Comment -->
                    <div v-if="item.doi_nr">
                        <h2>Your Request for FeedBack</h2>
-                        <a-descriptions  title="Comment Info" :column="1" >
-                        
-                            <a-descriptions-item label="Go to this Book">
-                                <p @click="seeDetail(item.doi_nr)" style="color:#76C06B;cursor:pointer;text-decoration: underline">{{item.doi_nr}}</p>
-                            </a-descriptions-item>
-                            
-                            <a-descriptions-item label="Your Comments" >
-                            <p v-html="item.commentContent"  class="ql-editor"></p>
-                            </a-descriptions-item>
 
-                        </a-descriptions>
-                    
+                        <p>Comment Info</p>
+                        <p>Go to this Book</p>
+                        <p @click="seeDetail(item.doi_nr)" style="color:#76C06B;cursor:pointer;text-decoration: underline">{{item.doi_nr}}</p>
+                        <b>Your Comments</b>
+                        <p v-html="item.commentContent" class="ql-editor" sytle="margin:0;padding:0" ></p>
+                        <br>
                         <b>Feedback:</b>
                         <p v-html="item.feedbackContent" class="ql-editor"></p>
                        

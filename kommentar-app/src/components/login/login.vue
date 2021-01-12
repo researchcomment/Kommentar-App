@@ -13,8 +13,8 @@
             <h3 class="formtitle">Welcome!</h3>
 
             <!-- Form Body -->
-            <mt-field class="fieldarea" label="Username" placeholder="Enter your E-Mail" v-model="form.username"></mt-field>
-            <mt-field class="fieldarea" label="Password" placeholder="Enter your password" v-model="form.password"></mt-field>
+            <mt-field class="fieldarea" label="Username" placeholder="Enter your E-Mail"  v-model="form.username"></mt-field>
+            <mt-field class="fieldarea" label="Password" placeholder="Enter your password" type="password" v-model="form.password"></mt-field>
 
             <!-- Button -->
             <div class="cbuttons">
@@ -36,8 +36,8 @@
                 formLabelWidth: '120px',
                 dialogFormVisible: false,
                 form:{
-                    username:"test3@gmail.com",    //! FOR TEST  default: ""
-                    password:"123123",          //! FOR TEST   default: ""
+                    username:"",    
+                    password:"",      
                 },  
                 validationErrors: [],
                 firebaseError: ""

@@ -31,16 +31,15 @@
             <a-layout-content style="height:88vh,overflow:hidden">
                 <div style="background: #fff; padding: 0">
                     
-                    
                     <!-- Titel -->
                     <span style="margin-top:2vh;margin-bottom:2vh;font-size:4vw;margin-left:2vw;font-weight:500">User Management</span>
 
                 </div>
+
                 <!-- Filter -->
                 <div :style="{ margin: '2vh 1vw', padding: '0', background: '#fff',width:'76vw'}">
                     
-                    
-                    <h2 style="margin-top:2vh;margin-bottom:2vh;font-size:2vw;margin-left:1vw;font-weight:500">Update to {{menuKey[0]}}</h2>
+                    <h2 style="margin-top:2vh;margin-bottom:2vh;font-size:2vw;margin-left:1vw;font-weight:500">Upgrade to {{menuKey[0]}}</h2>
 
                     <!-- Filter -->
                     <a-input ref="userNameInput" v-model="searchText" placeholder="Search user">

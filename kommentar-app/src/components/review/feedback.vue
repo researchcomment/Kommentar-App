@@ -3,7 +3,7 @@
         <!-- List of Comments -->
         <a-list item-layout="vertical" size="large" :pagination="pagination" :data-source="commentList" >
                  
-            <a-list-item slot="renderItem" slot-scope="comment" >
+            <a-list-item slot="renderItem" slot-scope="comment">
                 
                 <!-- About Author -->
                 <a-list-item-meta>
@@ -47,15 +47,11 @@
                     </a-descriptions-item>
 
                     <a-descriptions-item label="Content">
-                       <p v-html="comment.content" class="ql-editor"></p>
+                    <p v-html="comment.content" class="ql-editor"></p>
                     </a-descriptions-item>
 
                 </a-descriptions>
-
-               
-               
                 
-
             </a-list-item>
         </a-list>
 
@@ -127,11 +123,13 @@
                                                     {requestType:"Review"})
                 .then((result)=>{
 
-                                this.commentList= Object.keys(result).map((key) => {
+                                this.commentList= Object.keys(result).filter(key => 
+                                    result[key].active
+                                ).map((key) => {
                                     var comment = result[key];
                                     comment.key=key;
                                     return comment;
-                                })
+                                });
 
                                 })
                 .catch(err => {

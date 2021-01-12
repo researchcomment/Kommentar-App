@@ -66,6 +66,15 @@ export default {
                 return;
             }
 
+            // Ensure that the comment is not null
+            if(!this.content){
+                this.$error({
+                        title: 'Error message',
+                        content: 'Please write something',
+                });
+                return;
+            }
+
             // Send request to backend
             this.$store.dispatch('commitwork/sendFromEditorToDatabase',{
                 doi:this.doi,

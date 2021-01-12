@@ -144,7 +144,6 @@
                 if(this.filter){
                     rank.push("onlyfromCurrentUser");
                 }
-                console.log(rank);
 
                 // open the loading-animation 
                 this.loading = true;
