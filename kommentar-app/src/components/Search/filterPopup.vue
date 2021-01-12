@@ -203,7 +203,6 @@
 }
 .morebtn{
   width: 18vh;
-  height: 2vh;
   margin-bottom: 3vh;
   cursor: pointer;
 }

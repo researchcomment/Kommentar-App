@@ -10,7 +10,8 @@ const actions = {
     
     //the function that used from app-admin side.
     //requestType is Review/PID
-    async getUserList({ commit, state }, { toRole }) {
+    //roRole: one of ['Researcher', 'Reviewer','Moderator','Admin']
+    async getUserList({}, { toRole }) {
         return firebase.database().ref('updateRole/'+toRole)
         .once('value')
         .then((userinfo)=>{
@@ -25,7 +26,7 @@ const actions = {
 
     },
     //flag: true agree to update, false regret to update
-    async updateRole({ commit, state }, {flag,userKey,feedback_content, toRole }){
+    async updateRole({}, {flag,userKey,feedback_content, toRole }){
         return firebase.database().ref('updateRole/'+toRole+"/"+userKey).once('value')
         .then((info) => {
             if (info.val())
@@ -58,7 +59,7 @@ const actions = {
 
     },
     //actions for reviewer
-    async getCommentListForRequest({ commit, state },{requestType}){
+    async getCommentListForRequest({},{requestType}){
         return firebase.database().ref(requestType)
         .once('value')
         .then((userinfo)=>{
@@ -73,13 +74,12 @@ const actions = {
     },
 
     //flag:true agree with PID
-    async replyRequest({ commit, state,dispatch },{doi,user_id,requestType,comment_uid,comment_content,feedback_content,flag}){
+    async replyRequest({ dispatch },{doi,user_id,requestType,comment_uid,comment_content,feedback_content,flag}){
         //describe whether comment request is already edited by another reviewer
         return firebase.database().ref(requestType+"/"+comment_uid).once('value')
         .then((info) => {
             if (info.val())
             {
-                console.log(info.val());
                 firebase.database().ref(requestType).child(comment_uid).remove();
                 //use setAttribute in askFromUser to set status of request
                 dispatch('askFromUser/setAttribute',{
