@@ -15,6 +15,8 @@ Check the result, try to turn the page
 Use filter and search again
 view the details of one of the results
 
+
+
 ## Detail
 
 search “abc” and click the first result 
@@ -56,6 +58,9 @@ turn to the messageBox and delete all messages after reading
 come back to the Person Page 
 View the comments, for which you submitted a “PID” request previously and try to find the difference   
 
+
+
+
 ## Reviewer 
 
 try to update your role to “Reviewer” <u>(Developer will agree the request here)</u>
@@ -80,6 +85,7 @@ try to update your role to “Moderator” <u>(Developer will agree the request 
 search “abc” and click the first result  
 try to hide the first comment in “Comment” field
 logout and see the difference
+
 
 
 
