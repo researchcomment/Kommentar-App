@@ -47,7 +47,7 @@
                     </a-descriptions-item>
 
                     <a-descriptions-item label="Content">
-                    <p v-html="comment.content" class="ql-editor"></p>
+                    <p v-html="comment.content" class="ql-editor" style="max-height:25vh;overflow:auto;"></p>
                     </a-descriptions-item>
 
                 </a-descriptions>
@@ -64,7 +64,7 @@
             @cancel="handleCancel"
             >
             <b>Original Content</b>
-            <p v-html="templateComment.content" class="ql-editor"></p>
+            <p v-html="templateComment.content" class="ql-editor" style="max-height:25vh;overflow:auto;"></p>
 
             <!-- Input -->
             <quill-editor

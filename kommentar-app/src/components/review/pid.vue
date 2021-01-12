@@ -44,7 +44,7 @@
                     </a-descriptions-item>
 
                     <a-descriptions-item label="Content">
-                    <p v-html="comment.content" class="ql-editor"></p>
+                    <p v-html="comment.content" class="ql-editor" style="max-height:25vh;overflow:auto;"></p>
                     </a-descriptions-item>
 
                 </a-descriptions>
@@ -62,7 +62,7 @@
             >
 
             <b>Original Content</b>
-            <p v-html="templateComment.content" class="ql-editor"></p>
+            <p v-html="templateComment.content" class="ql-editor" style="max-height:25vh;overflow:auto;"></p>
 
             <!-- agree or not -->
             <a-radio-group v-model="templateComment.agreePID" default-value="agree">

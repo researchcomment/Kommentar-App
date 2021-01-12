@@ -48,7 +48,7 @@
                     </a-descriptions-item>
                     
                     <a-descriptions-item label="Content" span=3>
-                        <p v-if="!editorVisibility[index]" v-html="comment.content" class="ql-editor"></p>
+                        <p v-if="!editorVisibility[index]" v-html="comment.content" class="ql-editor" style="max-height:25vh;overflow:auto;"></p>
                         <div v-if="editorVisibility[index]"> 
                             <quill-editor
                             v-model="templateComment.content"
