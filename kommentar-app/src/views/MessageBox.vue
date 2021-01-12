@@ -2,7 +2,7 @@
     <div class="mainmess">
 
         <div v-if="Object.keys(Messagebox).length==0"> Your have no Message</div>
-        <div v-for="(item,key) in Messagebox" v-bind:key="key" style="background:#ECECEC; padding:5vw">
+        <div v-for="(item,key) in Messagebox" v-bind:key="key" style="background:#ECECEC; margin-left:3vw; padding:1vw; ">
 
                 <a-card  title="Message" >
                     
@@ -11,14 +11,14 @@
                     </a>
                    
                    <!-- Message about Comment -->
-                   <div v-if="item.doi_nr">
+                   <div v-if="item.doi_nr" >
                        <h2>Your Request for FeedBack</h2>
 
                         <p>Comment Info</p>
                         <p>Go to this Book</p>
                         <p @click="seeDetail(item.doi_nr)" style="color:#76C06B;cursor:pointer;text-decoration: underline">{{item.doi_nr}}</p>
                         <b>Your Comments</b>
-                        <p v-html="item.commentContent" class="ql-editor" sytle="margin:0;padding:0" ></p>
+                        <p v-html="item.commentContent" class="ql-editor" style="margin:0;padding:0;max-height:25vh;overflow:auto;" ></p>
                         <br>
                         <b>Feedback:</b>
                         <p v-html="item.feedbackContent" class="ql-editor"></p>

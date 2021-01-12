@@ -69,7 +69,7 @@
             </a-avatar>
 
             <!-- Comment -->
-            <p slot="content" v-if="!editorVisibility" v-html="comment.content" class="ql-editor" style="margin-right:0.5vw"></p>
+            <p slot="content" v-if="!editorVisibility" v-html="comment.content" class="ql-editor" style="margin-right:0.5vw; max-height:25vh;overflow:auto;"></p>
             
             <a-icon slot="content" type="up-circle" style="cursor:pointer" v-if="editorVisibility" @click="closeeditor()"/>
             <!-- Editor for Comments -->
