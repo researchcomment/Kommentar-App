@@ -4,7 +4,7 @@ import firebase from "firebase/app";
 
 const state = () => ({
     username: null,
-    role: null, //list:['default', 'Researcher', 'Reviewer','Moderator','Admin']  from JJY
+    role: null, //list:['default', 'Researcher', 'Reviewer','Moderator','Admin']
     update: {},
     error: null,
     commentList:[],
