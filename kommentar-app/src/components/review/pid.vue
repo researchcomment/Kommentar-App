@@ -4,7 +4,7 @@
         <a-list item-layout="vertical" size="large" :pagination="pagination" :data-source="commentList">
                  
             <a-list-item slot="renderItem" slot-scope="comment" >
-                
+               
                 <!-- About Author -->
                 <a-list-item-meta>
                     <!-- Author -->
@@ -13,7 +13,7 @@
                     <!-- Author picture -->  
                     <a-avatar slot="avatar" style="color: #f56a00; backgroundColor: #fde3cf">
                         <p>{{comment.author[0]}}</p>
-                     </a-avatar>     
+                    </a-avatar>     
                 </a-list-item-meta>
                 
                 <!-- Detail about this comment -->
@@ -44,18 +44,15 @@
                     </a-descriptions-item>
 
                     <a-descriptions-item label="Content">
-                       <p v-html="comment.content" class="ql-editor"></p>
+                    <p v-html="comment.content" class="ql-editor"></p>
                     </a-descriptions-item>
 
                 </a-descriptions>
 
-               
-               
-
             </a-list-item>
         </a-list>
 
-         <!-- Review Options -->
+        <!-- Review Options -->
         <!-- Reply for Permanent ID -->
         <a-modal
             title="Permanent ID"
@@ -134,7 +131,9 @@
                                                     {requestType:"PID"})
                 .then((result)=>{
                                 
-                                this.commentList= Object.keys(result).map((key) => {
+                                this.commentList= Object.keys(result).filter(key => 
+                                    result[key].active
+                                ).map((key) => {
                                     var comment = result[key];
                                     comment.key=key;
                                     return comment;
