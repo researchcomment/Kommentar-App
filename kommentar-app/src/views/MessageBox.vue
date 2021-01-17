@@ -1,7 +1,9 @@
 <template>
     <div class="mainmess">
 
-        <div v-if="Object.keys(Messagebox).length==0"> Your have no Message</div>
+        <div v-if="Object.keys(Messagebox).length==0" class="nomes">
+            Messagebox is empty
+            </div>
         <div v-for="(item,key) in Messagebox" v-bind:key="key" style="background:#ECECEC; margin-left:3vw; padding:1vw; ">
 
                 <a-card  title="Message" >
@@ -93,5 +95,13 @@
 .mainmess .ant-card{
     width: 90vw;
     margin: 0;
+}
+.nomes{
+    padding-top: 5vh;
+    padding-left: 5vw;
+    padding-right: 5vw;
+    width: 90vw;
+    margin: 0;
+    font-size: 5vh;
 }
 </style>
