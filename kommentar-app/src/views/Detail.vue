@@ -91,9 +91,11 @@
                 detail:{},
                 paginationOfficial: {
                     pageSize: 5,
+                    showLessItems:true,
                 },
                 paginationUnOfficial: {
                     pageSize: 5,
+                    showLessItems:true,
                 },
 
                 filterVisibility:false,
