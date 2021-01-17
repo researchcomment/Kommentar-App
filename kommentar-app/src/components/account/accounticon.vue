@@ -4,7 +4,7 @@
       Your Account
     </el-popover> -->
     <a-badge :count="Object.keys(Messagebox).length" dot>
-      <div class="iconyonghu" @click="popout"><span class="iconfont icon-yonghu"></span>{{username}}</div>
+      <div class="iconyonghu" @click="popout"><i class="iconfont icon-yonghu"></i><p style="font-size:2.2vh;display:inline">{{username}}</p></div>
     </a-badge>
     
     <mt-popup class="pop" v-model="visible" position="right" slot="reference">
@@ -50,6 +50,10 @@ export default {
     white-space:pre;
     cursor: pointer;
     z-index: 2;
+}
+.iconyonghu i{
+  font-size: 2.2vh;
+  display: inline;
 }
 .pop {
     height: 100%;
