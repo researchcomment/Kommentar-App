@@ -6,7 +6,7 @@
 
             <!-- Logo -->
             <div class="logo">
-                <img src="../pics/logo.jpg" alt="">
+                <img src="../pics/logo1.jpg" alt="">
                 
             </div>
 
