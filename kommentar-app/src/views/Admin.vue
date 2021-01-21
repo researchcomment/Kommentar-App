@@ -1,14 +1,21 @@
 <template>
     <div class="mainadmin">
+        
     <a-layout style="height:95vh">
+        
         <a-layout-header style="display:none">
             
         </a-layout-header>
         <a-layout>
            <!-- Menu -->
+           
             <a-layout-sider width="20%">
-                <a-menu theme="dark" mode="inline" v-model="menuKey">
-
+                
+                <a-button type="primary" style="margin-bottom: 0;float:right;background-color:#001529;border-color:#001529" @click="toggleCollapsed">
+                    <a-icon :type="collapsed ? 'menu-unfold' : 'menu-fold'" />
+                </a-button>
+                <a-menu theme="dark" mode="inline" v-model="menuKey" :inline-collapsed="collapsed">
+                    
                     <a-menu-item key="Researcher">
                         <span>default => Reseacher</span>
                     </a-menu-item>
@@ -29,6 +36,7 @@
 
             <!-- Contents -->
             <a-layout-content style="height:88vh,overflow:hidden">
+                
                 <div style="background: #fff; padding: 0">
                     
                     <!-- Titel -->
@@ -177,7 +185,13 @@
             
         },
         methods:{
-            
+            /**
+             * collapse menu
+             */
+            toggleCollapsed() {
+                this.collapsed = !this.collapsed;
+            },
+
             /**
              * Request the userList from background
              */

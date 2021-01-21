@@ -6,12 +6,7 @@
 
             <!-- Logo -->
             <div class="logo">
-                <img src="../pics/logo_small.jpg" alt="">
-                <div style="display:inline-block;vertical-align: middle">
-                    <h3>Comment</h3>
-                    <h3>of Works</h3>
-                    <h4>let ideas fly</h4>
-                </div>
+                <img src="../pics/logo1.jpg" alt="">
                 
             </div>
 
@@ -54,12 +49,12 @@
     }
     
     .search img{
-        width:30vw;
+        width:60vw;
         display:inline-block;
         vertical-align: middle;
     }
     .logo{
-        margin: 0 auto;
+        margin: 0 20vw;
         width: 70vw;
     }
     .logo h3{
