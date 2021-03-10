@@ -32,7 +32,7 @@
       </ul>
 
       <!-- show the results : if there is no result -->
-      <div v-if="(searchResultList.length == 0) && (!loading)"><img class="sorryimg" src="../pics/sorry.png" alt=""></div>
+      <div v-if="(searchResultList.length == 0) && (!loading)"><img class="sorryimg" src="../pics/404_2.jpg" alt=""></div>
 
     
       <!-- change Pages -->

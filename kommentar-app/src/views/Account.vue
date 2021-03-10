@@ -100,5 +100,9 @@ body{
   margin-left: 2vh;
   cursor: pointer;
   height: 7vh;
+  
+}
+.homepage i{
+  font-size: 2.2vh;
 }
 </style>

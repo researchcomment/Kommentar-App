@@ -1,7 +1,7 @@
 <template>
     <div>
         <!-- Filter -->
-        <h4 style="font-size:2vw;margin-top:1vh">Search Your Comment With DOI:</h4>
+        <h4 style="font-size:3vh;margin-top:1vh">Search Your Comment With DOI:</h4>
         <a-input placeholder="DOI...."  v-model="searchDOI" style="width:40%;margin-top:0"/>
 
         <!-- List of Comments -->
