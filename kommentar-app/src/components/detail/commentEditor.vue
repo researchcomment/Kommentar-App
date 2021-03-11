@@ -23,17 +23,13 @@
 </template>
 
 <script>
-import moment from 'moment';
-import { MessageBox } from 'mint-ui';
 
 export default {
     props:["doi","username","title"],
     data() {
         return {
             rateValue: null,
-            rateStyle: {fontSize: "35px"},
             content: null, 
-            
             editorOption: {    // style for quill-editor
                 placeholder: "Please write down your comment....",
                 modules:{

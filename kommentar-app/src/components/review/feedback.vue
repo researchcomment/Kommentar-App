@@ -1,5 +1,5 @@
 <template>
-    <div class="fb">
+    <div>
         <!-- List of Comments -->
         <a-list item-layout="vertical" size="large" :pagination="pagination" :data-source="commentList" >
                  
@@ -232,7 +232,7 @@
 </script>
 
 <style>
-.fb .ant-list-item-meta-avatar .ant-avatar-string p{
+.ant-list-item-meta-avatar .ant-avatar-string p{
     font-size: 16px;
     line-height: 30px;
 }

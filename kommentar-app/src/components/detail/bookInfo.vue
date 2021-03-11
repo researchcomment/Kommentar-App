@@ -3,12 +3,12 @@
         <div v-loading.fullscreen.lock="loading">
 
             <!-- Book Cover -->
-            <div v-for="(item, index) in detail" v-bind:key="index">
-                <img src="../../pics/book.jpg" align="right"  v-if="item == 'book'" class="workimg">
-                <img src="../../pics/journal-article.jpg" align="right"  v-if="item == 'journal'" class="workimg">
-                <img src="../../pics/proceeding.jpg" align="right"  v-if="item == 'proceedings-article'" class="workimg">
-                <img src="../../pics/dissertations.jpg" align="right"  v-if="item == 'dissertation'" class="workimg">
-                <img src="../../pics/components.jpg" align="right"  v-if="item == 'component'" class="workimg">  
+            <div class="workimg">
+                <img src="../../pics/book.jpg" align="right"  v-if="detail.type == 'book'" >
+                <img src="../../pics/journal-article.jpg" align="right"  v-if="detail.type == 'journal'">
+                <img src="../../pics/proceeding.jpg" align="right"  v-if="detail.type == 'proceedings-article'" >
+                <img src="../../pics/dissertations.jpg" align="right"  v-if="detail.type == 'dissertation'" >
+                <img src="../../pics/components.jpg" align="right"  v-if="detail.type == 'component'" >  
             </div>
 
             <!-- Titel -->
@@ -77,7 +77,7 @@
     .details{
         word-break: break-all;
     }
-    .workimg{
+    .workimg img{
         height: 20vw;
         top: 0vh;
         padding: 3vw;

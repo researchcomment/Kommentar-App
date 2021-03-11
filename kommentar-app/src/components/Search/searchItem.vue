@@ -36,7 +36,6 @@
              * open a new window which shows the details of this book
              */
             seeDetail(){
-
                 // build router address
                 let routeData = this.$router.resolve({
                     path: '/detail', 
@@ -46,10 +45,7 @@
                 //open a new window
                 window.open(routeData.href, "_blank");
 
-            },
-
-
-            
+            },   
         }
     }
 </script>
@@ -67,21 +63,15 @@
 }
 .box-card a:hover{
     text-decoration: underline;
-    color: #76C06B;
 }
-.box-card a:link {color:#76C06B}      
-.box-card a:visited {color:#76C06B} 
-
 .box-card h3{
     margin: 1vh auto;
     font-size: 3vh;
     cursor: pointer;
-     width:auto; 
-     display:inline-block !important; 
-     display:inline;
+    width:auto; 
+    display:inline-block !important; 
 }
 .box-card h3:hover{
-    cursor: pointer;
     text-decoration: underline;
 }
 .box-card p{

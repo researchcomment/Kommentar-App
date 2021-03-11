@@ -27,13 +27,10 @@
 </template>
 
 <script>
-    import { Button } from 'mint-ui';
-
     export default {
 
         data(){
             return{
-                formLabelWidth: '120px',
                 dialogFormVisible: false,
                 form:{
                     username:"",    
@@ -98,21 +95,21 @@
 </script>
 
 <style>
- .login1{
+.login1{
     width: auto;
     height: 50px;
     color: #fff;
- }
+}
  .popform{
-     width:70%;
-     cursor:default;
+    width:70%;
+    cursor:default;
  }
  .fieldarea{
-     margin: 3% 5%;
+    margin: 3% 5%;
  }
  .popform .mint-cell:hover{
-     color: #6A6A6A;
-     cursor: default;
+    color: #6A6A6A;
+    cursor: default;
  }
 .popform .mint-cell .mint-cell-title{
     color: black;
@@ -131,18 +128,18 @@
     float: right;
     margin-bottom: 5%;
     margin-left: 3%;
- }
- .cbuttons{
-     width: auto;
-     margin: 3% 3%;
-     padding-left: 3%;
- }
- .formtitle{
-     margin-left: 6%;
-     margin-top: 7%;
-     height: 2.5vh;
-     line-height: 2.5vh;
-     font-size: 3vh;
-     margin-bottom: 2vh;
- }
+}
+.cbuttons{
+    width: auto;
+    margin: 3% 3%;
+    padding-left: 3%;
+}
+.formtitle{
+    margin-left: 6%;
+    margin-top: 7%;
+    height: 2.5vh;
+    line-height: 2.5vh;
+    font-size: 3vh;
+    margin-bottom: 2vh;
+}
 </style>

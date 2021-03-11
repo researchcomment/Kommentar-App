@@ -12,16 +12,16 @@
             <div v-if="roleRequesting">
                 <p >Role-Request in Checking</p>
                 <ul class="rolelist">
-                    <li @click="updateRoleCancel('Researcher')">
+                    <li @click="updateRoleOrCancel('Researcher',true)">
                         <a-tag v-show="update['Researcher']" class="tags">Researcher</a-tag>
                     </li>
-                    <li @click="updateRoleCancel('Moderator')">
+                    <li @click="updateRoleOrCancel('Moderator',true)">
                         <a-tag v-show="update['Moderator']" class="tags">Moderator</a-tag>
                     </li>
-                    <li @click="updateRoleCancel('Reviewer')">
+                    <li @click="updateRoleOrCancel('Reviewer',true)">
                         <a-tag v-show="update['Reviewer']" class="tags">Reviewer</a-tag>
                     </li>
-                    <li @click="updateRoleCancel('Admin')">
+                    <li @click="updateRoleOrCancel('Admin',true)">
                         <a-tag v-show="update['Admin']" class="tags">Admin</a-tag>
                     </li>
                     <br>       
@@ -32,7 +32,7 @@
             <p>I want to be a </p>
 
             <!-- Researcher Card -->
-            <a-card hoverable style="width: 250px" v-if="!role.includes('Researcher') && !update['Researcher']"  @click="updateRole('Researcher')">
+            <a-card hoverable style="width: 250px" v-if="!role.includes('Researcher') && !update['Researcher']"  @click="updateRoleOrCancel('Researcher',false)">
                 <img
                 slot="cover"
                 alt="Researcher"
@@ -56,7 +56,7 @@
             <div v-show="role.includes('Researcher')">
                 
                 <!-- Reviewer Card -->
-                <a-card hoverable style="width: 250px" v-if="!role.includes('Reviewer') && !update['Reviewer']"  @click="updateRole('Reviewer')">
+                <a-card hoverable style="width: 250px" v-if="!role.includes('Reviewer') && !update['Reviewer']"  @click="updateRoleOrCancel('Reviewer',false)">
                     <img
                     slot="cover"
                     alt="Reviewer"
@@ -76,7 +76,7 @@
                 </a-card>
 
                 <!-- Moderator Card -->
-                <a-card hoverable style="width: 250px" v-if="!role.includes('Moderator') && !update['Moderator']"  @click="updateRole('Moderator')">
+                <a-card hoverable style="width: 250px" v-if="!role.includes('Moderator') && !update['Moderator']"  @click="updateRoleOrCancel('Moderator',false)">
                     <img
                     slot="cover"
                     alt="Moderator"
@@ -98,7 +98,7 @@
                 </a-card>
 
                 <!-- Admin Card -->
-                <a-card hoverable style="width: 250px" v-if="!role.includes('Admin') && !update['Admin']"   @click="updateRole('Admin')">
+                <a-card hoverable style="width: 250px" v-if="!role.includes('Admin') && !update['Admin']"   @click="updateRoleOrCancel('Admin',false)">
                     <img
                     slot="cover"
                     alt="Admin"
@@ -126,8 +126,6 @@
 </template>
 
 <script>
-import 'ant-design-vue/dist/antd.css'
-import Antd from 'ant-design-vue'
     export default {
 
         data(){
@@ -166,26 +164,17 @@ import Antd from 'ant-design-vue'
             /**
              * send role request according to the click action 
              * @param role - the role which the user selects
+             * @param cancel - whether it is cancel request
+             * 
              */
-            updateRole(role){
-                this.$store.dispatch("askFromUser/updateRole",{toRole:role});
+            updateRoleOrCancel(role,cancel){
+                let request="askFromUser/updateRole";
+                if (cancel)
+                    request=request.concat("Cancel");
+                this.$store.dispatch(request,{toRole:role});
                 this.update[role]=true;
-                this.$notification.open({
-                        message: 'Success',
-                        description:
-                        'Your Request has been submitted.',
-                        icon: <a-icon type="smile" style="color: #108ee9" />,
-                    });
-
-            },
-
-            /**
-             * send role-Cancel request according to the click action 
-             * @param role - the role which the user selects
-             */
-            updateRoleCancel(role){
-                this.$store.dispatch("askFromUser/updateRoleCancel",{toRole:role});
-                this.update[role]=false;
+                if (cancel)
+                    this.update[role]=false;
                 this.$notification.open({
                         message: 'Success',
                         description:

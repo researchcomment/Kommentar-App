@@ -30,7 +30,6 @@
 export default {
   data(){
     return{
-      formLabelWidth: '150px',
       dialogFormVisible: false,
       passwordComfirm:"",
       validationErrors: [],
