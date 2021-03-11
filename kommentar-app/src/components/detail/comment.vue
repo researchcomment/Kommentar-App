@@ -105,7 +105,6 @@
 
 import Antd from 'ant-design-vue'
 import Vue from 'vue'
-import moment from 'moment';
 import 'ant-design-vue/dist/antd.css'
 Vue.use(Antd)
 
@@ -120,7 +119,6 @@ Vue.use(Antd)
                 buttonWidth: 10,
                 visible: false,
                 comment:this.commentFromParent, 
-                cansee:'none',
                 content:"",
                 editorVisibility:false,
                 editorOption: {    // style for quill-editor
@@ -133,8 +131,6 @@ Vue.use(Antd)
                                 ]
                             }
                 }, 
-               
-             
             };
         },
 
@@ -202,7 +198,7 @@ Vue.use(Antd)
                 var requestName = this.comment.status[request]?    // inReview/inRequest  => cancel the Reqeust
                     "askFromUser/askForRequestCancel":"askFromUser/askForRequest";
                 
-                var result = this.$store.dispatch(requestName,{
+                this.$store.dispatch(requestName,{
                     uid:this.comment.key,
                     doi:this.comment.doi_nr,
                     requestType:request,

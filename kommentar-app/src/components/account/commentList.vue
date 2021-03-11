@@ -17,12 +17,12 @@
                     </a-descriptions-item>
                     <a-descriptions-item label="Requests in Checking">
                         <!-- Cancel Review Request -->
-                        <span  @click="requestCancel('Review',comment)"   v-if="comment.status['Review']">
+                        <span  @click="request('Review',comment,true)"   v-if="comment.status['Review']">
                             <a-tag>Review</a-tag>
                         </span >
                         
                         <!-- Cancel PID Request -->
-                        <span  @click="requestCancel('PID',comment)"  v-if="comment.status['PID']">
+                        <span  @click="request('PID',comment,true)"  v-if="comment.status['PID']">
                             <a-tag >PID</a-tag>
                         </span>
 
@@ -33,7 +33,7 @@
                     <a-descriptions-item label="New Request">
                         
                         <!-- Review Request -->
-                        <span v-if="!comment.status['Review']&&comment.type!='official'"  @click="newRequest('Review',comment)">
+                        <span v-if="!comment.status['Review']&&comment.type!='official'"  @click="request('Review',comment,false)">
                             <a-tag color="cyan" >Review</a-tag>
                         </span >
                         
@@ -41,7 +41,7 @@
                         <!-- PID Request -->
                         <span  
                         v-if=" !comment.status['PID'] && role.includes('Researcher')&&comment.type!='official'" 
-                        @click="newRequest('PID',comment)">
+                        @click="request('PID',comment,false)">
                             <a-tag color="cyan" >PID</a-tag>
                         </span >
                         
@@ -139,47 +139,18 @@
              * Send request to the firebase
              * @param request - "Review" or "PID"
              * @param comment
+             * @param cancel -"whether it is about a cancel or not"
              */
-            newRequest(request,comment){
+            request(request,comment,cancel){
                 var request ={
                     uid:comment.commitKey,
                     doi:comment.doi_nr, 
                     requestType:request,
                 }
-               
-                this.$store.dispatch("askFromUser/askForRequest",request)
-                .then(()=>{
-                    
-                    // Refresh the display, prompting success                    
-                        this.$notification.open({
-                            message: 'Success',
-                            description:
-                            'Your Request has been submitted.',
-                            icon: <a-icon type="smile" style="color: #108ee9" />,
-                        });  
-                        comment.status[request.requestType]=!comment.status[request.requestType];
-                        //this.getCommentList();
-
-                    })
-                .catch(err => {
-                                console.log(err);
-                            });
- 
-            },
-
-             /**
-             * Send request to the firebase
-             * @param request - "Review" or "PID"
-             * @param comment
-             */
-            requestCancel(request,comment){
-                var request ={
-                    uid:comment.commitKey,
-                    doi:comment.doi_nr, 
-                    requestType:request,
-                }
-               
-                this.$store.dispatch("askFromUser/askForRequestCancel",request)
+                let requestDist="askFromUser/askForRequest";
+                if (cancel)
+                    requestDist=requestDist.concat("Cancel");
+                this.$store.dispatch(requestDist,request)
                 .then(()=>{
                     
                     // Refresh the display, prompting success                    

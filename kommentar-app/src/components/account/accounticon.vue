@@ -1,8 +1,6 @@
 <template>
   <div>
-    <!-- <el-popover placement="bottom" trigger="click" v-model="visible">
-      Your Account
-    </el-popover> -->
+    <!-- Your Account -->
     <a-badge :count="Object.keys(Messagebox).length" dot>
       <div class="iconyonghu" @click="popout"><i class="iconfont icon-yonghu"></i><p style="font-size:2.2vh;display:inline">{{username}}</p></div>
     </a-badge>
@@ -10,7 +8,6 @@
     <mt-popup class="pop" v-model="visible" position="right" slot="reference">
         <profile class="prof" @logout="logout" :username="username"></profile>
     </mt-popup>
-    <!-- <profile class="prof" v-show="visible" @logout="logout"></profile> -->
   </div>
 </template>
 
@@ -36,7 +33,7 @@ export default {
     logout() {
       this.visible = false;
     },
-    popout: function () {
+    popout() {
         this.visible = !this.visible;
     }
   },
